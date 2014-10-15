@@ -5,10 +5,18 @@ GoLang Thrust Client for Breach.cc
 
 Notes for me while I work on this Project:
 
-Current command to run is:
+Running on OSX 10.9
+==================
+Included in vendor are the binaries
+Start thrust using
 ```bash
-go run src/* -socket=/var/folders/nx/lqsp2r_93nlbdt_7mxkwrjr00000gn/T/_thrust_shell.sock
+./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path=/tmp/thrust.sock
 ```
+Start Thrust Go using
+```bash
+go run src/* -socket=/tmp/thrust.sock
+```
+
 
 Building bleeding edge from Source
 ======
@@ -32,19 +40,15 @@ ninja -C out/Debug thrust_shell
 
 Now you can run thrust 
 I run it on OSX with the command
- ./out/Debug/ThrustShell.app/Contents/MacOS/ThrustShell 
+ ./out/Debug/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path={somepathhere}
 
-Look for a line similar to this
-[19883:1015/143211:INFO:api_server.cc(388)] Listening on: /var/folders/nx/lqsp2r_93nlbdt_7mxkwrjr00000gn/T/_thrust_shell.sock
-
-And copy that socket address
 
 From here down only works while I have  func main in the repo which will be removed soon
 Now back in the thrust-go directory
 
 go build -o thrust src/* 
 
-./thrust -socket={socketaddrhere}
+./thrust -socket={socketaddrusedinstartingthrusthere}
 
 
 Todo:
