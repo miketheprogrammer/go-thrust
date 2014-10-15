@@ -18,6 +18,7 @@ type Menu struct {
 	Displayed        bool
 	Parent           *Menu
 	Children         []*Menu
+	EventRegistry    []int
 }
 
 func (menu *Menu) Create(conn net.Conn) {
@@ -31,12 +32,16 @@ func (menu *Menu) Create(conn net.Conn) {
 func (menu *Menu) IsTarget(targetId int) bool {
 	return targetId == menu.TargetID
 }
-func (menu *Menu) HandleError(reply CommandResponse) {
+func (menu *Menu) HandleError(reply CommandResponse, conn net.Conn) {
 
 }
 
-func (menu *Menu) HandleEvent(reply CommandResponse) {
-
+func (menu *Menu) HandleEvent(reply CommandResponse, conn net.Conn) {
+	for _, commandID := range menu.EventRegistry {
+		if reply.Event.CommandID == commandID {
+			fmt.Println("Event", commandID, "Handled With Flags", reply.Event.EventFlags)
+		}
+	}
 }
 
 func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
@@ -74,6 +79,20 @@ func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
 	}
 }
 
+func (menu *Menu) DispatchResponse(reply CommandResponse, conn net.Conn) {
+	fmt.Println("Menu(", menu.TargetID, ") Attempting to dispatch response")
+	switch reply.Action {
+	case "event":
+		menu.HandleEvent(reply, conn)
+	case "reply":
+		menu.HandleReply(reply, conn)
+	}
+
+	for _, child := range menu.Children {
+		child.DispatchResponse(reply, conn)
+	}
+}
+
 func (menu *Menu) Send(command *Command, conn net.Conn) {
 	ActionId += 1
 
@@ -93,6 +112,9 @@ func (menu *Menu) Send(command *Command, conn net.Conn) {
 func (menu *Menu) Call(command *Command, conn net.Conn) {
 	command.Action = "call"
 	command.TargetID = menu.TargetID
+	if command.Args.CommandID != 0 {
+		menu.EventRegistry = append(menu.EventRegistry, command.Args.CommandID)
+	}
 	if menu.Ready == false {
 		menu.CommandQueue = append(menu.CommandQueue, command)
 		return
@@ -118,7 +140,6 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 		Args: CommandArguments{
 			CommandID: commandID,
 			Label:     label,
-			MenuID:    child.TargetID,
 		},
 	}
 
@@ -129,6 +150,7 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 	go func() {
 		for {
 			if child.IsStable() {
+				command.Args.MenuID = child.TargetID
 				menu.Call(&command, conn)
 				return
 			}

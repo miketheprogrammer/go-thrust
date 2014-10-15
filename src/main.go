@@ -83,12 +83,12 @@ func main() {
 	otherSub.AddItem(5, "Do 1", conn)
 	otherSub.AddItem(6, "Do 2", conn)
 
+	fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
+	menu.AddSubmenu(1, "File", &fileMenu, conn)
 	for {
 		response := <-ch
-		window.HandleReply(response, conn)
-		menu.HandleReply(response, conn)
-		fileMenu.HandleReply(response, conn)
-		otherSub.HandleReply(response, conn)
+		window.DispatchResponse(response, conn)
+		menu.DispatchResponse(response, conn)
 		if len(fileMenu.WaitingResponses) > 0 {
 			for _, v := range fileMenu.WaitingResponses {
 				fmt.Println("Waiting for", v.ID, v.Action, v.Method)
@@ -98,8 +98,8 @@ func main() {
 			fileMenu.Ready &&
 			fileMenu.Parent != &menu &&
 			len(fileMenu.WaitingResponses) == 0 {
-			fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
-			menu.AddSubmenu(1, "File", &fileMenu, conn)
+			//fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
+			//menu.AddSubmenu(1, "File", &fileMenu, conn)
 		}
 		if menu.Ready == true &&
 			fileMenu.Ready &&

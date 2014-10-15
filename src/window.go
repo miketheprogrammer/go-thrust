@@ -42,11 +42,11 @@ func (w *Window) Create(conn net.Conn) {
 func (w *Window) IsTarget(targetId int) bool {
 	return targetId == w.TargetID
 }
-func (w *Window) HandleError(reply CommandResponse) {
+func (w *Window) HandleError(reply CommandResponse, conn net.Conn) {
 
 }
 
-func (w *Window) HandleEvent(reply CommandResponse) {
+func (w *Window) HandleEvent(reply CommandResponse, conn net.Conn) {
 
 }
 
@@ -90,6 +90,15 @@ func (w *Window) HandleReply(reply CommandResponse, conn net.Conn) {
 	}
 }
 
+func (w *Window) DispatchResponse(reply CommandResponse, conn net.Conn) {
+	switch reply.Action {
+	case "event":
+		w.HandleEvent(reply, conn)
+	case "reply":
+		w.HandleReply(reply, conn)
+	}
+
+}
 func (w *Window) Send(command *Command, conn net.Conn) {
 	ActionId += 1
 

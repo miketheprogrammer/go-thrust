@@ -36,13 +36,19 @@ func (c Command) Send(conn net.Conn) {
 
 //{"_action":"reply","_error":"","_id":1,"_result":{"_target":3}}
 
-type ResponseResult struct {
+type ReplyResult struct {
 	TargetID int `json:"_target,omitempty"`
 }
 
+type EventResult struct {
+	CommandID  int `json:"command_id,omitempty"`
+	EventFlags int `json:"event_flags,omitempty"`
+}
+
 type CommandResponse struct {
-	Action string         `json:"_action,omitempty"`
-	Error  string         `json:"_error,omitempty"`
-	ID     int            `json:"_id,omitempty"`
-	Result ResponseResult `json:"_result,omitempty"`
+	Action string      `json:"_action,omitempty"`
+	Error  string      `json:"_error,omitempty"`
+	ID     int         `json:"_id,omitempty"`
+	Result ReplyResult `json:"_result,omitempty"`
+	Event  EventResult `json:"_event,omitempty"`
 }
