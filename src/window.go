@@ -11,6 +11,7 @@ type Window struct {
 	CommandHistory   []*Command
 	ResponseHistory  []*CommandResponse
 	WaitingResponses []*Command
+	CommandQueue     []*Command
 	Url              string
 	Title            string
 	Conn             net.Conn
@@ -49,25 +50,36 @@ func (w *Window) HandleEvent(reply CommandResponse) {
 
 }
 
-func (w *Window) HandleReply(reply CommandResponse) {
+func (w *Window) HandleReply(reply CommandResponse, conn net.Conn) {
 	fmt.Println("Handling Response", reply)
 	for k, v := range w.WaitingResponses {
 		if v.ID != reply.ID {
 			continue
 		}
+
 		if len(w.WaitingResponses) > 1 {
+			// Remove the element at index k
 			w.WaitingResponses = w.WaitingResponses[:k+copy(w.WaitingResponses[k:], w.WaitingResponses[k+1:])]
 		} else {
+			// Just initialize to empty splice literal
 			w.WaitingResponses = []*Command{}
 		}
 
+		// If we dont already have a TargetID then we accept a create action
 		if w.TargetID == 0 && v.Action == "create" {
-			//Assume we have a reply to action:create
 			if reply.Result.TargetID != 0 {
 				w.TargetID = reply.Result.TargetID
 				fmt.Println("Received TargetID", "\nSetting Ready State")
 				w.Ready = true
 			}
+
+			for i, _ := range w.CommandQueue {
+				w.CommandQueue[i].TargetID = w.TargetID
+				w.Send(w.CommandQueue[i], conn)
+			}
+			// Reinitialize empty command queue, and allow gc.
+			w.CommandQueue = []*Command{}
+
 			return
 		}
 
@@ -98,6 +110,10 @@ func (w *Window) Call(command *Command, conn net.Conn) {
 	command.Action = "call"
 	command.TargetID = w.TargetID
 
+	if w.Ready == false {
+		w.CommandQueue = append(w.CommandQueue, command)
+		return
+	}
 	w.Send(command, conn)
 }
 

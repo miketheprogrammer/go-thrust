@@ -20,6 +20,7 @@ type CommandArguments struct {
 	CommandID int    `json:"command_id,omitempty"`
 	Index     int    `json:"index,omitempty"`
 	Label     string `json:"label,omitempty"`
+	MenuID    int    `json:"menu_id,omitempty"`
 }
 type Command struct {
 	ID         int              `json:"_id"`

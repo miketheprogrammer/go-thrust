@@ -8,7 +8,6 @@ import (
 	"net"
 	"os"
 	"strings"
-	"time"
 )
 
 //Global ID tracking for Commands
@@ -28,6 +27,7 @@ func reader(r *bufio.Reader, ch chan CommandResponse) {
 	for {
 		line, err := r.ReadString(byte('\n'))
 		if err != nil {
+			fmt.Println(err)
 			panic(err)
 		}
 		if !strings.Contains(line, SOCKET_BOUNDARY) {
@@ -66,27 +66,32 @@ func main() {
 		Conn: conn,
 	}
 	menu := Menu{}
+	fileMenu := Menu{}
+
 	window.Create(conn)
+	window.Show(conn)
+
 	menu.Create(conn)
-	setMenu := func() {
-		menu.InsertItemAt(1, 1, "MyItem", conn)
-		menu.InsertItemAt(2, 2, "MyItem", conn)
-		time.Sleep(time.Millisecond * 2000)
-		//menu.SetApplicationMenu(conn)
-	}
+	fileMenu.Create(conn)
+
+	fileMenu.InsertItemAt(0, 1, "Open", conn)
+	fileMenu.InsertItemAt(1, 2, "Close", conn)
+
 	for {
 		response := <-ch
-		window.HandleReply(response)
-		menu.HandleReply(response)
-		if window.Ready && window.Displayed == false {
-			fmt.Println("Window Ready")
-			window.Show(conn)
+		window.HandleReply(response, conn)
+		menu.HandleReply(response, conn)
+		fileMenu.HandleReply(response, conn)
+		if menu.Ready == true &&
+			fileMenu.Ready &&
+			fileMenu.Parent != &menu &&
+			len(fileMenu.WaitingResponses) == 0 {
+			menu.InsertSubmenuAt(1, 3, "File", &fileMenu, conn)
 		}
-
-		if menu.Ready && menu.Displayed == false {
-			setMenu()
-			setMenu = func() {}
-		}
+		// if window.Ready && window.Displayed == false {
+		// 	fmt.Println("Window Ready")
+		// 	window.Show(conn)
+		// }
 
 	}
 

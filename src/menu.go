@@ -11,9 +11,11 @@ type Menu struct {
 	CommandHistory   []*Command
 	ResponseHistory  []*CommandResponse
 	WaitingResponses []*Command
+	CommandQueue     []*Command
 	Conn             net.Conn
 	Ready            bool
 	Displayed        bool
+	Parent           *Menu
 }
 
 func (menu *Menu) Create(conn net.Conn) {
@@ -35,7 +37,7 @@ func (menu *Menu) HandleEvent(reply CommandResponse) {
 
 }
 
-func (menu *Menu) HandleReply(reply CommandResponse) {
+func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
 	fmt.Println("MENU::Handling Response", reply)
 	for k, v := range menu.WaitingResponses {
 		if v.ID != reply.ID {
@@ -54,6 +56,12 @@ func (menu *Menu) HandleReply(reply CommandResponse) {
 				fmt.Println("Received TargetID", "\nSetting Ready State")
 				menu.Ready = true
 			}
+			for i, _ := range menu.CommandQueue {
+				menu.CommandQueue[i].TargetID = menu.TargetID
+				menu.Send(menu.CommandQueue[i], conn)
+			}
+			// Reinitialize empty command queue, and allow gc.
+			menu.CommandQueue = []*Command{}
 			return
 		}
 
@@ -83,7 +91,10 @@ func (menu *Menu) Send(command *Command, conn net.Conn) {
 func (menu *Menu) Call(command *Command, conn net.Conn) {
 	command.Action = "call"
 	command.TargetID = menu.TargetID
-
+	if menu.Ready == false {
+		menu.CommandQueue = append(menu.CommandQueue, command)
+		return
+	}
 	menu.Send(command, conn)
 }
 
@@ -96,6 +107,22 @@ func (menu *Menu) InsertItemAt(index, commandID int, label string, conn net.Conn
 			Label:     label,
 		},
 	}
+
+	menu.Call(&command, conn)
+}
+
+func (menu *Menu) InsertSubmenuAt(index, commandID int, label string, child *Menu, conn net.Conn) {
+	command := Command{
+		Method: "insert_submenu_at",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Index:     index,
+			Label:     label,
+			MenuID:    child.TargetID,
+		},
+	}
+	fmt.Println(command)
+	child.Parent = menu
 
 	menu.Call(&command, conn)
 }
