@@ -18,15 +18,14 @@ type CommandArguments struct {
 	X         int    `json:"x,omitempty"`
 	Y         int    `json:"y,omitempty"`
 	CommandID int    `json:"command_id,omitempty"`
-	Index     int    `json:"index,omitempty"`
 	Label     string `json:"label,omitempty"`
-	MenuID    int    `json:"menu_id,omitempty"`
+	MenuID    int    `json:"menu_id,omitempty"` // this should never be 0 anyway
 }
 type Command struct {
 	ID         int              `json:"_id"`
 	Action     string           `json:"_action"`
 	ObjectType string           `json:"_type,omitempty"`
-	Method     string           `json:"_method,omitempty"`
+	Method     string           `json:"_method"`
 	TargetID   int              `json:"_target,omitempty"`
 	Args       CommandArguments `json:"_args"`
 }

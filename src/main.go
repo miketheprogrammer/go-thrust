@@ -67,27 +67,48 @@ func main() {
 	}
 	menu := Menu{}
 	fileMenu := Menu{}
-
+	otherSub := Menu{}
+	// Calls to other methods after create are Queued until Create returns
 	window.Create(conn)
 	window.Show(conn)
 
 	menu.Create(conn)
-	fileMenu.Create(conn)
+	menu.AddItem(2, "Root", conn)
 
-	fileMenu.InsertItemAt(0, 1, "Open", conn)
-	fileMenu.InsertItemAt(1, 2, "Close", conn)
+	fileMenu.Create(conn)
+	fileMenu.AddItem(3, "Open", conn)
+	fileMenu.AddItem(4, "Close", conn)
+
+	otherSub.Create(conn)
+	otherSub.AddItem(5, "Do 1", conn)
+	otherSub.AddItem(6, "Do 2", conn)
 
 	for {
 		response := <-ch
 		window.HandleReply(response, conn)
 		menu.HandleReply(response, conn)
 		fileMenu.HandleReply(response, conn)
+		otherSub.HandleReply(response, conn)
+		if len(fileMenu.WaitingResponses) > 0 {
+			for _, v := range fileMenu.WaitingResponses {
+				fmt.Println("Waiting for", v.ID, v.Action, v.Method)
+			}
+		}
 		if menu.Ready == true &&
 			fileMenu.Ready &&
 			fileMenu.Parent != &menu &&
 			len(fileMenu.WaitingResponses) == 0 {
-			menu.InsertSubmenuAt(1, 3, "File", &fileMenu, conn)
+			fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
+			menu.AddSubmenu(1, "File", &fileMenu, conn)
 		}
+		if menu.Ready == true &&
+			fileMenu.Ready &&
+			fileMenu.Parent == &menu &&
+			len(fileMenu.WaitingResponses) == 0 &&
+			menu.Displayed == false {
+			menu.SetApplicationMenu(conn)
+		}
+
 		// if window.Ready && window.Displayed == false {
 		// 	fmt.Println("Window Ready")
 		// 	window.Show(conn)

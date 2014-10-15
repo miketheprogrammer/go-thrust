@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"time"
 )
 
 type Menu struct {
@@ -16,6 +17,7 @@ type Menu struct {
 	Ready            bool
 	Displayed        bool
 	Parent           *Menu
+	Children         []*Menu
 }
 
 func (menu *Menu) Create(conn net.Conn) {
@@ -98,12 +100,11 @@ func (menu *Menu) Call(command *Command, conn net.Conn) {
 	menu.Send(command, conn)
 }
 
-func (menu *Menu) InsertItemAt(index, commandID int, label string, conn net.Conn) {
+func (menu *Menu) AddItem(commandID int, label string, conn net.Conn) {
 	command := Command{
-		Method: "insert_item_at",
+		Method: "add_item",
 		Args: CommandArguments{
 			CommandID: commandID,
-			Index:     index,
 			Label:     label,
 		},
 	}
@@ -111,18 +112,35 @@ func (menu *Menu) InsertItemAt(index, commandID int, label string, conn net.Conn
 	menu.Call(&command, conn)
 }
 
-func (menu *Menu) InsertSubmenuAt(index, commandID int, label string, child *Menu, conn net.Conn) {
+func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.Conn) {
 	command := Command{
-		Method: "insert_submenu_at",
+		Method: "add_submenu",
 		Args: CommandArguments{
 			CommandID: commandID,
-			Index:     index,
 			Label:     label,
 			MenuID:    child.TargetID,
 		},
 	}
-	fmt.Println(command)
+
+	// Assign Bidirectional navigation elements i.e. DoublyLinkedLists
 	child.Parent = menu
+	menu.Children = append(menu.Children, child)
+
+	go func() {
+		for {
+			if child.IsStable() {
+				menu.Call(&command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
+}
+
+func (menu *Menu) AddSeperator(conn net.Conn) {
+	command := Command{
+		Method: "add_seperator",
+	}
 
 	menu.Call(&command, conn)
 }
@@ -130,7 +148,39 @@ func (menu *Menu) InsertSubmenuAt(index, commandID int, label string, child *Men
 func (menu *Menu) SetApplicationMenu(conn net.Conn) {
 	command := Command{
 		Method: "set_application_menu",
+		Args: CommandArguments{
+			MenuID: menu.TargetID,
+		},
+	}
+	menu.Displayed = true
+	// Thread to wait for Stable Menu State
+	go func() {
+		for {
+			if menu.IsMenuTreeReady() {
+				menu.Call(&command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
+
+}
+
+func (menu *Menu) IsStable() bool {
+	return menu.Ready && len(menu.WaitingResponses) == 0
+}
+
+func (menu *Menu) IsMenuTreeReady() bool {
+	if !menu.IsStable() {
+		return false
 	}
 
-	menu.Call(&command, conn)
+	for _, child := range menu.Children {
+		//fmt.Println("Checking child")
+		if !child.IsMenuTreeReady() {
+			return false
+		}
+	}
+
+	return true
 }
