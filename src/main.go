@@ -37,7 +37,7 @@ func reader(r *bufio.Reader, ch chan CommandResponse) {
 			ch <- response
 		}
 
-		fmt.Println("Got line", line)
+		fmt.Print("SOCKET::Line", line)
 	}
 }
 
@@ -78,9 +78,11 @@ func main() {
 	fileMenu.Create(conn)
 	fileMenu.AddItem(3, "Open", conn)
 	fileMenu.AddItem(4, "Close", conn)
+	fileMenu.AddSeparator(conn)
 
 	otherSub.Create(conn)
 	otherSub.AddItem(5, "Do 1", conn)
+	otherSub.AddSeparator(conn)
 	otherSub.AddItem(6, "Do 2", conn)
 
 	fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)

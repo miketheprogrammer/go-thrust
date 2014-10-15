@@ -46,11 +46,12 @@ func (menu *Menu) HandleEvent(reply CommandResponse, conn net.Conn) {
 }
 
 func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
-	fmt.Println("MENU::Handling Response", reply)
+
 	for k, v := range menu.WaitingResponses {
 		if v.ID != reply.ID {
 			continue
 		}
+		fmt.Println("MENU(", menu.TargetID, ")::Handling Response", reply)
 		removeAt := func(k int) {
 			if len(menu.WaitingResponses) > 1 {
 				menu.WaitingResponses = menu.WaitingResponses[:k+copy(menu.WaitingResponses[k:], menu.WaitingResponses[k+1:])]
@@ -84,7 +85,7 @@ func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
 }
 
 func (menu *Menu) DispatchResponse(reply CommandResponse, conn net.Conn) {
-	fmt.Println("Menu(", menu.TargetID, ") Attempting to dispatch response")
+	fmt.Println("Menu(", menu.TargetID, ")::Attempting to dispatch response")
 	switch reply.Action {
 	case "event":
 		menu.HandleEvent(reply, conn)
@@ -174,9 +175,9 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 	}()
 }
 
-func (menu *Menu) AddSeperator(conn net.Conn) {
+func (menu *Menu) AddSeparator(conn net.Conn) {
 	command := Command{
-		Method: "add_seperator",
+		Method: "add_separator",
 	}
 
 	menu.SafeCall(&command, conn)
