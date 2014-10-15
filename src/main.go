@@ -11,21 +11,20 @@ import (
 	"time"
 )
 
-var ActionId = 0
+//Global ID tracking for Commands
+//Could probably move this to a factory function
+var ActionId int = 0
 
 const (
 	SOCKET_BOUNDARY = "--(Foo)++__THRUST_SHELL_BOUNDARY__++(Bar)--"
 )
 
-type ThrustApiObject interface {
-	Create(conn net.Conn)
-	Call(action string, command *Command, conn net.Conn)
-	IsTarget(targetId int) bool
-	Handle(reply CommandResponse)
-}
-
+/*
+Reader
+Read from the unix socket connection, split on NewLine
+Try to json.Unmarshal any value that is not the SOCKET_BOUNDARY
+*/
 func reader(r *bufio.Reader, ch chan CommandResponse) {
-	// buf := make([]byte, 2048)
 	for {
 		line, err := r.ReadString(byte('\n'))
 		if err != nil {
@@ -40,13 +39,6 @@ func reader(r *bufio.Reader, ch chan CommandResponse) {
 
 		fmt.Println("Got line", line)
 	}
-	// for {
-	// 	n, err := r.Read(buf[:])
-	// 	if err != nil {
-	// 		return
-	// 	}
-	// 	println("Client got:", string(buf[0:n]))
-	// }
 }
 
 func main() {
@@ -73,15 +65,28 @@ func main() {
 	window := Window{
 		Conn: conn,
 	}
+	menu := Menu{}
 	window.Create(conn)
-
+	menu.Create(conn)
+	setMenu := func() {
+		menu.InsertItemAt(1, 1, "MyItem", conn)
+		menu.InsertItemAt(2, 2, "MyItem", conn)
+		time.Sleep(time.Millisecond * 2000)
+		//menu.SetApplicationMenu(conn)
+	}
 	for {
 		response := <-ch
 		window.HandleReply(response)
+		menu.HandleReply(response)
 		if window.Ready && window.Displayed == false {
+			fmt.Println("Window Ready")
 			window.Show(conn)
 		}
-		time.Sleep(time.Millisecond * 10000)
+
+		if menu.Ready && menu.Displayed == false {
+			setMenu()
+			setMenu = func() {}
+		}
 
 	}
 

@@ -7,12 +7,19 @@ type SizeHW struct {
 	Height int `json:"height,omitempty"`
 }
 
+/*
+Covers all possible argument combinations.
+Makes use of omit empty to adapt to different use cases
+*/
 type CommandArguments struct {
-	RootUrl string `json:"root_url,omitempty"`
-	Title   string `json:"title,omitempty"`
-	Size    SizeHW `json:"size,omitempty"`
-	X       int    `json:"x,omitempty"`
-	Y       int    `json:"y,omitempty"`
+	RootUrl   string `json:"root_url,omitempty"`
+	Title     string `json:"title,omitempty"`
+	Size      SizeHW `json:"size,omitempty"`
+	X         int    `json:"x,omitempty"`
+	Y         int    `json:"y,omitempty"`
+	CommandID int    `json:"command_id,omitempty"`
+	Index     int    `json:"index,omitempty"`
+	Label     string `json:"label,omitempty"`
 }
 type Command struct {
 	ID         int              `json:"_id"`

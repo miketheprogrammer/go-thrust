@@ -65,7 +65,7 @@ func (w *Window) HandleReply(reply CommandResponse) {
 			//Assume we have a reply to action:create
 			if reply.Result.TargetID != 0 {
 				w.TargetID = reply.Result.TargetID
-				fmt.Println("Received TargetID", "\bSetting Ready State")
+				fmt.Println("Received TargetID", "\nSetting Ready State")
 				w.Ready = true
 			}
 			return
