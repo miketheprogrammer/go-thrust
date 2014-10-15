@@ -12,28 +12,28 @@ go run src/* -socket=/var/folders/nx/lqsp2r_93nlbdt_7mxkwrjr00000gn/T/_thrust_sh
 
 Todo:
 
-[ ] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
+- [ ] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
 
-[ ] Add Window Support
+- [ ] Add Window Support
   - [X] Basic Support
   - [ ] Complete Support 
 
-[ ] Add Menu Support
+- [ ] Add Menu Support
   - [X] Basic Support
   - [ ] Complete Support
 
-[ ] Add Session Support
+- [ ] Add Session Support
   - [ ] Basic Support
   - [ ] Complete Support
 
-[ ] Seperate out in to packages other than main
+- [ ] Seperate out in to packages other than main
   - [ ] Package Window
   - [ ] Package Menu
   - [ ] Package Session
   - [ ] Package Commands
   - [ ] Package Core - Import for all Window, Menu, Session, Commands 
 
-[ ] - Remove func Main as this is a Library
+- [ ] - Remove func Main as this is a Library
   - [ ] Should use Tests instead
 
 
