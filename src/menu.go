@@ -156,7 +156,7 @@ func (menu *Menu) SetApplicationMenu(conn net.Conn) {
 	// Thread to wait for Stable Menu State
 	go func() {
 		for {
-			if menu.IsMenuTreeReady() {
+			if menu.IsTreeStable() {
 				menu.Call(&command, conn)
 				return
 			}
@@ -166,18 +166,26 @@ func (menu *Menu) SetApplicationMenu(conn net.Conn) {
 
 }
 
+/*
+A menu is stable if and only if, it is Ready (meaning it was created successfully)
+and it has no Commands awaiting Responses.
+*/
 func (menu *Menu) IsStable() bool {
 	return menu.Ready && len(menu.WaitingResponses) == 0
 }
 
-func (menu *Menu) IsMenuTreeReady() bool {
+/*
+A Menu Tree is considered stable if and only if its children nodes report that they are stable.
+Function is recursive, so factor that in to performance
+*/
+func (menu *Menu) IsTreeStable() bool {
 	if !menu.IsStable() {
 		return false
 	}
 
 	for _, child := range menu.Children {
 		//fmt.Println("Checking child")
-		if !child.IsMenuTreeReady() {
+		if !child.IsTreeStable() {
 			return false
 		}
 	}
