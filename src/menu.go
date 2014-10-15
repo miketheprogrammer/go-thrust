@@ -26,6 +26,7 @@ func (menu *Menu) Create(conn net.Conn) {
 		Action:     "create",
 		ObjectType: "menu",
 	}
+	menu.WaitingResponses = append(menu.WaitingResponses, &menuCreate)
 	menu.Send(&menuCreate, conn)
 }
 
@@ -50,11 +51,14 @@ func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
 		if v.ID != reply.ID {
 			continue
 		}
-		if len(menu.WaitingResponses) > 1 {
-			menu.WaitingResponses = menu.WaitingResponses[:k+copy(menu.WaitingResponses[k:], menu.WaitingResponses[k+1:])]
-		} else {
-			menu.WaitingResponses = []*Command{}
+		removeAt := func(k int) {
+			if len(menu.WaitingResponses) > 1 {
+				menu.WaitingResponses = menu.WaitingResponses[:k+copy(menu.WaitingResponses[k:], menu.WaitingResponses[k+1:])]
+			} else {
+				menu.WaitingResponses = []*Command{}
+			}
 		}
+		defer removeAt(k)
 
 		if menu.TargetID == 0 && v.Action == "create" {
 			//Assume we have a reply to action:create
@@ -102,8 +106,6 @@ func (menu *Menu) Send(command *Command, conn net.Conn) {
 	cmd, _ := json.Marshal(&command)
 	fmt.Println("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
 
-	menu.WaitingResponses = append(menu.WaitingResponses, command)
-
 	conn.Write(cmd)
 	conn.Write([]byte("\n"))
 	conn.Write([]byte(SOCKET_BOUNDARY))
@@ -131,7 +133,20 @@ func (menu *Menu) AddItem(commandID int, label string, conn net.Conn) {
 		},
 	}
 
-	menu.Call(&command, conn)
+	menu.SafeCall(&command, conn)
+}
+
+func (menu *Menu) SafeCall(command *Command, conn net.Conn) {
+	menu.WaitingResponses = append(menu.WaitingResponses, command)
+	go func() {
+		for {
+			if menu.Ready {
+				menu.Call(command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
 }
 
 func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.Conn) {
@@ -164,7 +179,7 @@ func (menu *Menu) AddSeperator(conn net.Conn) {
 		Method: "add_seperator",
 	}
 
-	menu.Call(&command, conn)
+	menu.SafeCall(&command, conn)
 }
 
 func (menu *Menu) SetApplicationMenu(conn net.Conn) {
