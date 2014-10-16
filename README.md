@@ -3,8 +3,6 @@ thrust-go
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust) to be used in Breach.cc(http://breach.cc) via Official Go Implementation @ (http://github.com/miketheprogrammer/breach-go)
 
-Notes for me while I work on this Project:
-
 Running on OSX 10.9
 ==================
 Included in vendor are the binaries
