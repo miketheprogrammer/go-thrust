@@ -10,7 +10,7 @@ Running on OSX 10.9
 Included in vendor are the binaries
 Start thrust using
 ```bash
-#./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path=/tmp/
+./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path=/tmp/
 thrust.sock
 # This is no longer needed, Thrust-go will detect darwin as your runtime, and try to spawn this binary.
 # if that does not work run the aformentioned binary and then run thrust with
