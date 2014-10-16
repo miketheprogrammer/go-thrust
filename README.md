@@ -62,7 +62,7 @@ go build -o thrust src/main.go
 ```
 
 
-Todo:
+Roadmap to v1.0 :
 ================
 Please note Complete Support will never be toggled until Thrust core is stable.
 
