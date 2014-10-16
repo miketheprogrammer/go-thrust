@@ -87,3 +87,86 @@ i.e. insert_item_at == InsertItemAt
 
 
 
+Extra Notes
+================
+Example Menu State @ during set_application_menu
+
+```javascript
+{
+    "target_id": 18,
+    "awaiting_responses": [
+        {
+            "_id": 0,
+            "_action": "",
+            "_method": "set_application_menu",
+            "_args": {
+                "size": {},
+                "menu_id": 18,
+                "value": false
+            }
+        }
+    ],
+    "ready": true,
+    "Displayed": false,
+    "items": [
+        {
+            "command_id": 2,
+            "label": "Root"
+        },
+        {
+            "command_id": 1,
+            "label": "File",
+            "submenu": {
+                "target_id": 19,
+                "ready": true,
+                "Displayed": false,
+                "items": [
+                    {
+                        "command_id": 3,
+                        "label": "Open"
+                    },
+                    {
+                        "command_id": 4,
+                        "label": "Close"
+                    },
+                    {},
+                    {
+                        "command_id": 7,
+                        "label": "otherSub",
+                        "submenu": {
+                            "target_id": 20,
+                            "ready": true,
+                            "Displayed": false,
+                            "items": [
+                                {
+                                    "command_id": 5,
+                                    "label": "Do 1"
+                                },
+                                {},
+                                {
+                                    "command_id": 6,
+                                    "label": "Do 2"
+                                }
+                            ],
+                            "events": [
+                                5,
+                                6
+                            ]
+                        }
+                    }
+                ],
+                "events": [
+                    3,
+                    4,
+                    7
+                ]
+            }
+        }
+    ],
+    "events": [
+        2,
+        1
+    ]
+}
+```
+

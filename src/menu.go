@@ -7,18 +7,38 @@ import (
 	"time"
 )
 
+type Item interface {
+	IsSubMenu() bool
+	IsCommandId() bool
+	Handle()
+}
+
+type MenuItem struct {
+	CommandID int    `json:"command_id,omitempty"`
+	Label     string `json:"label,omitempty"`
+	GroupID   int    `json:"group_id,omitempty"`
+	SubMenu   *Menu  `json:"submenu,omitempty"`
+}
+
+func (mi MenuItem) IsSubMenu() bool {
+	return mi.SubMenu != nil
+}
+
+func (mi MenuItem) IsCommandId(commandID int) bool {
+	return mi.CommandID == commandID
+}
+
 type Menu struct {
-	TargetID         int
-	CommandHistory   []*Command
-	ResponseHistory  []*CommandResponse
-	WaitingResponses []*Command
-	CommandQueue     []*Command
-	Conn             net.Conn
-	Ready            bool
-	Displayed        bool
-	Parent           *Menu
-	Children         []*Menu
-	EventRegistry    []int
+	TargetID         int        `json:"target_id,omitempty"`
+	WaitingResponses []*Command `json:"awaiting_responses,omitempty"`
+	CommandQueue     []*Command `json:"command_queue,omitempty"`
+	Conn             net.Conn   `json:"-"`
+	Ready            bool       `json:"ready"`
+	Displayed        bool       `json:""displayed`
+	Parent           *Menu      `json:"-"`
+	Children         []*Menu    `json:"-"`
+	Items            []MenuItem `json:"items,omitempty"`
+	EventRegistry    []int      `json:"events,omitempty"`
 }
 
 func (menu *Menu) Create(conn net.Conn) {
@@ -78,9 +98,20 @@ func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn) {
 		}
 
 		if v.Action == "call" && v.Method == "set_application_menu" {
-			menu.Displayed = true
+			fmt.Println("Received reply to set_application_menu", "Setting Menu Displayed to True")
+			menu.setDisplayed(true)
 		}
 
+	}
+}
+
+func (menu *Menu) setDisplayed(displayed bool) {
+	menu.Displayed = displayed
+
+	for _, child := range menu.Items {
+		if child.IsSubMenu() {
+			child.SubMenu.setDisplayed(displayed)
+		}
 	}
 }
 
@@ -93,8 +124,10 @@ func (menu *Menu) DispatchResponse(reply CommandResponse, conn net.Conn) {
 		menu.HandleReply(reply, conn)
 	}
 
-	for _, child := range menu.Children {
-		child.DispatchResponse(reply, conn)
+	for _, child := range menu.Items {
+		if child.IsSubMenu() {
+			child.SubMenu.DispatchResponse(reply, conn)
+		}
 	}
 }
 
@@ -104,7 +137,7 @@ func (menu *Menu) Send(command *Command, conn net.Conn) {
 	command.ID = ActionId
 
 	fmt.Println(command)
-	cmd, _ := json.Marshal(&command)
+	cmd, _ := json.Marshal(command)
 	fmt.Println("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
 
 	conn.Write(cmd)
@@ -133,8 +166,71 @@ func (menu *Menu) AddItem(commandID int, label string, conn net.Conn) {
 			Label:     label,
 		},
 	}
+	menuItem := MenuItem{
+		CommandID: commandID,
+		Label:     label,
+	}
+	menu.Items = append(menu.Items, menuItem)
 
 	menu.SafeCall(&command, conn)
+}
+
+func (menu *Menu) AddCheckItem(commandID int, label string, conn net.Conn) {
+	command := Command{
+		Method: "add_check_item",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Label:     label,
+		},
+	}
+	menuItem := MenuItem{
+		CommandID: commandID,
+		Label:     label,
+	}
+	menu.Items = append(menu.Items, menuItem)
+	menu.SafeCall(&command, conn)
+}
+
+func (menu *Menu) AddRadioItem(commandID int, label string, groupID int, conn net.Conn) {
+	command := Command{
+		Method: "add_radio_item",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Label:     label,
+			GroupID:   groupID,
+		},
+	}
+	menuItem := MenuItem{
+		CommandID: commandID,
+		Label:     label,
+		GroupID:   groupID,
+	}
+	menu.Items = append(menu.Items, menuItem)
+	menu.SafeCall(&command, conn)
+}
+
+func (menu *Menu) SetChecked(commandID int, checked bool, asEvent bool, conn net.Conn) {
+	command := Command{
+		Method: "set_checked",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Checked:   checked,
+		},
+	}
+	//if asEvent == false {
+	go func() {
+		for {
+			fmt.Println("IsDisplayed", menu.Displayed)
+
+			if menu.Displayed {
+				menu.Call(&command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond * 1000)
+		}
+	}()
+	//}
+
 }
 
 func (menu *Menu) SafeCall(command *Command, conn net.Conn) {
@@ -161,8 +257,13 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 
 	// Assign Bidirectional navigation elements i.e. DoublyLinkedLists
 	child.Parent = menu
-	menu.Children = append(menu.Children, child)
-
+	menuItem := MenuItem{
+		CommandID: commandID,
+		Label:     label,
+		SubMenu:   child,
+	}
+	menu.Items = append(menu.Items, menuItem)
+	menu.WaitingResponses = append(menu.WaitingResponses, &command)
 	go func() {
 		for {
 			if child.IsStable() {
@@ -179,7 +280,8 @@ func (menu *Menu) AddSeparator(conn net.Conn) {
 	command := Command{
 		Method: "add_separator",
 	}
-
+	menuItem := MenuItem{}
+	menu.Items = append(menu.Items, menuItem)
 	menu.SafeCall(&command, conn)
 }
 
@@ -190,11 +292,13 @@ func (menu *Menu) SetApplicationMenu(conn net.Conn) {
 			MenuID: menu.TargetID,
 		},
 	}
-	menu.Displayed = true
+
 	// Thread to wait for Stable Menu State
 	go func() {
 		for {
 			if menu.IsTreeStable() {
+				command.Args.MenuID = menu.TargetID
+				menu.WaitingResponses = append(menu.WaitingResponses, &command)
 				menu.Call(&command, conn)
 				return
 			}
@@ -221,10 +325,12 @@ func (menu *Menu) IsTreeStable() bool {
 		return false
 	}
 
-	for _, child := range menu.Children {
+	for _, child := range menu.Items {
 		//fmt.Println("Checking child")
-		if !child.IsTreeStable() {
-			return false
+		if child.IsSubMenu() {
+			if !child.SubMenu.IsTreeStable() {
+				return false
+			}
 		}
 	}
 

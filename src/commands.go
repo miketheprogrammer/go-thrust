@@ -20,6 +20,8 @@ type CommandArguments struct {
 	CommandID int    `json:"command_id,omitempty"`
 	Label     string `json:"label,omitempty"`
 	MenuID    int    `json:"menu_id,omitempty"` // this should never be 0 anyway
+	GroupID   int    `json:"group_id,omitempty"`
+	Checked   bool   `json:"value"`
 }
 type Command struct {
 	ID         int              `json:"_id"`

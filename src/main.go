@@ -81,12 +81,15 @@ func main() {
 	fileMenu.AddSeparator(conn)
 
 	otherSub.Create(conn)
-	otherSub.AddItem(5, "Do 1", conn)
+	otherSub.AddCheckItem(5, "Do 1", conn)
+	otherSub.SetChecked(5, true, false, conn)
 	otherSub.AddSeparator(conn)
 	otherSub.AddItem(6, "Do 2", conn)
 
 	fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
 	menu.AddSubmenu(1, "File", &fileMenu, conn)
+
+	menu.SetApplicationMenu(conn)
 	for {
 		response := <-ch
 		window.DispatchResponse(response, conn)
@@ -96,25 +99,6 @@ func main() {
 				fmt.Println("Waiting for", v.ID, v.Action, v.Method)
 			}
 		}
-		if menu.Ready == true &&
-			fileMenu.Ready &&
-			fileMenu.Parent != &menu &&
-			len(fileMenu.WaitingResponses) == 0 {
-			//fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
-			//menu.AddSubmenu(1, "File", &fileMenu, conn)
-		}
-		if menu.Ready == true &&
-			fileMenu.Ready &&
-			fileMenu.Parent == &menu &&
-			len(fileMenu.WaitingResponses) == 0 &&
-			menu.Displayed == false {
-			menu.SetApplicationMenu(conn)
-		}
-
-		// if window.Ready && window.Displayed == false {
-		// 	fmt.Println("Window Ready")
-		// 	window.Show(conn)
-		// }
 
 	}
 
