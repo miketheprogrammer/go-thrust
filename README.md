@@ -97,6 +97,7 @@ Please note Complete Support will never be toggled until Thrust core is stable.
 - [X] Refactor how Dispatching occurs
   - [X] We should not have to manually dispatch, there should be a registration method 
 
+- [ ] Refactor menu.SetChecked to accept a nillable menu item pointer, so we dont have to waste resources finding the item in the Tree
 
 This thrust client exposes enough Methods to be fairly forwards compatible even without adding new helper methods. The beauty of working with a stable JSON RPC Protocol is that most methods are just helpers around build that data structure.
 
