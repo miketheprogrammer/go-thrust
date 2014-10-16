@@ -26,19 +26,25 @@ Get Chromium DepotTools from here
 http://www.chromium.org/developers/how-tos/install-depot-tools
 Make sure to follow instructions for setting path.
 
+
 Clone Thrust Core from here
 https://github.com/breach/thrust/
 
 From the thrust core directory run 
 First run the boostrap script:
-
+```bash
 ./scripts/bootstrap.py 
+```
 Then generate build files with:
 
+```bash
 GYP_GENERATORS=ninja gyp --depth . thrust_shell.gyp
+```
 Finally run ninja:
 
+```bash
 ninja -C out/Debug thrust_shell
+```
 
 Now you can run thrust 
 I run it on OSX with the command
@@ -48,9 +54,10 @@ I run it on OSX with the command
 From here down only works while I have  func main in the repo which will be removed soon
 Now back in the thrust-go directory
 
+```bash
 go build -o thrust src/main.go
-
 ./thrust -socket={socketaddrusedinstartingthrusthere}
+```
 
 
 Todo:
