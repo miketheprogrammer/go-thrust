@@ -49,7 +49,7 @@ type Menu struct {
 	CommandQueue     []*Command  `json:"command_queue,omitempty"`
 	Conn             net.Conn    `json:"-"`
 	Ready            bool        `json:"ready"`
-	Displayed        bool        `json:""displayed`
+	Displayed        bool        `json:"displayed"`
 	Parent           *Menu       `json:"-"`
 	Children         []*Menu     `json:"-"`
 	Items            []*MenuItem `json:"items,omitempty"`
