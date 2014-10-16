@@ -65,7 +65,7 @@ go build -o thrust src/main.go
 Todo:
 ================
 
-- [ ] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
+- [X] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
 - [ ] Remove overuse of pointers in structs where modification will not take place
 - [ ] Add Window Support
   - [X] Basic Support
