@@ -2,6 +2,7 @@ package window
 
 import (
 	"fmt"
+	"time"
 
 	. "github.com/miketheprogrammer/thrust-go/commands"
 	"github.com/miketheprogrammer/thrust-go/connection"
@@ -38,6 +39,7 @@ func (w *Window) Create(sendChannel *connection.In) {
 		},
 	}
 	w.SetSendChannel(sendChannel)
+	w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
 	w.Send(&windowCreate)
 }
 
@@ -107,7 +109,7 @@ func (w *Window) DispatchResponse(reply CommandResponse) {
 
 }
 func (w *Window) Send(command *Command) {
-	w.WaitingResponses = append(w.WaitingResponses, command)
+
 	w.SendChannel.Commands <- command
 }
 
@@ -121,10 +123,64 @@ func (w *Window) Call(command *Command) {
 	w.Send(command)
 }
 
+func (w *Window) CallWhenReady(command *Command) {
+	w.WaitingResponses = append(w.WaitingResponses, command)
+	go func() {
+		for {
+			if w.Ready {
+				w.Call(command)
+				return
+			}
+			time.Sleep(time.Microsecond * 100)
+		}
+	}()
+}
+
+func (w *Window) CallWhenDisplayed(command *Command) {
+	w.WaitingResponses = append(w.WaitingResponses, command)
+	go func() {
+		for {
+			if w.Displayed {
+				w.Call(command)
+				return
+			}
+			time.Sleep(time.Microsecond * 100)
+		}
+	}()
+}
+
 func (w *Window) Show() {
 	command := Command{
 		Method: "show",
 	}
 
-	w.Call(&command)
+	w.CallWhenReady(&command)
+}
+
+func (w *Window) Maximize() {
+	command := Command{
+		Method: "maximize",
+	}
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) UnMaximize() {
+	command := Command{
+		Method: "unmaximize",
+	}
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) Minimize() {
+	command := Command{
+		Method: "minmize",
+	}
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) Restore() {
+	command := Command{
+		Method: "restore",
+	}
+	w.CallWhenDisplayed(&command)
 }

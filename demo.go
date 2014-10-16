@@ -6,7 +6,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/miketheprogrammer/thrust-go/commands"
 	"github.com/miketheprogrammer/thrust-go/connection"
+	"github.com/miketheprogrammer/thrust-go/dispatcher"
 	"github.com/miketheprogrammer/thrust-go/menu"
 	"github.com/miketheprogrammer/thrust-go/spawn"
 	"github.com/miketheprogrammer/thrust-go/window"
@@ -68,11 +70,22 @@ func main() {
 	rootMenu.AddSubmenu(1, "File", &fileMenu)
 
 	rootMenu.SetApplicationMenu()
+
+	thrustWindow.Maximize()
+
+	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
+		thrustWindow.DispatchResponse(c)
+	})
+
+	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
+		rootMenu.DispatchResponse(c)
+	})
 	for {
 		select {
 		case response := <-out.CommandResponses:
-			thrustWindow.DispatchResponse(response)
-			rootMenu.DispatchResponse(response)
+			//thrustWindow.DispatchResponse(response)
+			//rootMenu.DispatchResponse(response)
+			dispatcher.Dispatch(response)
 			if len(fileMenu.WaitingResponses) > 0 {
 				for _, v := range fileMenu.WaitingResponses {
 					fmt.Println("Waiting for", v.ID, v.Action, v.Method)

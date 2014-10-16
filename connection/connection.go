@@ -93,7 +93,7 @@ func Reader(out *Out, in *In) {
 			}
 			fmt.Print("SOCKET::Line", line)
 		}
-		time.Sleep(time.Millisecond)
+		time.Sleep(time.Microsecond * 100)
 
 	}
 
@@ -114,6 +114,6 @@ func Writer(out *Out, in *In) {
 			conn.Write([]byte("\n"))
 			conn.Write([]byte(SOCKET_BOUNDARY))
 		}
-		time.Sleep(time.Millisecond)
+		time.Sleep(time.Microsecond * 100)
 	}
 }

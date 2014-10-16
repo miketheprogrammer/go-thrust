@@ -64,6 +64,7 @@ go build -o thrust src/main.go
 
 Todo:
 ================
+Please note Complete Support will never be toggled until Thrust core is stable.
 
 - [X] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
 - [ ] Remove overuse of pointers in structs where modification will not take place
@@ -90,8 +91,11 @@ Todo:
   - [X] Package Commands
   - [X] Package Spawn
 
-- [ ] - Remove func Main as this is a Library
+- [ ] Remove func Main as this is a Library
   - [ ] Should use Tests instead
+
+- [X] Refactor how Dispatching occurs
+  - [X] We should not have to manually dispatch, there should be a registration method 
 
 
 This thrust client exposes enough Methods to be fairly forwards compatible even without adding new helper methods. The beauty of working with a stable JSON RPC Protocol is that most methods are just helpers around build that data structure.
