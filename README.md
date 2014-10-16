@@ -48,7 +48,9 @@ ninja -C out/Debug thrust_shell
 
 Now you can run thrust 
 I run it on OSX with the command
+```bash
  ./out/Debug/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path={somepathhere}
+```
 
 
 From here down only works while I have  func main in the repo which will be removed soon
