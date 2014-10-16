@@ -12,11 +12,11 @@ Start thrust using
 thrust.sock
 # This is no longer needed, Thrust-go will detect darwin as your runtime, and try to spawn this binary.
 # if that does not work run the aformentioned binary and then run thrust with
-# go run src/main.go -socket=/tmp/thrust.sock -disable-auto-loader=true
+# go run demo.go -socket=/tmp/thrust.sock -disable-auto-loader=true
 ```
 Start Thrust Go using
 ```bash
-go run src/main.go -socket=/tmp/thrust.sock
+go run demo.go -socket=/tmp/thrust.sock
 ```
 
 

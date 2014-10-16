@@ -1,0 +1,542 @@
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/miketheprogrammer/thrust-go/menu"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#Item">type Item</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Menu">type Menu</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.AddCheckItem">func (menu *Menu) AddCheckItem(commandID int, label string, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.AddItem">func (menu *Menu) AddItem(commandID int, label string, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.AddRadioItem">func (menu *Menu) AddRadioItem(commandID int, label string, groupID int, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.AddSeparator">func (menu *Menu) AddSeparator(conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.AddSubmenu">func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.Call">func (menu *Menu) Call(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.CallWhenChildStable">func (menu *Menu) CallWhenChildStable(command *Command, child *Menu, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.CallWhenDisplayed">func (menu *Menu) CallWhenDisplayed(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.CallWhenReady">func (menu *Menu) CallWhenReady(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.CallWhenTreeStable">func (menu *Menu) CallWhenTreeStable(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.Create">func (menu *Menu) Create(conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.DispatchResponse">func (menu *Menu) DispatchResponse(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.HandleError">func (menu *Menu) HandleError(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.HandleEvent">func (menu *Menu) HandleEvent(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.HandleReply">func (menu *Menu) HandleReply(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.IsStable">func (menu *Menu) IsStable() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.IsTarget">func (menu *Menu) IsTarget(targetId int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.IsTreeStable">func (menu *Menu) IsTreeStable() bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.ItemAtCommandID">func (menu *Menu) ItemAtCommandID(commandID int) *MenuItem</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.Send">func (menu *Menu) Send(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.SetApplicationMenu">func (menu *Menu) SetApplicationMenu(conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.SetChecked">func (menu *Menu) SetChecked(commandID int, checked bool, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Menu.SetEnabled">func (menu *Menu) SetEnabled(commandID int, enabled bool, conn net.Conn)</a></dd>
+				
+			
+				
+				<dd><a href="#MenuItem">type MenuItem</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#MenuItem.HandleEvent">func (mi MenuItem) HandleEvent(conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#MenuItem.IsCommandId">func (mi MenuItem) IsCommandId(commandID int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#MenuItem.IsSubMenu">func (mi MenuItem) IsSubMenu() bool</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/miketheprogrammer/thrust-go/menu/menu.go">menu.go</a>
+			
+				<a href="/src/github.com/miketheprogrammer/thrust-go/menu/menuitem.go">menuitem.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Item">type <a href="/src/target/menuitem.go?s=40:111#L1">Item</a></h2>
+			<pre>type Item interface {
+    IsSubMenu() <a href="/pkg/builtin/#bool">bool</a>
+    IsCommandId() <a href="/pkg/builtin/#bool">bool</a>
+    Handle()
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Menu">type <a href="/src/target/menu.go?s=181:719#L4">Menu</a></h2>
+			<pre>type Menu struct {
+    TargetID         <a href="/pkg/builtin/#int">int</a>         `json:&#34;target_id,omitempty&#34;`
+    WaitingResponses []*<a href="#Command">Command</a>  `json:&#34;awaiting_responses,omitempty&#34;`
+    CommandQueue     []*<a href="#Command">Command</a>  `json:&#34;command_queue,omitempty&#34;`
+    Conn             <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>    `json:&#34;-&#34;`
+    Ready            <a href="/pkg/builtin/#bool">bool</a>        `json:&#34;ready&#34;`
+    Displayed        <a href="/pkg/builtin/#bool">bool</a>        `json:&#34;displayed&#34;`
+    Parent           *<a href="#Menu">Menu</a>       `json:&#34;-&#34;`
+    Children         []*<a href="#Menu">Menu</a>     `json:&#34;-&#34;`
+    Items            []*<a href="#MenuItem">MenuItem</a> `json:&#34;items,omitempty&#34;`
+    EventRegistry    []<a href="/pkg/builtin/#int">int</a>       `json:&#34;events,omitempty&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Menu.AddCheckItem">func (*Menu) <a href="/src/target/menu.go?s=5530:5604#L214">AddCheckItem</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) AddCheckItem(commandID <a href="/pkg/builtin/#int">int</a>, label <a href="/pkg/builtin/#string">string</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Add a CheckItem to both the internal representation of menu and the external representation of menu
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.AddItem">func (*Menu) <a href="/src/target/menu.go?s=5035:5104#L192">AddItem</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) AddItem(commandID <a href="/pkg/builtin/#int">int</a>, label <a href="/pkg/builtin/#string">string</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Add a MenuItem to both the internal representation of menu and the external representation of menu
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.AddRadioItem">func (*Menu) <a href="/src/target/menu.go?s=6036:6123#L235">AddRadioItem</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) AddRadioItem(commandID <a href="/pkg/builtin/#int">int</a>, label <a href="/pkg/builtin/#string">string</a>, groupID <a href="/pkg/builtin/#int">int</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Add a RadioItem to both the internal representation of menu and the external representation of menu
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.AddSeparator">func (*Menu) <a href="/src/target/menu.go?s=8003:8048#L321">AddSeparator</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) AddSeparator(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Add a Seperator to both the internal representation of menu and the external representation of menu
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.AddSubmenu">func (*Menu) <a href="/src/target/menu.go?s=6598:6683#L258">AddSubmenu</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) AddSubmenu(commandID <a href="/pkg/builtin/#int">int</a>, label <a href="/pkg/builtin/#string">string</a>, child *<a href="#Menu">Menu</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Add a SubMenu to both the internal representation of menu and the external representation of menu
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.Call">func (*Menu) <a href="/src/target/menu.go?s=3514:3569#L124">Call</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) Call(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.CallWhenChildStable">func (*Menu) <a href="/src/target/menu.go?s=4016:4099#L148">CallWhenChildStable</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) CallWhenChildStable(command *<a href="#Command">Command</a>, child *<a href="#Menu">Menu</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.CallWhenDisplayed">func (*Menu) <a href="/src/target/menu.go?s=4659:4727#L176">CallWhenDisplayed</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) CallWhenDisplayed(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.CallWhenReady">func (*Menu) <a href="/src/target/menu.go?s=3756:3820#L135">CallWhenReady</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) CallWhenReady(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.CallWhenTreeStable">func (*Menu) <a href="/src/target/menu.go?s=4342:4411#L162">CallWhenTreeStable</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) CallWhenTreeStable(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.Create">func (*Menu) <a href="/src/target/menu.go?s=721:760#L17">Create</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) Create(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.DispatchResponse">func (*Menu) <a href="/src/target/menu.go?s=2828:2900#L94">DispatchResponse</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) DispatchResponse(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.HandleError">func (*Menu) <a href="/src/target/menu.go?s=1021:1088#L29">HandleError</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) HandleError(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.HandleEvent">func (*Menu) <a href="/src/target/menu.go?s=1095:1162#L33">HandleEvent</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) HandleEvent(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.HandleReply">func (*Menu) <a href="/src/target/menu.go?s=1453:1520#L44">HandleReply</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) HandleReply(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.IsStable">func (*Menu) <a href="/src/target/menu.go?s=8740:8773#L355">IsStable</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) IsStable() <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+A menu is stable if and only if, it is Ready (meaning it was created successfully)
+and it has no Commands awaiting Responses.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.IsTarget">func (*Menu) <a href="/src/target/menu.go?s=937:982#L26">IsTarget</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) IsTarget(targetId <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.IsTreeStable">func (*Menu) <a href="/src/target/menu.go?s=8991:9028#L363">IsTreeStable</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) IsTreeStable() <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+A Menu Tree is considered stable if and only if its children nodes report that they are stable.
+Function is recursive, so factor that in to performance
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.ItemAtCommandID">func (*Menu) <a href="/src/target/menu.go?s=9397:9455#L384">ItemAtCommandID</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) ItemAtCommandID(commandID <a href="/pkg/builtin/#int">int</a>) *<a href="#MenuItem">MenuItem</a></pre>
+				<p>
+Recursively searches the Menu Tree for an item with the commandID
+Returns the first found match.
+A proper menu should not reuse commandID&#39;s
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.Send">func (*Menu) <a href="/src/target/menu.go?s=3217:3272#L110">Send</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) Send(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Menu.SetApplicationMenu">func (*Menu) <a href="/src/target/menu.go?s=8310:8361#L336">SetApplicationMenu</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) SetApplicationMenu(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+On Darwin systems, Set the application menu in the UI
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.SetChecked">func (*Menu) <a href="/src/target/menu.go?s=7156:7228#L283">SetChecked</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) SetChecked(commandID <a href="/pkg/builtin/#int">int</a>, checked <a href="/pkg/builtin/#bool">bool</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Checks or Unchecks a CheckItem in the UI
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Menu.SetEnabled">func (*Menu) <a href="/src/target/menu.go?s=7547:7619#L301">SetEnabled</a></h3>
+				<pre>func (menu *<a href="#Menu">Menu</a>) SetEnabled(commandID <a href="/pkg/builtin/#int">int</a>, enabled <a href="/pkg/builtin/#bool">bool</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<p>
+Enables or Disables an item in the UI
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MenuItem">type <a href="/src/target/menuitem.go?s=113:460#L4">MenuItem</a></h2>
+			<pre>type MenuItem struct {
+    CommandID <a href="/pkg/builtin/#int">int</a>    `json:&#34;command_id,omitempty&#34;`
+    Label     <a href="/pkg/builtin/#string">string</a> `json:&#34;label,omitempty&#34;`
+    GroupID   <a href="/pkg/builtin/#int">int</a>    `json:&#34;group_id,omitempty&#34;`
+    SubMenu   *<a href="#Menu">Menu</a>  `json:&#34;submenu,omitempty&#34;`
+    Type      <a href="/pkg/builtin/#string">string</a> `json:&#34;type,omitempty&#34;`
+    Checked   <a href="/pkg/builtin/#bool">bool</a>   `json:&#34;checked&#34;`
+    Enabled   <a href="/pkg/builtin/#bool">bool</a>   `json:&#34;enabled&#34;`
+    Parent    *<a href="#Menu">Menu</a>  `json:&#34;-&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="MenuItem.HandleEvent">func (MenuItem) <a href="/src/target/menuitem.go?s=619:664#L23">HandleEvent</a></h3>
+				<pre>func (mi <a href="#MenuItem">MenuItem</a>) HandleEvent(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MenuItem.IsCommandId">func (MenuItem) <a href="/src/target/menuitem.go?s=529:579#L19">IsCommandId</a></h3>
+				<pre>func (mi <a href="#MenuItem">MenuItem</a>) IsCommandId(commandID <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MenuItem.IsSubMenu">func (MenuItem) <a href="/src/target/menuitem.go?s=462:497#L15">IsSubMenu</a></h3>
+				<pre>func (mi <a href="#MenuItem">MenuItem</a>) IsSubMenu() <a href="/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+

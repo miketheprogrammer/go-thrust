@@ -1,0 +1,257 @@
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/miketheprogrammer/thrust-go/window"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#Window">type Window</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Call">func (w *Window) Call(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Create">func (w *Window) Create(conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.DispatchResponse">func (w *Window) DispatchResponse(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.HandleError">func (w *Window) HandleError(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.HandleEvent">func (w *Window) HandleEvent(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.HandleReply">func (w *Window) HandleReply(reply CommandResponse, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.IsTarget">func (w *Window) IsTarget(targetId int) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Send">func (w *Window) Send(command *Command, conn net.Conn)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Show">func (w *Window) Show(conn net.Conn)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/miketheprogrammer/thrust-go/window/window.go">window.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="Window">type <a href="/src/target/window.go?s=164:455#L2">Window</a></h2>
+			<pre>type Window struct {
+    TargetID         <a href="/pkg/builtin/#int">int</a>
+    CommandHistory   []*<a href="#Command">Command</a>
+    ResponseHistory  []*<a href="#CommandResponse">CommandResponse</a>
+    WaitingResponses []*<a href="#Command">Command</a>
+    CommandQueue     []*<a href="#Command">Command</a>
+    Url              <a href="/pkg/builtin/#string">string</a>
+    Title            <a href="/pkg/builtin/#string">string</a>
+    Conn             <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>
+    Ready            <a href="/pkg/builtin/#bool">bool</a>
+    Displayed        <a href="/pkg/builtin/#bool">bool</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Window.Call">func (*Window) <a href="/src/target/window.go?s=2626:2680#L111">Call</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Call(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Create">func (*Window) <a href="/src/target/window.go?s=457:495#L15">Create</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Create(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.DispatchResponse">func (*Window) <a href="/src/target/window.go?s=2079:2150#L86">DispatchResponse</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) DispatchResponse(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.HandleError">func (*Window) <a href="/src/target/window.go?s=884:950#L38">HandleError</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) HandleError(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.HandleEvent">func (*Window) <a href="/src/target/window.go?s=957:1023#L42">HandleEvent</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) HandleEvent(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.HandleReply">func (*Window) <a href="/src/target/window.go?s=1030:1096#L46">HandleReply</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) HandleReply(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.IsTarget">func (*Window) <a href="/src/target/window.go?s=804:848#L35">IsTarget</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) IsTarget(targetId <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Send">func (*Window) <a href="/src/target/window.go?s=2270:2324#L95">Send</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Send(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Show">func (*Window) <a href="/src/target/window.go?s=2852:2888#L122">Show</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Show(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
