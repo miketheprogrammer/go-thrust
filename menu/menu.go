@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	. "github.com/miketheprogrammer/thrust-go/src/commands"
-	. "github.com/miketheprogrammer/thrust-go/src/common"
+	. "github.com/miketheprogrammer/thrust-go/commands"
+	. "github.com/miketheprogrammer/thrust-go/common"
 )
 
 type Menu struct {
@@ -348,7 +348,6 @@ func (menu *Menu) IsTreeStable() bool {
 	if !menu.IsStable() {
 		return false
 	}
-
 	for _, child := range menu.Items {
 		//fmt.Println("Checking child")
 		if child.IsSubMenu() {
@@ -359,4 +358,19 @@ func (menu *Menu) IsTreeStable() bool {
 	}
 
 	return true
+}
+
+func (menu *Menu) ItemAtCommandID(commandID int) *MenuItem {
+	for _, item := range menu.Items {
+		if item.IsCommandId(commandID) {
+			return item
+		}
+		if item.IsSubMenu() {
+			result := item.SubMenu.ItemAtCommandID(commandID)
+			if result != nil {
+				return result
+			}
+		}
+	}
+	return nil
 }

@@ -2,18 +2,21 @@ package main
 
 import (
 	"bufio"
+	"commands"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"net"
 	"os"
+	"spawn"
 	"strings"
+	"window"
 
-	. "github.com/miketheprogrammer/thrust-go/src/commands"
-	. "github.com/miketheprogrammer/thrust-go/src/common"
-	. "github.com/miketheprogrammer/thrust-go/src/menu"
-	. "github.com/miketheprogrammer/thrust-go/src/spawn"
-	. "github.com/miketheprogrammer/thrust-go/src/window"
+	"github.com/miketheprogrammer/thrust-go/commands"
+	. "github.com/miketheprogrammer/thrust-go/common"
+	"github.com/miketheprogrammer/thrust-go/menu"
+	"github.com/miketheprogrammer/thrust-go/spawn"
+	"github.com/miketheprogrammer/thrust-go/window"
 )
 
 /*
@@ -49,7 +52,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	SpawnThrustCore(*addr, *autoloaderDisabled)
+	spawn.SpawnThrustCore(*addr, *autoloaderDisabled)
 	conn, err := net.Dial("unix", *addr)
 
 	defer conn.Close()
@@ -58,22 +61,23 @@ func main() {
 		os.Exit(2)
 	}
 	r := bufio.NewReader(conn)
-	ch := make(chan CommandResponse)
+	ch := make(chan commands.CommandResponse)
 
 	go reader(r, ch)
 
-	window := Window{
+	thrustWindow := window.Window{
 		Conn: conn,
 	}
-	menu := Menu{}
-	fileMenu := Menu{}
-	checkList := Menu{}
+	rootMenu = menu.Menu{}
+	fileMenu := menu.Menu{}
+	checkList := menu.Menu{}
+	//radioList := Menu{}
 	// Calls to other methods after create are Queued until Create returns
-	window.Create(conn)
-	window.Show(conn)
+	thrustWindow.Create(conn)
+	thrustWindow.Show(conn)
 
-	menu.Create(conn)
-	menu.AddItem(2, "Root", conn)
+	rootMenu.Create(conn)
+	rootMenu.AddItem(2, "Root", conn)
 
 	fileMenu.Create(conn)
 	fileMenu.AddItem(3, "Open", conn)
@@ -89,13 +93,14 @@ func main() {
 	checkList.SetEnabled(6, false, conn)
 
 	fileMenu.AddSubmenu(7, "CheckList", &checkList, conn)
-	menu.AddSubmenu(1, "File", &fileMenu, conn)
+	rootMenu.AddSubmenu(1, "File", &fileMenu, conn)
 
-	menu.SetApplicationMenu(conn)
+	rootMenu.SetApplicationMenu(conn)
+
 	for {
 		response := <-ch
-		window.DispatchResponse(response, conn)
-		menu.DispatchResponse(response, conn)
+		thrustWindow.DispatchResponse(response, conn)
+		rootMenu.DispatchResponse(response, conn)
 		if len(fileMenu.WaitingResponses) > 0 {
 			for _, v := range fileMenu.WaitingResponses {
 				fmt.Println("Waiting for", v.ID, v.Action, v.Method)

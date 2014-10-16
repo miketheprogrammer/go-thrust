@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net"
 
-	. "github.com/miketheprogrammer/thrust-go/src/commands"
-	. "github.com/miketheprogrammer/thrust-go/src/common"
+	. "github.com/miketheprogrammer/thrust-go/commands"
+	. "github.com/miketheprogrammer/thrust-go/common"
 )
 
 type Window struct {
