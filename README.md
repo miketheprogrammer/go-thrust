@@ -102,7 +102,7 @@ i.e. insert_item_at == InsertItemAt
 
 
 
-Extra Notes
+Extra Notes (This section quickly gets outdated, ill try to keep it updated, but it really just for reference)
 ================
 Example Menu State @ during set_application_menu
 
