@@ -2,7 +2,6 @@ package menu
 
 import (
 	"fmt"
-	"net"
 	"runtime"
 	"time"
 
@@ -14,7 +13,6 @@ type Menu struct {
 	TargetID         int            `json:"target_id,omitempty"`
 	WaitingResponses []*Command     `json:"awaiting_responses,omitempty"`
 	CommandQueue     []*Command     `json:"command_queue,omitempty"`
-	Conn             net.Conn       `json:"-"`
 	Ready            bool           `json:"ready"`
 	Displayed        bool           `json:"displayed"`
 	Parent           *Menu          `json:"-"`
@@ -159,7 +157,7 @@ func (menu *Menu) CallWhenChildStable(command *Command, child *Menu) {
 				menu.Call(command)
 				return
 			}
-			time.Sleep(time.Millisecond)
+			time.Sleep(time.Microsecond * 100)
 		}
 	}()
 }
@@ -173,7 +171,7 @@ func (menu *Menu) CallWhenTreeStable(command *Command) {
 				menu.Call(command)
 				return
 			}
-			time.Sleep(time.Millisecond)
+			time.Sleep(time.Microsecond * 100)
 		}
 	}()
 }
@@ -186,7 +184,7 @@ func (menu *Menu) CallWhenDisplayed(command *Command) {
 				menu.Call(command)
 				return
 			}
-			time.Sleep(time.Millisecond)
+			time.Sleep(time.Microsecond * 100)
 		}
 	}()
 }
@@ -300,6 +298,29 @@ func (menu *Menu) SetChecked(commandID int, checked bool) {
 		}
 	}
 	menu.CallWhenDisplayed(&command)
+}
+
+/*
+ Checks or Unchecks a CheckItem in the UI
+*/
+func (menu *Menu) ToggleRadio(commandID, groupID int, checked bool) {
+	for _, item := range menu.RadioGroupAtGroupID(groupID) {
+		command := Command{
+			Method: "set_checked",
+			Args: CommandArguments{
+				CommandID: item.CommandID,
+				Value:     checked,
+			},
+		}
+		if item.IsCommandID(commandID) {
+			item.Checked = checked
+		} else {
+			item.Checked = false
+			command.Args.Value = false
+		}
+		menu.CallWhenDisplayed(&command)
+	}
+
 }
 
 // Enables or Disables an item in the UI

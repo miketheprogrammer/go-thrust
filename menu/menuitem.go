@@ -46,5 +46,9 @@ func (mi MenuItem) HandleEvent() {
 	case "check":
 		fmt.Println("Toggling Checked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
 		mi.Parent.SetChecked(mi.CommandID, !mi.Checked)
+	case "radio":
+		fmt.Println("Toggling RadioChecked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
+		mi.Parent.ToggleRadio(mi.CommandID, mi.GroupID, !mi.Checked)
 	}
+
 }
