@@ -141,6 +141,60 @@ func (menu *Menu) Call(command *Command, conn net.Conn) {
 	menu.Send(command, conn)
 }
 
+func (menu *Menu) CallWhenReady(command *Command, conn net.Conn) {
+	menu.WaitingResponses = append(menu.WaitingResponses, command)
+	go func() {
+		for {
+			if menu.Ready {
+				menu.Call(command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
+}
+
+func (menu *Menu) CallWhenChildStable(command *Command, child *Menu, conn net.Conn) {
+	menu.WaitingResponses = append(menu.WaitingResponses, command)
+	go func() {
+		for {
+			if child.IsStable() {
+				command.Args.MenuID = child.TargetID
+				menu.Call(command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
+}
+
+func (menu *Menu) CallWhenTreeStable(command *Command, conn net.Conn) {
+	go func() {
+		for {
+			if menu.IsTreeStable() {
+				command.Args.MenuID = menu.TargetID
+				menu.WaitingResponses = append(menu.WaitingResponses, command)
+				menu.Call(command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
+}
+
+func (menu *Menu) CallWhenDisplayed(command *Command, conn net.Conn) {
+	go func() {
+		for {
+			if menu.Displayed {
+				menu.WaitingResponses = append(menu.WaitingResponses, command)
+				menu.Call(command, conn)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}()
+}
+
 func (menu *Menu) AddItem(commandID int, label string, conn net.Conn) {
 	command := Command{
 		Method: "add_item",
@@ -157,7 +211,7 @@ func (menu *Menu) AddItem(commandID int, label string, conn net.Conn) {
 	}
 	menu.Items = append(menu.Items, &menuItem)
 
-	menu.SafeCall(&command, conn)
+	menu.CallWhenReady(&command, conn)
 }
 
 func (menu *Menu) AddCheckItem(commandID int, label string, conn net.Conn) {
@@ -175,7 +229,7 @@ func (menu *Menu) AddCheckItem(commandID int, label string, conn net.Conn) {
 		Parent:    menu,
 	}
 	menu.Items = append(menu.Items, &menuItem)
-	menu.SafeCall(&command, conn)
+	menu.CallWhenReady(&command, conn)
 }
 
 func (menu *Menu) AddRadioItem(commandID int, label string, groupID int, conn net.Conn) {
@@ -195,51 +249,7 @@ func (menu *Menu) AddRadioItem(commandID int, label string, groupID int, conn ne
 		Type:      "radio",
 	}
 	menu.Items = append(menu.Items, &menuItem)
-	menu.SafeCall(&command, conn)
-}
-
-func (menu *Menu) SetChecked(commandID int, checked bool, asEvent bool, conn net.Conn) {
-	command := Command{
-		Method: "set_checked",
-		Args: CommandArguments{
-			CommandID: commandID,
-			Checked:   checked,
-		},
-	}
-
-	for _, item := range menu.Items {
-		if item.IsCommandId(commandID) {
-			item.Checked = checked
-		}
-	}
-	//if asEvent == false {
-	go func() {
-		for {
-			fmt.Println("IsDisplayed", menu.Displayed)
-
-			if menu.Displayed {
-				menu.WaitingResponses = append(menu.WaitingResponses, &command)
-				menu.Call(&command, conn)
-				return
-			}
-			time.Sleep(time.Millisecond * 1000)
-		}
-	}()
-	//}
-
-}
-
-func (menu *Menu) SafeCall(command *Command, conn net.Conn) {
-	menu.WaitingResponses = append(menu.WaitingResponses, command)
-	go func() {
-		for {
-			if menu.Ready {
-				menu.Call(command, conn)
-				return
-			}
-			time.Sleep(time.Millisecond)
-		}
-	}()
+	menu.CallWhenReady(&command, conn)
 }
 
 func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.Conn) {
@@ -260,17 +270,27 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 		Parent:    menu,
 	}
 	menu.Items = append(menu.Items, &menuItem)
-	menu.WaitingResponses = append(menu.WaitingResponses, &command)
-	go func() {
-		for {
-			if child.IsStable() {
-				command.Args.MenuID = child.TargetID
-				menu.Call(&command, conn)
-				return
-			}
-			time.Sleep(time.Millisecond)
+
+	menu.CallWhenChildStable(&command, child, conn)
+}
+
+func (menu *Menu) SetChecked(commandID int, checked bool, asEvent bool, conn net.Conn) {
+	command := Command{
+		Method: "set_checked",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Checked:   checked,
+		},
+	}
+
+	for _, item := range menu.Items {
+		if item.IsCommandId(commandID) {
+			item.Checked = checked
 		}
-	}()
+	}
+	//if asEvent == false {
+	menu.CallWhenDisplayed(&command, conn)
+	//}
 }
 
 func (menu *Menu) AddSeparator(conn net.Conn) {
@@ -282,7 +302,7 @@ func (menu *Menu) AddSeparator(conn net.Conn) {
 		Parent: menu,
 	}
 	menu.Items = append(menu.Items, &menuItem)
-	menu.SafeCall(&command, conn)
+	menu.CallWhenReady(&command, conn)
 }
 
 func (menu *Menu) SetApplicationMenu(conn net.Conn) {
@@ -294,18 +314,7 @@ func (menu *Menu) SetApplicationMenu(conn net.Conn) {
 	}
 
 	// Thread to wait for Stable Menu State
-	go func() {
-		for {
-			if menu.IsTreeStable() {
-				command.Args.MenuID = menu.TargetID
-				menu.WaitingResponses = append(menu.WaitingResponses, &command)
-				menu.Call(&command, conn)
-				return
-			}
-			time.Sleep(time.Millisecond)
-		}
-	}()
-
+	menu.CallWhenTreeStable(&command, conn)
 }
 
 /*
