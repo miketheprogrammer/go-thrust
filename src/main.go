@@ -64,7 +64,7 @@ func main() {
 	}
 	menu := Menu{}
 	fileMenu := Menu{}
-	otherSub := Menu{}
+	checkList := Menu{}
 	// Calls to other methods after create are Queued until Create returns
 	window.Create(conn)
 	window.Show(conn)
@@ -77,13 +77,14 @@ func main() {
 	fileMenu.AddItem(4, "Close", conn)
 	fileMenu.AddSeparator(conn)
 
-	otherSub.Create(conn)
-	otherSub.AddCheckItem(5, "Do 1", conn)
-	otherSub.SetChecked(5, true, false, conn)
-	otherSub.AddSeparator(conn)
-	otherSub.AddItem(6, "Do 2", conn)
+	checkList.Create(conn)
+	checkList.AddCheckItem(5, "Do 1", conn)
+	checkList.SetChecked(5, true, false, conn)
+	checkList.AddSeparator(conn)
+	checkList.AddCheckItem(6, "Do 2", conn)
+	checkList.SetChecked(6, true, false, conn)
 
-	fileMenu.AddSubmenu(7, "otherSub", &otherSub, conn)
+	fileMenu.AddSubmenu(7, "CheckList", &checkList, conn)
 	menu.AddSubmenu(1, "File", &fileMenu, conn)
 
 	menu.SetApplicationMenu(conn)

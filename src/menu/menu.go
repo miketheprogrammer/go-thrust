@@ -21,6 +21,9 @@ type MenuItem struct {
 	Label     string `json:"label,omitempty"`
 	GroupID   int    `json:"group_id,omitempty"`
 	SubMenu   *Menu  `json:"submenu,omitempty"`
+	Type      string `json:"type,omitempty"`
+	Checked   bool   `json:"checked,omitempty"`
+	Parent    *Menu  `json:"-"`
 }
 
 func (mi MenuItem) IsSubMenu() bool {
@@ -31,17 +34,26 @@ func (mi MenuItem) IsCommandId(commandID int) bool {
 	return mi.CommandID == commandID
 }
 
+func (mi MenuItem) HandleEvent(conn net.Conn) {
+	fmt.Println("EventType", mi.Type)
+	switch mi.Type {
+	case "check":
+		fmt.Println("Toggling Checked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
+		mi.Parent.SetChecked(mi.CommandID, !mi.Checked, false, conn)
+	}
+}
+
 type Menu struct {
-	TargetID         int        `json:"target_id,omitempty"`
-	WaitingResponses []*Command `json:"awaiting_responses,omitempty"`
-	CommandQueue     []*Command `json:"command_queue,omitempty"`
-	Conn             net.Conn   `json:"-"`
-	Ready            bool       `json:"ready"`
-	Displayed        bool       `json:""displayed`
-	Parent           *Menu      `json:"-"`
-	Children         []*Menu    `json:"-"`
-	Items            []MenuItem `json:"items,omitempty"`
-	EventRegistry    []int      `json:"events,omitempty"`
+	TargetID         int         `json:"target_id,omitempty"`
+	WaitingResponses []*Command  `json:"awaiting_responses,omitempty"`
+	CommandQueue     []*Command  `json:"command_queue,omitempty"`
+	Conn             net.Conn    `json:"-"`
+	Ready            bool        `json:"ready"`
+	Displayed        bool        `json:""displayed`
+	Parent           *Menu       `json:"-"`
+	Children         []*Menu     `json:"-"`
+	Items            []*MenuItem `json:"items,omitempty"`
+	EventRegistry    []int       `json:"events,omitempty"`
 }
 
 func (menu *Menu) Create(conn net.Conn) {
@@ -62,8 +74,11 @@ func (menu *Menu) HandleError(reply CommandResponse, conn net.Conn) {
 
 func (menu *Menu) HandleEvent(reply CommandResponse, conn net.Conn) {
 	for _, item := range menu.Items {
+		fmt.Println("Looking for item to handle event")
 		if reply.Event.CommandID == item.CommandID {
-			fmt.Println("Event", item.CommandID, "Handled With Flags", reply.Event.EventFlags)
+			fmt.Println("Event", item.CommandID, "Handled With Flags", reply.Event.EventFlags, "With Type", item.Type)
+			item.HandleEvent(conn)
+			return
 		}
 	}
 }
@@ -170,8 +185,10 @@ func (menu *Menu) AddItem(commandID int, label string, conn net.Conn) {
 	menuItem := MenuItem{
 		CommandID: commandID,
 		Label:     label,
+		Parent:    menu,
+		Type:      "item",
 	}
-	menu.Items = append(menu.Items, menuItem)
+	menu.Items = append(menu.Items, &menuItem)
 
 	menu.SafeCall(&command, conn)
 }
@@ -187,8 +204,10 @@ func (menu *Menu) AddCheckItem(commandID int, label string, conn net.Conn) {
 	menuItem := MenuItem{
 		CommandID: commandID,
 		Label:     label,
+		Type:      "check",
+		Parent:    menu,
 	}
-	menu.Items = append(menu.Items, menuItem)
+	menu.Items = append(menu.Items, &menuItem)
 	menu.SafeCall(&command, conn)
 }
 
@@ -205,8 +224,10 @@ func (menu *Menu) AddRadioItem(commandID int, label string, groupID int, conn ne
 		CommandID: commandID,
 		Label:     label,
 		GroupID:   groupID,
+		Parent:    menu,
+		Type:      "radio",
 	}
-	menu.Items = append(menu.Items, menuItem)
+	menu.Items = append(menu.Items, &menuItem)
 	menu.SafeCall(&command, conn)
 }
 
@@ -218,12 +239,19 @@ func (menu *Menu) SetChecked(commandID int, checked bool, asEvent bool, conn net
 			Checked:   checked,
 		},
 	}
+
+	for _, item := range menu.Items {
+		if item.IsCommandId(commandID) {
+			item.Checked = checked
+		}
+	}
 	//if asEvent == false {
 	go func() {
 		for {
 			fmt.Println("IsDisplayed", menu.Displayed)
 
 			if menu.Displayed {
+				menu.WaitingResponses = append(menu.WaitingResponses, &command)
 				menu.Call(&command, conn)
 				return
 			}
@@ -262,8 +290,9 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 		CommandID: commandID,
 		Label:     label,
 		SubMenu:   child,
+		Parent:    menu,
 	}
-	menu.Items = append(menu.Items, menuItem)
+	menu.Items = append(menu.Items, &menuItem)
 	menu.WaitingResponses = append(menu.WaitingResponses, &command)
 	go func() {
 		for {
@@ -281,8 +310,11 @@ func (menu *Menu) AddSeparator(conn net.Conn) {
 	command := Command{
 		Method: "add_separator",
 	}
-	menuItem := MenuItem{}
-	menu.Items = append(menu.Items, menuItem)
+	menuItem := MenuItem{
+		Type:   "separator",
+		Parent: menu,
+	}
+	menu.Items = append(menu.Items, &menuItem)
 	menu.SafeCall(&command, conn)
 }
 
