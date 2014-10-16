@@ -83,7 +83,6 @@ Please note Complete Support will never be toggled until Thrust core is stable.
   - [ ] Complete Support
 
 - [X] Implement Package Connection
-- [ ] Implement Package Session
 
 - [x] Seperate out in to packages other than main
   - [X] Package Window
