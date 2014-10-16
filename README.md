@@ -10,7 +10,11 @@ Running on OSX 10.9
 Included in vendor are the binaries
 Start thrust using
 ```bash
-./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path=/tmp/thrust.sock
+#./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path=/tmp/
+thrust.sock
+# This is no longer needed, Thrust-go will detect darwin as your runtime, and try to spawn this binary.
+# if that does not work run the aformentioned binary and then run thrust with
+# go run src/main.go -socket=/tmp/thrust.sock -disable-auto-loader=true
 ```
 Start Thrust Go using
 ```bash
@@ -18,7 +22,7 @@ go run src/main.go -socket=/tmp/thrust.sock
 ```
 
 
-Building bleeding edge from Source
+Building from source
 ======
 Get Chromium DepotTools from here
 http://www.chromium.org/developers/how-tos/install-depot-tools
