@@ -43,6 +43,12 @@ func main() {
 	addr := flag.String("socket", "", "unix socket where thrust is running")
 	autoloaderDisabled := flag.Bool("disable-auto-loader", false, "disable auto running of thrust")
 	flag.Parse()
+
+	if len(addr) == 0 {
+		fmt.Println("System cannot proceed without a socket to connect to. please use -socket={socket_addr}")
+		os.Exit(2)
+	}
+
 	SpawnThrustCore(*addr, *autoloaderDisabled)
 	conn, err := net.Dial("unix", *addr)
 
