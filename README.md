@@ -93,7 +93,7 @@ Example Menu State @ during set_application_menu
 
 ```javascript
 {
-    "target_id": 18,
+    "target_id": 2,
     "awaiting_responses": [
         {
             "_id": 0,
@@ -101,7 +101,7 @@ Example Menu State @ during set_application_menu
             "_method": "set_application_menu",
             "_args": {
                 "size": {},
-                "menu_id": 18,
+                "menu_id": 2,
                 "value": false
             }
         }
@@ -111,61 +111,59 @@ Example Menu State @ during set_application_menu
     "items": [
         {
             "command_id": 2,
-            "label": "Root"
+            "label": "Root",
+            "type": "item"
         },
         {
             "command_id": 1,
             "label": "File",
             "submenu": {
-                "target_id": 19,
+                "target_id": 3,
                 "ready": true,
                 "Displayed": false,
                 "items": [
                     {
                         "command_id": 3,
-                        "label": "Open"
+                        "label": "Open",
+                        "type": "item"
                     },
                     {
                         "command_id": 4,
-                        "label": "Close"
+                        "label": "Close",
+                        "type": "item"
                     },
-                    {},
+                    {
+                        "type": "separator"
+                    },
                     {
                         "command_id": 7,
-                        "label": "otherSub",
+                        "label": "CheckList",
                         "submenu": {
-                            "target_id": 20,
+                            "target_id": 4,
                             "ready": true,
                             "Displayed": false,
                             "items": [
                                 {
                                     "command_id": 5,
-                                    "label": "Do 1"
+                                    "label": "Do 1",
+                                    "type": "check",
+                                    "checked": true
                                 },
-                                {},
+                                {
+                                    "type": "separator"
+                                },
                                 {
                                     "command_id": 6,
-                                    "label": "Do 2"
+                                    "label": "Do 2",
+                                    "type": "check",
+                                    "checked": true
                                 }
-                            ],
-                            "events": [
-                                5,
-                                6
                             ]
                         }
                     }
-                ],
-                "events": [
-                    3,
-                    4,
-                    7
                 ]
             }
         }
-    ],
-    "events": [
-        2,
-        1
     ]
 }
 ```
