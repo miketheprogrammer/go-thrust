@@ -68,7 +68,7 @@ func main() {
 	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
 	checkList := menu.Menu{}
-	//radioList := Menu{}
+	radioList := menu.Menu{}
 	// Calls to other methods after create are Queued until Create returns
 	thrustWindow.Create(conn)
 	thrustWindow.Show(conn)
@@ -82,14 +82,20 @@ func main() {
 	fileMenu.AddSeparator(conn)
 
 	checkList.Create(conn)
-	checkList.AddCheckItem(5, "Do 1", conn)
+	checkList.AddCheckItem(5, "Check 1", conn)
 	checkList.SetChecked(5, true, conn)
 	checkList.AddSeparator(conn)
-	checkList.AddCheckItem(6, "Do 2", conn)
+	checkList.AddCheckItem(6, "Check 2", conn)
 	checkList.SetChecked(6, true, conn)
 	checkList.SetEnabled(6, false, conn)
 
-	fileMenu.AddSubmenu(7, "CheckList", &checkList, conn)
+	radioList.Create(conn)
+	radioList.AddRadioItem(7, "Radio 1", 1, conn)
+	radioList.AddRadioItem(8, "Radio 2", 1, conn)
+	radioList.SetVisible(6, false, conn)
+
+	fileMenu.AddSubmenu(9, "CheckList", &checkList, conn)
+	fileMenu.AddSubmenu(10, "RadioList", &radioList, conn)
 	rootMenu.AddSubmenu(1, "File", &fileMenu, conn)
 
 	rootMenu.SetApplicationMenu(conn)

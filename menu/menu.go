@@ -300,7 +300,7 @@ func (menu *Menu) SetChecked(commandID int, checked bool, conn net.Conn) {
 	}
 
 	for _, item := range menu.Items {
-		if item.IsCommandId(commandID) {
+		if item.IsCommandID(commandID) {
 			item.Checked = checked
 		}
 	}
@@ -318,8 +318,26 @@ func (menu *Menu) SetEnabled(commandID int, enabled bool, conn net.Conn) {
 	}
 
 	for _, item := range menu.Items {
-		if item.IsCommandId(commandID) {
+		if item.IsCommandID(commandID) {
 			item.Enabled = enabled
+		}
+	}
+	menu.CallWhenDisplayed(&command, conn)
+}
+
+// Enables or Disables an item in the UI
+func (menu *Menu) SetVisible(commandID int, visible bool, conn net.Conn) {
+	command := Command{
+		Method: "set_visible",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Value:     visible,
+		},
+	}
+
+	for _, item := range menu.Items {
+		if item.IsCommandID(commandID) {
+			item.Visible = visible
 		}
 	}
 	menu.CallWhenDisplayed(&command, conn)
@@ -393,7 +411,7 @@ A proper menu should not reuse commandID's
 */
 func (menu *Menu) ItemAtCommandID(commandID int) *MenuItem {
 	for _, item := range menu.Items {
-		if item.IsCommandId(commandID) {
+		if item.IsCommandID(commandID) {
 			return item
 		}
 		if item.IsSubMenu() {
@@ -405,3 +423,21 @@ func (menu *Menu) ItemAtCommandID(commandID int) *MenuItem {
 	}
 	return nil
 }
+
+/*
+Find all menu items that belong to group identified by groupID
+Not recursive, as a group should be identified at the same level.
+Since it is not recursive you can theoretically reuse a groupID but problems
+could creep up elsewhere, so please use unique groupID for radio items
+*/
+func (menu *Menu) RadioGroupAtGroupID(groupID int) []*MenuItem {
+	group := []*MenuItem
+	for _, item := range menu.Items {
+		if item.IsGroupID(groupID) {
+			group = append(group, item)
+		}
+	}
+
+	return group
+}
+
