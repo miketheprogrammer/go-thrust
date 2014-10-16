@@ -2,15 +2,12 @@ package main
 
 import (
 	"bufio"
-	"commands"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"net"
 	"os"
-	"spawn"
 	"strings"
-	"window"
 
 	"github.com/miketheprogrammer/thrust-go/commands"
 	. "github.com/miketheprogrammer/thrust-go/common"
@@ -24,7 +21,7 @@ Reader
 Read from the unix socket connection, split on NewLine
 Try to json.Unmarshal any value that is not the SOCKET_BOUNDARY
 */
-func reader(r *bufio.Reader, ch chan CommandResponse) {
+func reader(r *bufio.Reader, ch chan commands.CommandResponse) {
 	for {
 		line, err := r.ReadString(byte('\n'))
 		if err != nil {
@@ -32,7 +29,7 @@ func reader(r *bufio.Reader, ch chan CommandResponse) {
 			panic(err)
 		}
 		if !strings.Contains(line, SOCKET_BOUNDARY) {
-			response := CommandResponse{}
+			response := commands.CommandResponse{}
 			json.Unmarshal([]byte(line), &response)
 			fmt.Println(response)
 			ch <- response
@@ -68,7 +65,7 @@ func main() {
 	thrustWindow := window.Window{
 		Conn: conn,
 	}
-	rootMenu = menu.Menu{}
+	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
 	checkList := menu.Menu{}
 	//radioList := Menu{}
