@@ -61,7 +61,7 @@ func main() {
 	if len(thrustExecPath) > 0 && *autoloaderDisabled == false {
 
 		go func() {
-			cmd := exec.Command(thrustExecPath, "-socket-path=/tmp/thrust.sock")
+			cmd := exec.Command(thrustExecPath, "-socket-path="+*addr)
 			cmdIn, _ := cmd.StdinPipe()
 			cmdOut, _ := cmd.StdoutPipe()
 			cmdErr, _ := cmd.StderrPipe()
