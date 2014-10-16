@@ -14,7 +14,7 @@ Start thrust using
 ```
 Start Thrust Go using
 ```bash
-go run src/* -socket=/tmp/thrust.sock
+go run src/main.go -socket=/tmp/thrust.sock
 ```
 
 
@@ -46,7 +46,7 @@ I run it on OSX with the command
 From here down only works while I have  func main in the repo which will be removed soon
 Now back in the thrust-go directory
 
-go build -o thrust src/* 
+go build -o thrust src/main.go
 
 ./thrust -socket={socketaddrusedinstartingthrusthere}
 

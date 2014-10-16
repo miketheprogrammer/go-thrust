@@ -1,9 +1,12 @@
-package main
+package window
 
 import (
 	"encoding/json"
 	"fmt"
 	"net"
+
+	. "github.com/miketheprogrammer/thrust-go/src/commands"
+	. "github.com/miketheprogrammer/thrust-go/src/common"
 )
 
 type Window struct {

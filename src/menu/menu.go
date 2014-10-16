@@ -1,10 +1,13 @@
-package main
+package menu
 
 import (
 	"encoding/json"
 	"fmt"
 	"net"
 	"time"
+
+	. "github.com/miketheprogrammer/thrust-go/src/commands"
+	. "github.com/miketheprogrammer/thrust-go/src/common"
 )
 
 type Item interface {
@@ -58,9 +61,9 @@ func (menu *Menu) HandleError(reply CommandResponse, conn net.Conn) {
 }
 
 func (menu *Menu) HandleEvent(reply CommandResponse, conn net.Conn) {
-	for _, commandID := range menu.EventRegistry {
-		if reply.Event.CommandID == commandID {
-			fmt.Println("Event", commandID, "Handled With Flags", reply.Event.EventFlags)
+	for _, item := range menu.Items {
+		if reply.Event.CommandID == item.CommandID {
+			fmt.Println("Event", item.CommandID, "Handled With Flags", reply.Event.EventFlags)
 		}
 	}
 }
@@ -148,9 +151,7 @@ func (menu *Menu) Send(command *Command, conn net.Conn) {
 func (menu *Menu) Call(command *Command, conn net.Conn) {
 	command.Action = "call"
 	command.TargetID = menu.TargetID
-	if command.Args.CommandID != 0 {
-		menu.EventRegistry = append(menu.EventRegistry, command.Args.CommandID)
-	}
+
 	if menu.Ready == false {
 		menu.CommandQueue = append(menu.CommandQueue, command)
 		return

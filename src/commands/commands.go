@@ -1,6 +1,8 @@
-package main
+package commands
 
-import "net"
+import (
+	"net"
+)
 
 type SizeHW struct {
 	Width  int `json:"width,omitempty"`
