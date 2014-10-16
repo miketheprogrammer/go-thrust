@@ -1,43 +1,16 @@
 package main
 
 import (
-	"bufio"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"net"
 	"os"
-	"strings"
+	"time"
 
-	"github.com/miketheprogrammer/thrust-go/commands"
-	. "github.com/miketheprogrammer/thrust-go/common"
+	"github.com/miketheprogrammer/thrust-go/connection"
 	"github.com/miketheprogrammer/thrust-go/menu"
 	"github.com/miketheprogrammer/thrust-go/spawn"
 	"github.com/miketheprogrammer/thrust-go/window"
 )
-
-/*
-Reader
-Read from the unix socket connection, split on NewLine
-Try to json.Unmarshal any value that is not the SOCKET_BOUNDARY
-*/
-func reader(r *bufio.Reader, ch chan commands.CommandResponse) {
-	for {
-		line, err := r.ReadString(byte('\n'))
-		if err != nil {
-			fmt.Println(err)
-			panic(err)
-		}
-		if !strings.Contains(line, SOCKET_BOUNDARY) {
-			response := commands.CommandResponse{}
-			json.Unmarshal([]byte(line), &response)
-			fmt.Println(response)
-			ch <- response
-		}
-
-		fmt.Print("SOCKET::Line", line)
-	}
-}
 
 func main() {
 	addr := flag.String("socket", "", "unix socket where thrust is running")
@@ -50,65 +23,65 @@ func main() {
 	}
 
 	spawn.SpawnThrustCore(*addr, *autoloaderDisabled)
-	conn, err := net.Dial("unix", *addr)
 
-	defer conn.Close()
-
+	err := connection.InitializeThreads("unix", *addr)
 	if err != nil {
 		os.Exit(2)
 	}
-	r := bufio.NewReader(conn)
-	ch := make(chan commands.CommandResponse)
+	out, in := connection.GetCommunicationChannels()
 
-	go reader(r, ch)
-
-	thrustWindow := window.Window{
-		Conn: conn,
-	}
+	thrustWindow := window.Window{}
 	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
 	checkList := menu.Menu{}
 	radioList := menu.Menu{}
 	// Calls to other methods after create are Queued until Create returns
-	thrustWindow.Create(conn)
-	thrustWindow.Show(conn)
+	thrustWindow.Create(in)
+	thrustWindow.Show()
 
-	rootMenu.Create(conn)
-	rootMenu.AddItem(2, "Root", conn)
+	rootMenu.Create(in)
+	rootMenu.AddItem(2, "Root")
 
-	fileMenu.Create(conn)
-	fileMenu.AddItem(3, "Open", conn)
-	fileMenu.AddItem(4, "Close", conn)
-	fileMenu.AddSeparator(conn)
+	fileMenu.Create(in)
+	fileMenu.AddItem(3, "Open")
+	fileMenu.AddItem(4, "Close")
+	fileMenu.AddSeparator()
 
-	checkList.Create(conn)
-	checkList.AddCheckItem(5, "Check 1", conn)
-	checkList.SetChecked(5, true, conn)
-	checkList.AddSeparator(conn)
-	checkList.AddCheckItem(6, "Check 2", conn)
-	checkList.SetChecked(6, true, conn)
-	checkList.SetEnabled(6, false, conn)
+	checkList.Create(in)
+	checkList.AddCheckItem(5, "Check 1")
+	checkList.SetChecked(5, true)
+	checkList.AddSeparator()
+	checkList.AddCheckItem(6, "Check 2")
+	checkList.SetChecked(6, true)
+	checkList.SetEnabled(6, false)
 
-	radioList.Create(conn)
-	radioList.AddRadioItem(7, "Radio 1", 1, conn)
-	radioList.AddRadioItem(8, "Radio 2", 1, conn)
-	radioList.SetVisible(6, false, conn)
+	radioList.Create(in)
+	radioList.AddRadioItem(7, "Radio 1-1", 1)
+	radioList.AddRadioItem(8, "Radio 1-2", 1)
+	radioList.AddSeparator()
+	radioList.AddRadioItem(9, "Radio 2-1", 2)
+	radioList.AddRadioItem(10, "Radio 2-2", 2)
+	radioList.SetVisible(6, false)
 
-	fileMenu.AddSubmenu(9, "CheckList", &checkList, conn)
-	fileMenu.AddSubmenu(10, "RadioList", &radioList, conn)
-	rootMenu.AddSubmenu(1, "File", &fileMenu, conn)
+	fileMenu.AddSubmenu(11, "CheckList", &checkList)
+	fileMenu.AddSubmenu(12, "RadioList", &radioList)
+	rootMenu.AddSubmenu(1, "File", &fileMenu)
 
-	rootMenu.SetApplicationMenu(conn)
-
+	rootMenu.SetApplicationMenu()
 	for {
-		response := <-ch
-		thrustWindow.DispatchResponse(response, conn)
-		rootMenu.DispatchResponse(response, conn)
-		if len(fileMenu.WaitingResponses) > 0 {
-			for _, v := range fileMenu.WaitingResponses {
-				fmt.Println("Waiting for", v.ID, v.Action, v.Method)
+		select {
+		case response := <-out.CommandResponses:
+			thrustWindow.DispatchResponse(response)
+			rootMenu.DispatchResponse(response)
+			if len(fileMenu.WaitingResponses) > 0 {
+				for _, v := range fileMenu.WaitingResponses {
+					fmt.Println("Waiting for", v.ID, v.Action, v.Method)
+				}
 			}
+		default:
+			break
 		}
+		time.Sleep(time.Microsecond * 10)
 
 	}
 

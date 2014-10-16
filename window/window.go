@@ -1,12 +1,10 @@
 package window
 
 import (
-	"encoding/json"
 	"fmt"
-	"net"
 
 	. "github.com/miketheprogrammer/thrust-go/commands"
-	. "github.com/miketheprogrammer/thrust-go/common"
+	"github.com/miketheprogrammer/thrust-go/connection"
 )
 
 type Window struct {
@@ -17,12 +15,12 @@ type Window struct {
 	CommandQueue     []*Command
 	Url              string
 	Title            string
-	Conn             net.Conn
 	Ready            bool
 	Displayed        bool
+	SendChannel      *connection.In `json:"-"`
 }
 
-func (w *Window) Create(conn net.Conn) {
+func (w *Window) Create(sendChannel *connection.In) {
 	url := w.Url
 	if len(url) == 0 {
 		url = "http://google.com"
@@ -39,21 +37,26 @@ func (w *Window) Create(conn net.Conn) {
 			},
 		},
 	}
-	w.Send(&windowCreate, conn)
+	w.SetSendChannel(sendChannel)
+	w.Send(&windowCreate)
+}
+
+func (w *Window) SetSendChannel(sendChannel *connection.In) {
+	w.SendChannel = sendChannel
 }
 
 func (w *Window) IsTarget(targetId int) bool {
 	return targetId == w.TargetID
 }
-func (w *Window) HandleError(reply CommandResponse, conn net.Conn) {
+func (w *Window) HandleError(reply CommandResponse) {
 
 }
 
-func (w *Window) HandleEvent(reply CommandResponse, conn net.Conn) {
+func (w *Window) HandleEvent(reply CommandResponse) {
 
 }
 
-func (w *Window) HandleReply(reply CommandResponse, conn net.Conn) {
+func (w *Window) HandleReply(reply CommandResponse) {
 	fmt.Println("Handling Response", reply)
 	for k, v := range w.WaitingResponses {
 		if v.ID != reply.ID {
@@ -78,7 +81,7 @@ func (w *Window) HandleReply(reply CommandResponse, conn net.Conn) {
 
 			for i, _ := range w.CommandQueue {
 				w.CommandQueue[i].TargetID = w.TargetID
-				w.Send(w.CommandQueue[i], conn)
+				w.Send(w.CommandQueue[i])
 			}
 			// Reinitialize empty command queue, and allow gc.
 			w.CommandQueue = []*Command{}
@@ -93,46 +96,35 @@ func (w *Window) HandleReply(reply CommandResponse, conn net.Conn) {
 	}
 }
 
-func (w *Window) DispatchResponse(reply CommandResponse, conn net.Conn) {
+func (w *Window) DispatchResponse(reply CommandResponse) {
+	fmt.Println("Window(", w.TargetID, ")::Attempting to Dispatch::", reply)
 	switch reply.Action {
 	case "event":
-		w.HandleEvent(reply, conn)
+		w.HandleEvent(reply)
 	case "reply":
-		w.HandleReply(reply, conn)
+		w.HandleReply(reply)
 	}
 
 }
-func (w *Window) Send(command *Command, conn net.Conn) {
-	ActionId += 1
-
-	command.ID = ActionId
-
-	fmt.Println(command)
-	cmd, _ := json.Marshal(&command)
-	fmt.Println("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
-
+func (w *Window) Send(command *Command) {
 	w.WaitingResponses = append(w.WaitingResponses, command)
-
-	conn.Write(cmd)
-	conn.Write([]byte("\n"))
-	conn.Write([]byte(SOCKET_BOUNDARY))
+	w.SendChannel.Commands <- command
 }
 
-func (w *Window) Call(command *Command, conn net.Conn) {
+func (w *Window) Call(command *Command) {
 	command.Action = "call"
 	command.TargetID = w.TargetID
-
 	if w.Ready == false {
 		w.CommandQueue = append(w.CommandQueue, command)
 		return
 	}
-	w.Send(command, conn)
+	w.Send(command)
 }
 
-func (w *Window) Show(conn net.Conn) {
+func (w *Window) Show() {
 	command := Command{
 		Method: "show",
 	}
 
-	w.Call(&command, conn)
+	w.Call(&command)
 }

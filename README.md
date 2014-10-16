@@ -69,22 +69,26 @@ Todo:
 - [ ] Remove overuse of pointers in structs where modification will not take place
 - [ ] Add Window Support
   - [X] Basic Support
+  - [X] Refactor Connection usage
   - [ ] Complete Support 
 
 - [ ] Add Menu Support
   - [X] Basic Support
+  - [X] Refactor Connection usage
   - [ ] Complete Support
 
 - [ ] Add Session Support
   - [ ] Basic Support
   - [ ] Complete Support
 
-- [ ] Seperate out in to packages other than main
-  - [ ] Package Window
-  - [ ] Package Menu
-  - [ ] Package Session
-  - [ ] Package Commands
-  - [ ] Package Core - Import for all Window, Menu, Session, Commands 
+- [X] Implement Package Connection
+- [ ] Implement Package Session
+
+- [x] Seperate out in to packages other than main
+  - [X] Package Window
+  - [X] Package Menu
+  - [X] Package Commands
+  - [X] Package Spawn
 
 - [ ] - Remove func Main as this is a Library
   - [ ] Should use Tests instead

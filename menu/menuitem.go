@@ -1,9 +1,6 @@
 package menu
 
-import (
-	"fmt"
-	"net"
-)
+import "fmt"
 
 type Item interface {
 	IsSubMenu() bool
@@ -43,11 +40,11 @@ func (mi MenuItem) IsCommandID(commandID int) bool {
 	return mi.CommandID == commandID
 }
 
-func (mi MenuItem) HandleEvent(conn net.Conn) {
+func (mi MenuItem) HandleEvent() {
 	fmt.Println("EventType", mi.Type)
 	switch mi.Type {
 	case "check":
 		fmt.Println("Toggling Checked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
-		mi.Parent.SetChecked(mi.CommandID, !mi.Checked, conn)
+		mi.Parent.SetChecked(mi.CommandID, !mi.Checked)
 	}
 }
