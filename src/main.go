@@ -44,7 +44,7 @@ func main() {
 	autoloaderDisabled := flag.Bool("disable-auto-loader", false, "disable auto running of thrust")
 	flag.Parse()
 
-	if len(addr) == 0 {
+	if len(*addr) == 0 {
 		fmt.Println("System cannot proceed without a socket to connect to. please use -socket={socket_addr}")
 		os.Exit(2)
 	}
@@ -82,10 +82,11 @@ func main() {
 
 	checkList.Create(conn)
 	checkList.AddCheckItem(5, "Do 1", conn)
-	checkList.SetChecked(5, true, false, conn)
+	checkList.SetChecked(5, true, conn)
 	checkList.AddSeparator(conn)
 	checkList.AddCheckItem(6, "Do 2", conn)
-	checkList.SetChecked(6, true, false, conn)
+	checkList.SetChecked(6, true, conn)
+	checkList.SetEnabled(6, false, conn)
 
 	fileMenu.AddSubmenu(7, "CheckList", &checkList, conn)
 	menu.AddSubmenu(1, "File", &fileMenu, conn)

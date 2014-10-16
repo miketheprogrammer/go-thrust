@@ -17,7 +17,8 @@ type MenuItem struct {
 	GroupID   int    `json:"group_id,omitempty"`
 	SubMenu   *Menu  `json:"submenu,omitempty"`
 	Type      string `json:"type,omitempty"`
-	Checked   bool   `json:"checked,omitempty"`
+	Checked   bool   `json:"checked"`
+	Enabled   bool   `json:"enabled"`
 	Parent    *Menu  `json:"-"`
 }
 
@@ -34,6 +35,6 @@ func (mi MenuItem) HandleEvent(conn net.Conn) {
 	switch mi.Type {
 	case "check":
 		fmt.Println("Toggling Checked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
-		mi.Parent.SetChecked(mi.CommandID, !mi.Checked, false, conn)
+		mi.Parent.SetChecked(mi.CommandID, !mi.Checked, conn)
 	}
 }

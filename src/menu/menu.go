@@ -274,12 +274,12 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu, conn net.
 	menu.CallWhenChildStable(&command, child, conn)
 }
 
-func (menu *Menu) SetChecked(commandID int, checked bool, asEvent bool, conn net.Conn) {
+func (menu *Menu) SetChecked(commandID int, checked bool, conn net.Conn) {
 	command := Command{
 		Method: "set_checked",
 		Args: CommandArguments{
 			CommandID: commandID,
-			Checked:   checked,
+			Value:     checked,
 		},
 	}
 
@@ -288,9 +288,24 @@ func (menu *Menu) SetChecked(commandID int, checked bool, asEvent bool, conn net
 			item.Checked = checked
 		}
 	}
-	//if asEvent == false {
 	menu.CallWhenDisplayed(&command, conn)
-	//}
+}
+
+func (menu *Menu) SetEnabled(commandID int, enabled bool, conn net.Conn) {
+	command := Command{
+		Method: "set_enabled",
+		Args: CommandArguments{
+			CommandID: commandID,
+			Value:     enabled,
+		},
+	}
+
+	for _, item := range menu.Items {
+		if item.IsCommandId(commandID) {
+			item.Enabled = enabled
+		}
+	}
+	menu.CallWhenDisplayed(&command, conn)
 }
 
 func (menu *Menu) AddSeparator(conn net.Conn) {
