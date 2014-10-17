@@ -7,6 +7,7 @@ import (
 	. "github.com/miketheprogrammer/thrust-go/commands"
 	. "github.com/miketheprogrammer/thrust-go/common"
 	"github.com/miketheprogrammer/thrust-go/connection"
+	"github.com/miketheprogrammer/thrust-go/window"
 )
 
 type Menu struct {
@@ -448,6 +449,24 @@ func (menu *Menu) SetApplicationMenu() {
 		Method: "set_application_menu",
 		Args: CommandArguments{
 			MenuID: menu.TargetID,
+		},
+	}
+
+	// Thread to wait for Stable Menu State
+	menu.CallWhenTreeStable(&command)
+}
+
+/*
+On Linux and Windows systems, Attach the menu to a window
+*/
+func (menu *Menu) AttachToWindow(w *window.Window) {
+	if runtime.GOOS != "darwin" {
+		return
+	}
+	command := Command{
+		Method: "attach",
+		Args: CommandArguments{
+			WindowID: w.TargetID,
 		},
 	}
 

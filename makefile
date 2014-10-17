@@ -1,2 +1,2 @@
 build.release:
-		go build -o release/Thrust
+	go build -o release/Thrust

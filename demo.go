@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/miketheprogrammer/thrust-go/commands"
@@ -87,7 +88,11 @@ func main() {
 	rootMenu.AddSubmenu(17, "File", &fileMenu)
 	rootMenu.AddSubmenu(18, "View", &viewMenu)
 
-	rootMenu.SetApplicationMenu()
+	if runtime.GOOS == "darwin" {
+		rootMenu.SetApplicationMenu()
+	} else {
+		rootMenu.Attach(&thrustWindow)
+	}
 
 	thrustWindow.Maximize()
 

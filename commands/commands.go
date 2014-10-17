@@ -22,6 +22,7 @@ type CommandArguments struct {
 	CommandID uint   `json:"command_id,omitempty"`
 	Label     string `json:"label,omitempty"`
 	MenuID    uint   `json:"menu_id,omitempty"` // this should never be 0 anyway
+	WindowID  uint   `json:"window_id,omitempty"`
 	GroupID   uint   `json:"group_id,omitempty"`
 	Value     bool   `json:"value"`
 }
