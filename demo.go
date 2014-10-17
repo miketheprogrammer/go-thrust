@@ -107,9 +107,6 @@ func main() {
 		select {
 		case response := <-out.CommandResponses:
 			dispatcher.Dispatch(response)
-			if len(fileMenu.WaitingResponses) > 0 {
-				fileMenu.PrintRecursiveWaitingResponses()
-			}
 		default:
 			break
 		}
