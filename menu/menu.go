@@ -10,7 +10,7 @@ import (
 )
 
 type Menu struct {
-	TargetID         int            `json:"target_id,omitempty"`
+	TargetID         uint           `json:"target_id,omitempty"`
 	WaitingResponses []*Command     `json:"awaiting_responses,omitempty"`
 	CommandQueue     []*Command     `json:"command_queue,omitempty"`
 	Ready            bool           `json:"ready"`
@@ -18,7 +18,7 @@ type Menu struct {
 	Parent           *Menu          `json:"-"`
 	Children         []*Menu        `json:"-"`
 	Items            []*MenuItem    `json:"items,omitempty"`
-	EventRegistry    []int          `json:"events,omitempty"`
+	EventRegistry    []uint         `json:"events,omitempty"`
 	SendChannel      *connection.In `json:"-"`
 	Sync             MenuSync       `jons:"-"`
 }
@@ -31,7 +31,7 @@ func (menu *Menu) Create(sendChannel *connection.In) {
 	menu.Sync = MenuSync{
 		ReadyChan:        make(chan bool),
 		DisplayedChan:    make(chan bool),
-		ChildStableChan:  make(chan int),
+		ChildStableChan:  make(chan uint),
 		TreeStableChan:   make(chan bool),
 		ReadyQueue:       make([]*Command, 0),
 		DisplayedQueue:   make([]*Command, 0),
@@ -48,7 +48,7 @@ func (menu *Menu) SetSendChannel(sendChannel *connection.In) {
 	menu.SendChannel = sendChannel
 }
 
-func (menu *Menu) IsTarget(targetId int) bool {
+func (menu *Menu) IsTarget(targetId uint) bool {
 	return targetId == menu.TargetID
 }
 func (menu *Menu) HandleError(reply CommandResponse) {
@@ -255,7 +255,7 @@ func (menu *Menu) CallWhenDisplayed(command *Command) {
 /*
 Add a MenuItem to both the internal representation of menu and the external representation of menu
 */
-func (menu *Menu) AddItem(commandID int, label string) {
+func (menu *Menu) AddItem(commandID uint, label string) {
 	command := Command{
 		Method: "add_item",
 		Args: CommandArguments{
@@ -277,7 +277,7 @@ func (menu *Menu) AddItem(commandID int, label string) {
 /*
 Add a CheckItem to both the internal representation of menu and the external representation of menu
 */
-func (menu *Menu) AddCheckItem(commandID int, label string) {
+func (menu *Menu) AddCheckItem(commandID uint, label string) {
 	command := Command{
 		Method: "add_check_item",
 		Args: CommandArguments{
@@ -298,7 +298,7 @@ func (menu *Menu) AddCheckItem(commandID int, label string) {
 /*
 Add a RadioItem to both the internal representation of menu and the external representation of menu
 */
-func (menu *Menu) AddRadioItem(commandID int, label string, groupID int) {
+func (menu *Menu) AddRadioItem(commandID uint, label string, groupID uint) {
 	command := Command{
 		Method: "add_radio_item",
 		Args: CommandArguments{
@@ -321,7 +321,7 @@ func (menu *Menu) AddRadioItem(commandID int, label string, groupID int) {
 /*
 Add a SubMenu to both the internal representation of menu and the external representation of menu
 */
-func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu) {
+func (menu *Menu) AddSubmenu(commandID uint, label string, child *Menu) {
 	command := Command{
 		Method: "add_submenu",
 		Args: CommandArguments{
@@ -346,7 +346,7 @@ func (menu *Menu) AddSubmenu(commandID int, label string, child *Menu) {
 /*
  Checks or Unchecks a CheckItem in the UI
 */
-func (menu *Menu) SetChecked(commandID int, checked bool) {
+func (menu *Menu) SetChecked(commandID uint, checked bool) {
 	command := Command{
 		Method: "set_checked",
 		Args: CommandArguments{
@@ -366,7 +366,7 @@ func (menu *Menu) SetChecked(commandID int, checked bool) {
 /*
  Checks or Unchecks a CheckItem in the UI
 */
-func (menu *Menu) ToggleRadio(commandID, groupID int, checked bool) {
+func (menu *Menu) ToggleRadio(commandID, groupID uint, checked bool) {
 	for _, item := range menu.RadioGroupAtGroupID(groupID) {
 		command := Command{
 			Method: "set_checked",
@@ -387,7 +387,7 @@ func (menu *Menu) ToggleRadio(commandID, groupID int, checked bool) {
 }
 
 // Enables or Disables an item in the UI
-func (menu *Menu) SetEnabled(commandID int, enabled bool) {
+func (menu *Menu) SetEnabled(commandID uint, enabled bool) {
 	command := Command{
 		Method: "set_enabled",
 		Args: CommandArguments{
@@ -405,7 +405,7 @@ func (menu *Menu) SetEnabled(commandID int, enabled bool) {
 }
 
 // Enables or Disables an item in the UI
-func (menu *Menu) SetVisible(commandID int, visible bool) {
+func (menu *Menu) SetVisible(commandID uint, visible bool) {
 	command := Command{
 		Method: "set_visible",
 		Args: CommandArguments{
@@ -487,7 +487,7 @@ Recursively searches the Menu Tree for an item with the commandID
 Returns the first found match.
 A proper menu should not reuse commandID's
 */
-func (menu *Menu) ItemAtCommandID(commandID int) *MenuItem {
+func (menu *Menu) ItemAtCommandID(commandID uint) *MenuItem {
 	for _, item := range menu.Items {
 		if item.IsCommandID(commandID) {
 			return item
@@ -508,7 +508,7 @@ Not recursive, as a group should be identified at the same level.
 Since it is not recursive you can theoretically reuse a groupID but problems
 could creep up elsewhere, so please use unique groupID for radio items
 */
-func (menu *Menu) RadioGroupAtGroupID(groupID int) []*MenuItem {
+func (menu *Menu) RadioGroupAtGroupID(groupID uint) []*MenuItem {
 	group := []*MenuItem{}
 	for _, item := range menu.Items {
 		if item.IsGroupID(groupID) {

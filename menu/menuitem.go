@@ -9,9 +9,9 @@ type Item interface {
 }
 
 type MenuItem struct {
-	CommandID int    `json:"command_id,omitempty"`
+	CommandID uint   `json:"command_id,omitempty"`
 	Label     string `json:"label,omitempty"`
-	GroupID   int    `json:"group_id,omitempty"`
+	GroupID   uint   `json:"group_id,omitempty"`
 	SubMenu   *Menu  `json:"submenu,omitempty"`
 	Type      string `json:"type,omitempty"`
 	Checked   bool   `json:"checked"`
@@ -32,11 +32,11 @@ func (mi MenuItem) IsRadioItem() bool {
 	return mi.Type == "radio"
 }
 
-func (mi MenuItem) IsGroupID(groupID int) bool {
+func (mi MenuItem) IsGroupID(groupID uint) bool {
 	return mi.GroupID == groupID
 }
 
-func (mi MenuItem) IsCommandID(commandID int) bool {
+func (mi MenuItem) IsCommandID(commandID uint) bool {
 	return mi.CommandID == commandID
 }
 

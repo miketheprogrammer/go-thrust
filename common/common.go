@@ -7,7 +7,7 @@ import (
 
 //Global ID tracking for Commands
 //Could probably move this to a factory function
-var ActionId int = 0
+var ActionId uint = 0
 
 const (
 	SOCKET_BOUNDARY = "--(Foo)++__THRUST_SHELL_BOUNDARY__++(Bar)--"

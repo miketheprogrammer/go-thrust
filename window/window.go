@@ -9,7 +9,7 @@ import (
 )
 
 type Window struct {
-	TargetID         int
+	TargetID         uint
 	CommandHistory   []*Command
 	ResponseHistory  []*CommandResponse
 	WaitingResponses []*Command
@@ -47,7 +47,7 @@ func (w *Window) SetSendChannel(sendChannel *connection.In) {
 	w.SendChannel = sendChannel
 }
 
-func (w *Window) IsTarget(targetId int) bool {
+func (w *Window) IsTarget(targetId uint) bool {
 	return targetId == w.TargetID
 }
 func (w *Window) HandleError(reply CommandResponse) {

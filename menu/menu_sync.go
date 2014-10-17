@@ -11,7 +11,7 @@ type MenuSync struct {
 	/* Channels for singaling queues */
 	ReadyChan       chan bool
 	DisplayedChan   chan bool
-	ChildStableChan chan int
+	ChildStableChan chan uint
 	TreeStableChan  chan bool
 
 	/*Queues for preserving command order and Priority*/
