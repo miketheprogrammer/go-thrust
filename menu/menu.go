@@ -460,7 +460,7 @@ func (menu *Menu) SetApplicationMenu() {
 On Linux and Windows systems, Attach the menu to a window
 */
 func (menu *Menu) AttachToWindow(w *window.Window) {
-	if runtime.GOOS != "darwin" {
+	if runtime.GOOS != "linux" {
 		return
 	}
 	command := Command{
