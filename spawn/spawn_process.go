@@ -2,42 +2,60 @@ package spawn
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"runtime"
 	"strings"
 	"time"
+
+	. "github.com/miketheprogrammer/thrust-go/common"
 )
 
 func SpawnThrustCore(addr string, autoloaderDisabled bool) {
 
 	var thrustExecPath string
-
+	var thrustBoostrapPath string
 	if strings.Contains(runtime.GOOS, "darwin") {
-		thrustExecPath = "./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell"
+		thrustExecPath = "./vendor/darwin/x64/ThrustShell.app/Contents/MacOS/ThrustShell"
+		thrustBoostrapPath = "./tools/bootstrap_darwin.sh"
+	}
+	if strings.Contains(runtime.GOOS, "linux") {
+		thrustExecPath = "./vendor/linux/x64/thrust_shell"
+		thrustBoostrapPath = "./tools/bootstrap_linux.sh"
 	}
 
 	if len(thrustExecPath) > 0 && autoloaderDisabled == false {
-		go func() {
-			cmd := exec.Command(thrustExecPath, "-socket-path="+addr)
-			cmdIn, _ := cmd.StdinPipe()
-			cmdOut, _ := cmd.StdoutPipe()
-			cmdErr, _ := cmd.StderrPipe()
+		if _, err := os.Stat(thrustExecPath); os.IsNotExist(err) {
+			Log.Info("Could not find executable:", thrustExecPath)
+			Log.Info("Attempting to Download and Install the Thrust Core Executable")
 
-			cmd.Start()
-			defer cmdIn.Close()
+			installCmd := exec.Command("sh", thrustBoostrapPath)
+			installCmd.Stdout = os.Stdout
+			installCmd.Stderr = os.Stderr
 
-			for {
-				outBytes, _ := ioutil.ReadAll(cmdOut)
-				errBytes, _ := ioutil.ReadAll(cmdErr)
+			installCmd.Start()
+			Log.Info("Waiting for install to finish....")
+			installErr := installCmd.Wait()
 
-				fmt.Print(string(outBytes))
-				fmt.Print(string(errBytes))
-
-				time.Sleep(time.Millisecond * 10)
+			if installErr != nil {
+				Log.Errorf("Could not bootstrap, ErrorCode:", err)
+			} else {
+				Log.Info("... Done Bootstrapping")
 			}
-		}()
-		time.Sleep(time.Millisecond * 1000)
+		}
+
+		Log.Info("Attempting to start Thrust Core")
+		Log.Debug("CMD:", thrustExecPath, "-socket-path="+addr)
+		cmd := exec.Command(thrustExecPath, "-socket-path="+addr)
+		//cmdIn, _ := cmd.StdinPipe()
+
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stdout
+
+		cmd.Start()
+
+		time.Sleep(time.Millisecond * 2000)
+		Log.Info("Returning to Main Process.")
 	} else {
 		fmt.Println("===============WARNING================")
 		fmt.Println("Auto Loading of thrust currently not supported for", runtime.GOOS)

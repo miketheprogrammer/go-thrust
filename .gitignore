@@ -28,3 +28,19 @@ demo
 
 ThrustShell.app
 thrust-v0.7.0-linux-x64
+
+vendor/linux/x64/content_shell.pak
+vendor/linux/x64/icudtl.dat
+vendor/linux/x64/libchromiumcontent.so
+vendor/linux/x64/libffmpegsumo.so
+vendor/linux/x64/thrust_shell
+
+vendor/darwin/x64/ThrustShell.app
+
+release/vendor/linux/x64/content_shell.pak
+release/vendor/linux/x64/icudtl.dat
+release/vendor/linux/x64/libchromiumcontent.so
+release/vendor/linux/x64/libffmpegsumo.so
+release/vendor/linux/x64/thrust_shell
+
+release/vendor/darwin/x64/ThrustShell.app

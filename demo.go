@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"time"
 
@@ -30,6 +31,7 @@ func main() {
 
 	err := connection.InitializeThreads("unix", *addr)
 	if err != nil {
+		fmt.Println(err)
 		os.Exit(2)
 	}
 	out, in := connection.GetCommunicationChannels()
