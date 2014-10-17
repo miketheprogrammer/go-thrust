@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	addr := flag.String("socket", "", "unix socket where thrust is running")
+	addr := flag.String("socket", "/tmp/_thrust_shell.sock", "unix socket where thrust is running")
 	autoloaderDisabled := flag.Bool("disable-auto-loader", false, "disable auto running of thrust")
 
 	// Parses Flags

@@ -56,7 +56,7 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) {
 
 		cmd.Start()
 
-		time.Sleep(time.Millisecond * 500)
+		time.Sleep(time.Millisecond * 1000)
 		Log.Info("Returning to Main Process.")
 	} else {
 		fmt.Println("===============WARNING================")
