@@ -19,6 +19,28 @@ Start Thrust Go using
 go run demo.go -socket=/tmp/thrust.sock
 ```
 
+Command Line Switches
+========================
+```bash
+-socket=path  #path to the socket you want to use. Will create if not exist
+-disable-auto-loader=bool #disable auto run of thrust core, 
+#will need to run thrust core individually with the expected socket so that thrust core can create it.
+
+#LOGGING
+#Inherits Switches from http://godoc.org/github.com/alexcesaro/log/stdlog
+#Added below for ease, but for up to date info visit the page.
+-log=loglevel
+    #Log events at or above this level are logged.
+-stderr=bool
+    #Logs are written to standard error (stderr) instead of standard
+    #output.
+-flushlog=none
+    #Until this level is reached nothing is output and logs are stored
+    #in the memory. Once a log event is at or above this level, it
+    #outputs all logs in memory as well as the future log events. This
+    #feature should not be used with long-running processes.
+```
+
 
 Building from source
 ======
@@ -102,7 +124,7 @@ Please note Complete Support will never be toggled until Thrust core is stable.
 
 - [ ] Create a script to autodownload binaries
 
-- [ ] Refactor Logging
+- [X] Refactor Logging
 
 - [ ] SubMenus need order preservation
 

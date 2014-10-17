@@ -75,7 +75,7 @@ func Reader(out *Out, in *In) {
 	for {
 		select {
 		case quit := <-in.Quit:
-			fmt.Println("Connection Reader Received a Quit message from somewhere ... Exiting Now")
+			Log.Errorf("Connection Reader Received a Quit message from somewhere ... Exiting Now")
 			os.Exit(quit)
 		default:
 			//a := <-in.Quit
@@ -85,13 +85,14 @@ func Reader(out *Out, in *In) {
 				fmt.Println(err)
 				panic(err)
 			}
+			Log.Debug("SOCKET::Line", line)
 			if !strings.Contains(line, SOCKET_BOUNDARY) {
 				response := commands.CommandResponse{}
 				json.Unmarshal([]byte(line), &response)
-				fmt.Println(response)
+				//Log.Debug(response)
 				out.CommandResponses <- response
 			}
-			fmt.Print("SOCKET::Line", line)
+
 		}
 		time.Sleep(time.Microsecond * 100)
 
@@ -106,9 +107,9 @@ func Writer(out *Out, in *In) {
 			ActionId += 1
 			command.ID = ActionId
 
-			fmt.Println(command)
+			//fmt.Println(command)
 			cmd, _ := json.Marshal(command)
-			fmt.Println("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
+			Log.Debug("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
 
 			conn.Write(cmd)
 			conn.Write([]byte("\n"))

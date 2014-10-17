@@ -1,11 +1,11 @@
 package menu
 
 import (
-	"fmt"
 	"runtime"
 	"time"
 
 	. "github.com/miketheprogrammer/thrust-go/commands"
+	. "github.com/miketheprogrammer/thrust-go/common"
 	"github.com/miketheprogrammer/thrust-go/connection"
 )
 
@@ -57,9 +57,8 @@ func (menu *Menu) HandleError(reply CommandResponse) {
 
 func (menu *Menu) HandleEvent(reply CommandResponse) {
 	for _, item := range menu.Items {
-		fmt.Println("Looking for item to handle event")
 		if reply.Event.CommandID == item.CommandID {
-			fmt.Println("Event", item.CommandID, "Handled With Flags", reply.Event.EventFlags, "With Type", item.Type)
+			Log.Debug("Menu(", menu.TargetID, "):: Handling Event", item.CommandID, "::Handled With Flags", reply.Event.EventFlags, "With Type", item.Type)
 			item.HandleEvent()
 			return
 		}
@@ -72,7 +71,7 @@ func (menu *Menu) HandleReply(reply CommandResponse) {
 		if v.ID != reply.ID {
 			continue
 		}
-		fmt.Println("MENU(", menu.TargetID, ")::Handling Response", reply)
+		Log.Debug("MENU(", menu.TargetID, ")::Handling Reply", reply)
 		removeAt := func(k int) {
 			if len(menu.WaitingResponses) > 1 {
 				menu.WaitingResponses = menu.WaitingResponses[:k+copy(menu.WaitingResponses[k:], menu.WaitingResponses[k+1:])]
@@ -86,7 +85,7 @@ func (menu *Menu) HandleReply(reply CommandResponse) {
 			//Assume we have a reply to action:create
 			if reply.Result.TargetID != 0 {
 				menu.TargetID = reply.Result.TargetID
-				fmt.Println("Received TargetID", "\nSetting Ready State")
+				Log.Debug("Received TargetID", "\nSetting Ready State")
 				menu.Ready = true
 			}
 			for i, _ := range menu.CommandQueue {
@@ -99,7 +98,7 @@ func (menu *Menu) HandleReply(reply CommandResponse) {
 		}
 
 		if v.Action == "call" && v.Method == "set_application_menu" {
-			fmt.Println("Received reply to set_application_menu", "Setting Menu Displayed to True")
+			Log.Debug("Received reply to set_application_menu", "Setting Menu Displayed to True")
 			menu.setDisplayed(true)
 		}
 
@@ -117,7 +116,6 @@ func (menu *Menu) setDisplayed(displayed bool) {
 }
 
 func (menu *Menu) DispatchResponse(reply CommandResponse) {
-	fmt.Println("Menu(", menu.TargetID, ")::Attempting to dispatch response")
 	switch reply.Action {
 	case "event":
 		menu.HandleEvent(reply)
@@ -474,7 +472,6 @@ func (menu *Menu) IsTreeStable() bool {
 		return false
 	}
 	for _, child := range menu.Items {
-		//fmt.Println("Checking child")
 		if child.IsSubMenu() {
 			if !child.SubMenu.IsTreeStable() {
 				return false
@@ -526,10 +523,10 @@ func (menu *Menu) RadioGroupAtGroupID(groupID int) []*MenuItem {
 DEBUG Functions
 */
 func (menu Menu) PrintRecursiveWaitingResponses() {
-	fmt.Println("Scanning Menu(", menu.TargetID, ")")
+	Log.Debug("Scanning Menu(", menu.TargetID, ")")
 	if len(menu.WaitingResponses) > 0 {
 		for _, v := range menu.WaitingResponses {
-			fmt.Println("Waiting for", v.ID, v.Action, v.Method)
+			Log.Debug("Waiting for", v.ID, v.Action, v.Method)
 		}
 	}
 

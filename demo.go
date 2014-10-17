@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"time"
 
 	"github.com/miketheprogrammer/thrust-go/commands"
+	. "github.com/miketheprogrammer/thrust-go/common"
 	"github.com/miketheprogrammer/thrust-go/connection"
 	"github.com/miketheprogrammer/thrust-go/dispatcher"
 	"github.com/miketheprogrammer/thrust-go/menu"
@@ -17,10 +17,12 @@ import (
 func main() {
 	addr := flag.String("socket", "", "unix socket where thrust is running")
 	autoloaderDisabled := flag.Bool("disable-auto-loader", false, "disable auto running of thrust")
-	flag.Parse()
+
+	// Parses Flags
+	InitLogger()
 
 	if len(*addr) == 0 {
-		fmt.Println("System cannot proceed without a socket to connect to. please use -socket={socket_addr}")
+		Log.Errorf("System cannot proceed without a socket to connect to. please use -socket={socket_addr}")
 		os.Exit(2)
 	}
 
@@ -37,6 +39,7 @@ func main() {
 	fileMenu := menu.Menu{}
 	checkList := menu.Menu{}
 	radioList := menu.Menu{}
+	viewMenu := menu.Menu{}
 	// Calls to other methods after create are Queued until Create returns
 	thrustWindow.Create(in)
 	thrustWindow.Show()
@@ -63,11 +66,24 @@ func main() {
 	radioList.AddSeparator()
 	radioList.AddRadioItem(9, "Radio 2-1", 2)
 	radioList.AddRadioItem(10, "Radio 2-2", 2)
-	radioList.SetVisible(6, false)
+	radioList.AddRadioItem(11, "Radio 2-3", 2)
+	radioList.SetVisible(11, false)
 
 	fileMenu.AddSubmenu(11, "CheckList", &checkList)
 	fileMenu.AddSubmenu(12, "RadioList", &radioList)
-	rootMenu.AddSubmenu(1, "File", &fileMenu)
+
+	viewMenu.Create(in)
+	layoutMenu := menu.Menu{}
+	layoutMenu.Create(in)
+	layoutStyleMenu := menu.Menu{}
+	layoutStyleMenu.Create(in)
+	layoutStyleMenu.AddRadioItem(13, "Horizontal", 3)
+	layoutStyleMenu.AddRadioItem(14, "Vertical", 3)
+
+	layoutMenu.AddSubmenu(15, "Styles", &layoutStyleMenu)
+	viewMenu.AddSubmenu(16, "Layouts", &layoutMenu)
+	rootMenu.AddSubmenu(17, "File", &fileMenu)
+	rootMenu.AddSubmenu(18, "View", &viewMenu)
 
 	rootMenu.SetApplicationMenu()
 
@@ -83,8 +99,6 @@ func main() {
 	for {
 		select {
 		case response := <-out.CommandResponses:
-			//thrustWindow.DispatchResponse(response)
-			//rootMenu.DispatchResponse(response)
 			dispatcher.Dispatch(response)
 			if len(fileMenu.WaitingResponses) > 0 {
 				fileMenu.PrintRecursiveWaitingResponses()

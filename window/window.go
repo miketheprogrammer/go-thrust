@@ -1,10 +1,10 @@
 package window
 
 import (
-	"fmt"
 	"time"
 
 	. "github.com/miketheprogrammer/thrust-go/commands"
+	. "github.com/miketheprogrammer/thrust-go/common"
 	"github.com/miketheprogrammer/thrust-go/connection"
 )
 
@@ -55,16 +55,15 @@ func (w *Window) HandleError(reply CommandResponse) {
 }
 
 func (w *Window) HandleEvent(reply CommandResponse) {
-
+	//Log.Info(("Window(", w.TargetID, ")::Handling Event::", reply))
 }
 
 func (w *Window) HandleReply(reply CommandResponse) {
-	fmt.Println("Handling Response", reply)
 	for k, v := range w.WaitingResponses {
 		if v.ID != reply.ID {
 			continue
 		}
-
+		Log.Debug("Window(", w.TargetID, ")::Handling Reply::", reply)
 		if len(w.WaitingResponses) > 1 {
 			// Remove the element at index k
 			w.WaitingResponses = w.WaitingResponses[:k+copy(w.WaitingResponses[k:], w.WaitingResponses[k+1:])]
@@ -77,7 +76,7 @@ func (w *Window) HandleReply(reply CommandResponse) {
 		if w.TargetID == 0 && v.Action == "create" {
 			if reply.Result.TargetID != 0 {
 				w.TargetID = reply.Result.TargetID
-				fmt.Println("Received TargetID", "\nSetting Ready State")
+				Log.Debug("Received TargetID", "\nSetting Ready State")
 				w.Ready = true
 			}
 
@@ -99,7 +98,7 @@ func (w *Window) HandleReply(reply CommandResponse) {
 }
 
 func (w *Window) DispatchResponse(reply CommandResponse) {
-	fmt.Println("Window(", w.TargetID, ")::Attempting to Dispatch::", reply)
+
 	switch reply.Action {
 	case "event":
 		w.HandleEvent(reply)

@@ -1,6 +1,6 @@
 package menu
 
-import "fmt"
+import . "github.com/miketheprogrammer/thrust-go/common"
 
 type Item interface {
 	IsSubMenu() bool
@@ -41,13 +41,13 @@ func (mi MenuItem) IsCommandID(commandID int) bool {
 }
 
 func (mi MenuItem) HandleEvent() {
-	fmt.Println("EventType", mi.Type)
+	Log.Debug("EventType", mi.Type)
 	switch mi.Type {
 	case "check":
-		fmt.Println("Toggling Checked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
+		Log.Debug("Toggling Checked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
 		mi.Parent.SetChecked(mi.CommandID, !mi.Checked)
 	case "radio":
-		fmt.Println("Toggling RadioChecked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
+		Log.Debug("Toggling RadioChecked(", mi.Checked, ")", "to", "checked(", !mi.Checked, ")")
 		mi.Parent.ToggleRadio(mi.CommandID, mi.GroupID, !mi.Checked)
 	}
 
