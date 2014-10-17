@@ -1,6 +1,6 @@
 package menu
 
-import . "github.com/miketheprogrammer/thrust-go/common"
+import . "github.com/miketheprogrammer/go-thrust/common"
 
 type Item interface {
 	IsSubMenu() bool

@@ -7,13 +7,13 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/miketheprogrammer/thrust-go/commands"
-	. "github.com/miketheprogrammer/thrust-go/common"
-	"github.com/miketheprogrammer/thrust-go/connection"
-	"github.com/miketheprogrammer/thrust-go/dispatcher"
-	"github.com/miketheprogrammer/thrust-go/menu"
-	"github.com/miketheprogrammer/thrust-go/spawn"
-	"github.com/miketheprogrammer/thrust-go/window"
+	"github.com/miketheprogrammer/go-thrust/commands"
+	. "github.com/miketheprogrammer/go-thrust/common"
+	"github.com/miketheprogrammer/go-thrust/connection"
+	"github.com/miketheprogrammer/go-thrust/dispatcher"
+	"github.com/miketheprogrammer/go-thrust/menu"
+	"github.com/miketheprogrammer/go-thrust/spawn"
+	"github.com/miketheprogrammer/go-thrust/window"
 )
 
 func main() {

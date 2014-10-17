@@ -1,4 +1,4 @@
-thrust-go
+go-thrust
 =========
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust) to be used in Breach.cc(http://breach.cc) via Official Go Implementation @ (http://github.com/miketheprogrammer/breach-go).
@@ -76,7 +76,7 @@ I run it on OSX with the command
 
 
 From here down only works while I have  func main in the repo which will be removed soon
-Now back in the thrust-go directory
+Now back in the go-thrust directory
 
 ```bash
 go build -o thrust src/main.go

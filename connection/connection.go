@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/miketheprogrammer/thrust-go/commands"
-	. "github.com/miketheprogrammer/thrust-go/common"
+	"github.com/miketheprogrammer/go-thrust/commands"
+	. "github.com/miketheprogrammer/go-thrust/common"
 )
 
 // Single Connection

@@ -1,6 +1,6 @@
 package dispatcher
 
-import "github.com/miketheprogrammer/thrust-go/commands"
+import "github.com/miketheprogrammer/go-thrust/commands"
 
 type DispatcherHandleFunc func(commands.CommandResponse)
 

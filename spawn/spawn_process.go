@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	. "github.com/miketheprogrammer/thrust-go/common"
+	. "github.com/miketheprogrammer/go-thrust/common"
 )
 
 func SpawnThrustCore(addr string, autoloaderDisabled bool) {

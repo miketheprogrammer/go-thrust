@@ -3,9 +3,9 @@ package window
 import (
 	"time"
 
-	. "github.com/miketheprogrammer/thrust-go/commands"
-	. "github.com/miketheprogrammer/thrust-go/common"
-	"github.com/miketheprogrammer/thrust-go/connection"
+	. "github.com/miketheprogrammer/go-thrust/commands"
+	. "github.com/miketheprogrammer/go-thrust/common"
+	"github.com/miketheprogrammer/go-thrust/connection"
 )
 
 type Window struct {
