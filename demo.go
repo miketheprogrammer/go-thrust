@@ -28,7 +28,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	spawn.SpawnThrustCore(*addr, *autoloaderDisabled)
+	connection.StdOut, connection.StdIn = spawn.SpawnThrustCore(*addr, *autoloaderDisabled)
 
 	err := connection.InitializeThreads("unix", *addr)
 	if err != nil {

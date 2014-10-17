@@ -2,6 +2,7 @@ package spawn
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"runtime"
@@ -11,7 +12,7 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/common"
 )
 
-func SpawnThrustCore(addr string, autoloaderDisabled bool) {
+func SpawnThrustCore(addr string, autoloaderDisabled bool) (io.ReadCloser, io.WriteCloser) {
 
 	var thrustExecPath string
 	var thrustBoostrapPath string
@@ -47,9 +48,19 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) {
 		Log.Info("Attempting to start Thrust Core")
 		Log.Debug("CMD:", thrustExecPath, "-socket-path="+addr)
 		cmd := exec.Command(thrustExecPath, "-socket-path="+addr)
-		//cmdIn, _ := cmd.StdinPipe()
+		cmdIn, e1 := cmd.StdinPipe()
+		cmdOut, e2 := cmd.StdoutPipe()
 
-		cmd.Stdout = os.Stdout
+		if e1 != nil {
+			fmt.Println(e1)
+			os.Exit(2)
+		}
+
+		if e2 != nil {
+			fmt.Println(e2)
+			os.Exit(2)
+		}
+
 		if Log.LogDebug() {
 			cmd.Stderr = os.Stdout
 		}
@@ -58,10 +69,12 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) {
 
 		time.Sleep(time.Millisecond * 1000)
 		Log.Info("Returning to Main Process.")
+		return cmdOut, cmdIn
 	} else {
 		fmt.Println("===============WARNING================")
 		fmt.Println("Auto Loading of thrust currently not supported for", runtime.GOOS)
 		fmt.Println("Please run thrust executable manually")
 		fmt.Println("===============END====================")
 	}
+	return nil, nil
 }
