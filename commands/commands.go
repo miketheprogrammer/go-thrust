@@ -14,17 +14,19 @@ Covers all possible argument combinations.
 Makes use of omit empty to adapt to different use cases
 */
 type CommandArguments struct {
-	RootUrl   string `json:"root_url,omitempty"`
-	Title     string `json:"title,omitempty"`
-	Size      SizeHW `json:"size,omitempty"`
-	X         int    `json:"x,omitempty"`
-	Y         int    `json:"y,omitempty"`
-	CommandID uint   `json:"command_id,omitempty"`
-	Label     string `json:"label,omitempty"`
-	MenuID    uint   `json:"menu_id,omitempty"` // this should never be 0 anyway
-	WindowID  uint   `json:"window_id,omitempty"`
-	GroupID   uint   `json:"group_id,omitempty"`
-	Value     bool   `json:"value"`
+	RootUrl      string `json:"root_url,omitempty"`
+	Title        string `json:"title,omitempty"`
+	Size         SizeHW `json:"size,omitempty"`
+	X            int    `json:"x,omitempty"`
+	Y            int    `json:"y,omitempty"`
+	CommandID    uint   `json:"command_id,omitempty"`
+	Label        string `json:"label,omitempty"`
+	MenuID       uint   `json:"menu_id,omitempty"` // this should never be 0 anyway
+	WindowID     uint   `json:"window_id,omitempty"`
+	GroupID      uint   `json:"group_id,omitempty"`
+	Value        bool   `json:"value"`
+	CookieStore  bool   `json:"cookie_store"`
+	OffTheRecord bool   `json:"off_the_record"`
 }
 type Command struct {
 	ID         uint             `json:"_id"`
