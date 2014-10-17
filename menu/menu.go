@@ -478,7 +478,9 @@ func (menu *Menu) AttachToWindow(w *window.Window) {
 				menu.CallWhenTreeStable(&command)
 				return
 			}
+			time.Sleep(time.Microsecond * 10)
 		}
+
 	}()
 }
 
