@@ -50,7 +50,9 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) {
 		//cmdIn, _ := cmd.StdinPipe()
 
 		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stdout
+		if Log.LogDebug() {
+			cmd.Stderr = os.Stdout
+		}
 
 		cmd.Start()
 
