@@ -87,9 +87,7 @@ func main() {
 			//rootMenu.DispatchResponse(response)
 			dispatcher.Dispatch(response)
 			if len(fileMenu.WaitingResponses) > 0 {
-				for _, v := range fileMenu.WaitingResponses {
-					fmt.Println("Waiting for", v.ID, v.Action, v.Method)
-				}
+				fileMenu.PrintRecursiveWaitingResponses()
 			}
 		default:
 			break

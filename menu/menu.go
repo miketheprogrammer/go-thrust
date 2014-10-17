@@ -20,6 +20,7 @@ type Menu struct {
 	Items            []*MenuItem    `json:"items,omitempty"`
 	EventRegistry    []int          `json:"events,omitempty"`
 	SendChannel      *connection.In `json:"-"`
+	Sync             MenuSync       `jons:"-"`
 }
 
 func (menu *Menu) Create(sendChannel *connection.In) {
@@ -27,8 +28,19 @@ func (menu *Menu) Create(sendChannel *connection.In) {
 		Action:     "create",
 		ObjectType: "menu",
 	}
+	menu.Sync = MenuSync{
+		ReadyChan:        make(chan bool),
+		DisplayedChan:    make(chan bool),
+		ChildStableChan:  make(chan int),
+		TreeStableChan:   make(chan bool),
+		ReadyQueue:       make([]*Command, 0),
+		DisplayedQueue:   make([]*Command, 0),
+		ChildStableQueue: make([]*ChildCommand, 0),
+		TreeStableQueue:  make([]*Command, 0),
+	}
 	menu.SetSendChannel(sendChannel)
 	menu.WaitingResponses = append(menu.WaitingResponses, &menuCreate)
+	go menu.SendThread()
 	menu.Send(&menuCreate)
 }
 
@@ -120,6 +132,92 @@ func (menu *Menu) DispatchResponse(reply CommandResponse) {
 	}
 }
 
+func (menu *Menu) SendThread() {
+	//removeItemAt for []ChildCommand
+	CCremoveItemAt := func(a []*ChildCommand, i int) []*ChildCommand {
+		copy(a[i:], a[i+1:])
+		a[len(a)-1] = nil // or the zero value of T
+		a = a[:len(a)-1]
+		return a
+	}
+	//removeItemAt for []*Command
+	CremoveItemAt := func(a []*Command, i int) []*Command {
+		copy(a[i:], a[i+1:])
+		a[len(a)-1] = nil // or the zero value of T
+		a = a[:len(a)-1]
+		return a
+	}
+	go func() {
+		for {
+			if menu.Ready {
+				menu.Sync.ReadyChan <- true
+			}
+			if menu.Displayed {
+				menu.Sync.DisplayedChan <- true
+			}
+			for _, child := range menu.Items {
+				if child.IsSubMenu() {
+					if child.SubMenu.IsStable() {
+						menu.Sync.ChildStableChan <- child.SubMenu.TargetID
+					}
+				}
+			}
+			if menu.IsTreeStable() {
+				menu.Sync.TreeStableChan <- true
+			}
+			time.Sleep(time.Microsecond * 10)
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case ready := <-menu.Sync.ReadyChan:
+				if len(menu.Sync.ReadyQueue) == 0 || ready == false {
+					break
+				}
+				command := menu.Sync.ReadyQueue[0]
+				menu.Sync.ReadyQueue = CremoveItemAt(menu.Sync.ReadyQueue, 0)
+				menu.Call(command)
+			case displayed := <-menu.Sync.DisplayedChan:
+				if len(menu.Sync.DisplayedQueue) == 0 || displayed == false {
+					break
+				}
+				command := menu.Sync.DisplayedQueue[0]
+				menu.Sync.DisplayedQueue = CremoveItemAt(menu.Sync.DisplayedQueue, 0)
+				menu.WaitingResponses = append(menu.WaitingResponses, command)
+				menu.Call(command)
+			case stableChildId := <-menu.Sync.ChildStableChan:
+				if len(menu.Sync.ChildStableQueue) == 0 {
+					break
+				}
+				for i, childCommand := range menu.Sync.ChildStableQueue {
+					if childCommand.Child.TargetID != stableChildId {
+						continue
+					}
+
+					childCommand.Command.Args.MenuID = childCommand.Child.TargetID
+					menu.Sync.ChildStableQueue = CCremoveItemAt(menu.Sync.ChildStableQueue, i)
+					menu.Call(childCommand.Command)
+					break
+
+				}
+
+			case treeStable := <-menu.Sync.TreeStableChan:
+				if len(menu.Sync.TreeStableQueue) == 0 || treeStable == false {
+					break
+				}
+				command := menu.Sync.TreeStableQueue[0]
+				command.Args.MenuID = menu.TargetID
+				menu.WaitingResponses = append(menu.WaitingResponses, command)
+				menu.Sync.TreeStableQueue = CremoveItemAt(menu.Sync.TreeStableQueue, 0)
+				menu.Call(command)
+			}
+			time.Sleep(time.Microsecond * 10)
+		}
+	}()
+}
+
 func (menu *Menu) Send(command *Command) {
 	menu.SendChannel.Commands <- command
 }
@@ -137,56 +235,23 @@ func (menu *Menu) Call(command *Command) {
 
 func (menu *Menu) CallWhenReady(command *Command) {
 	menu.WaitingResponses = append(menu.WaitingResponses, command)
-	go func() {
-		for {
-			if menu.Ready {
-				menu.Call(command)
-				return
-			}
-			time.Sleep(time.Millisecond)
-		}
-	}()
+	menu.Sync.ReadyQueue = append(menu.Sync.ReadyQueue, command)
 }
 
 func (menu *Menu) CallWhenChildStable(command *Command, child *Menu) {
 	menu.WaitingResponses = append(menu.WaitingResponses, command)
-	go func() {
-		for {
-			if child.IsStable() {
-				command.Args.MenuID = child.TargetID
-				menu.Call(command)
-				return
-			}
-			time.Sleep(time.Microsecond * 100)
-		}
-	}()
+	menu.Sync.ChildStableQueue = append(menu.Sync.ChildStableQueue, &ChildCommand{
+		Command: command,
+		Child:   child,
+	})
 }
 
 func (menu *Menu) CallWhenTreeStable(command *Command) {
-	go func() {
-		for {
-			if menu.IsTreeStable() {
-				command.Args.MenuID = menu.TargetID
-				menu.WaitingResponses = append(menu.WaitingResponses, command)
-				menu.Call(command)
-				return
-			}
-			time.Sleep(time.Microsecond * 100)
-		}
-	}()
+	menu.Sync.TreeStableQueue = append(menu.Sync.TreeStableQueue, command)
 }
 
 func (menu *Menu) CallWhenDisplayed(command *Command) {
-	go func() {
-		for {
-			if menu.Displayed {
-				menu.WaitingResponses = append(menu.WaitingResponses, command)
-				menu.Call(command)
-				return
-			}
-			time.Sleep(time.Microsecond * 100)
-		}
-	}()
+	menu.Sync.DisplayedQueue = append(menu.Sync.DisplayedQueue, command)
 }
 
 /*
@@ -455,4 +520,22 @@ func (menu *Menu) RadioGroupAtGroupID(groupID int) []*MenuItem {
 	}
 
 	return group
+}
+
+/*
+DEBUG Functions
+*/
+func (menu Menu) PrintRecursiveWaitingResponses() {
+	fmt.Println("Scanning Menu(", menu.TargetID, ")")
+	if len(menu.WaitingResponses) > 0 {
+		for _, v := range menu.WaitingResponses {
+			fmt.Println("Waiting for", v.ID, v.Action, v.Method)
+		}
+	}
+
+	for _, child := range menu.Items {
+		if child.IsSubMenu() {
+			child.SubMenu.PrintRecursiveWaitingResponses()
+		}
+	}
 }
