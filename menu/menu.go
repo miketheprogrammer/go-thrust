@@ -463,15 +463,23 @@ func (menu *Menu) AttachToWindow(w *window.Window) {
 	if runtime.GOOS != "linux" {
 		return
 	}
-	command := Command{
-		Method: "attach",
-		Args: CommandArguments{
-			WindowID: w.TargetID,
-		},
-	}
 
-	// Thread to wait for Stable Menu State
-	menu.CallWhenTreeStable(&command)
+	go func() {
+		for {
+			if w.TargetID != 0 {
+				command := Command{
+					Method: "attach",
+					Args: CommandArguments{
+						WindowID: w.TargetID,
+					},
+				}
+
+				// Thread to wait for Stable Menu State
+				menu.CallWhenTreeStable(&command)
+				return
+			}
+		}
+	}()
 }
 
 /*
