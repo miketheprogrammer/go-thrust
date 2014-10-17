@@ -128,6 +128,8 @@ Please note Complete Support will never be toggled until Thrust core is stable.
 
 - [ ] SubMenus need order preservation
 
+- [ ] vendor folders need versioning
+
 This thrust client exposes enough Methods to be fairly forwards compatible even without adding new helper methods. The beauty of working with a stable JSON RPC Protocol is that most methods are just helpers around build that data structure.
 
 Helper methods receive the UpperCamelCase version of their relative names in Thrust.
