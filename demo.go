@@ -91,7 +91,7 @@ func main() {
 	if runtime.GOOS == "darwin" {
 		rootMenu.SetApplicationMenu()
 	} else {
-		rootMenu.Attach(&thrustWindow)
+		rootMenu.AttachToWindow(&thrustWindow)
 	}
 
 	thrustWindow.Maximize()
