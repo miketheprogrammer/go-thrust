@@ -38,7 +38,7 @@ func main() {
 	out, in := connection.GetCommunicationChannels()
 
 	thrustWindow := window.Window{
-		Url: "file:///Users/mhernandez/jibe/go/src/github.com/miketheprogrammer/go-thrust/html/index.html",
+		Url: "http://brach.cc",
 	}
 	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
