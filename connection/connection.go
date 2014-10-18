@@ -69,6 +69,7 @@ func GetCommunicationChannels() (*Out, *In) {
 func Reader(out *Out, in *In) {
 
 	r := bufio.NewReader(StdOut)
+	defer StdIn.Close()
 	for {
 		select {
 		case quit := <-in.Quit:

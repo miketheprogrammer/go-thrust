@@ -57,6 +57,9 @@
 				<dd><a href="#pkg-variables">Variables</a></dd>
 			
 			
+				
+				<dd><a href="#InitLogger">func InitLogger()</a></dd>
+			
 			
 			
 			</dl>
@@ -118,7 +121,9 @@
 			<h2 id="pkg-constants">Constants</h2>
 			
 				<pre>const (
-    <span id="SOCKET_BOUNDARY">SOCKET_BOUNDARY</span> = &#34;--(Foo)++__THRUST_SHELL_BOUNDARY__++(Bar)--&#34;
+    <span id="SOCKET_BOUNDARY">SOCKET_BOUNDARY</span>   = &#34;--(Foo)++__THRUST_SHELL_BOUNDARY__++(Bar)--&#34;
+    <span id="THRUST_VERSION">THRUST_VERSION</span>    = &#34;0.7.0&#34;
+    <span id="THRUST_GO_VERSION">THRUST_GO_VERSION</span> = &#34;0.1.0&#34;
 )</pre>
 				
 			
@@ -126,14 +131,26 @@
 		
 			<h2 id="pkg-variables">Variables</h2>
 			
-				<pre>var <span id="ActionId">ActionId</span> <a href="/pkg/builtin/#int">int</a> = 0</pre>
+				<pre>var <span id="ActionId">ActionId</span> <a href="/pkg/builtin/#uint">uint</a> = 0</pre>
 				<p>
 Global ID tracking for Commands
 Could probably move this to a factory function
 </p>
 
 			
+				<pre>var <span id="Log">Log</span> <a href="/pkg/github.com/alexcesaro/log/">log</a>.<a href="/pkg/github.com/alexcesaro/log/#Logger">Logger</a></pre>
+				
+			
 		
+		
+			
+			
+			<h2 id="InitLogger">func <a href="/src/target/common.go?s=355:372#L10">InitLogger</a></h2>
+			<pre>func InitLogger()</pre>
+			
+			
+			
+
 		
 		
 	

@@ -149,13 +149,13 @@
 		
 			
 			
-			<h2 id="Command">type <a href="/src/target/commands.go?s=731:1042#L18">Command</a></h2>
+			<h2 id="Command">type <a href="/src/target/commands.go?s=901:1212#L21">Command</a></h2>
 			<pre>type Command struct {
-    ID         <a href="/pkg/builtin/#int">int</a>              `json:&#34;_id&#34;`
+    ID         <a href="/pkg/builtin/#uint">uint</a>             `json:&#34;_id&#34;`
     Action     <a href="/pkg/builtin/#string">string</a>           `json:&#34;_action&#34;`
     ObjectType <a href="/pkg/builtin/#string">string</a>           `json:&#34;_type,omitempty&#34;`
     Method     <a href="/pkg/builtin/#string">string</a>           `json:&#34;_method&#34;`
-    TargetID   <a href="/pkg/builtin/#int">int</a>              `json:&#34;_target,omitempty&#34;`
+    TargetID   <a href="/pkg/builtin/#uint">uint</a>             `json:&#34;_target,omitempty&#34;`
     Args       <a href="#CommandArguments">CommandArguments</a> `json:&#34;_args&#34;`
 }</pre>
 			
@@ -172,7 +172,7 @@
 
 			
 				
-				<h3 id="Command.Send">func (Command) <a href="/src/target/commands.go?s=1044:1080#L27">Send</a></h3>
+				<h3 id="Command.Send">func (Command) <a href="/src/target/commands.go?s=1214:1250#L30">Send</a></h3>
 				<pre>func (c <a href="#Command">Command</a>) Send(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
 				
 				
@@ -182,18 +182,21 @@
 		
 			
 			
-			<h2 id="CommandArguments">type <a href="/src/target/commands.go?s=241:730#L6">CommandArguments</a></h2>
+			<h2 id="CommandArguments">type <a href="/src/target/commands.go?s=243:900#L6">CommandArguments</a></h2>
 			<pre>type CommandArguments struct {
-    RootUrl   <a href="/pkg/builtin/#string">string</a> `json:&#34;root_url,omitempty&#34;`
-    Title     <a href="/pkg/builtin/#string">string</a> `json:&#34;title,omitempty&#34;`
-    Size      <a href="#SizeHW">SizeHW</a> `json:&#34;size,omitempty&#34;`
-    X         <a href="/pkg/builtin/#int">int</a>    `json:&#34;x,omitempty&#34;`
-    Y         <a href="/pkg/builtin/#int">int</a>    `json:&#34;y,omitempty&#34;`
-    CommandID <a href="/pkg/builtin/#int">int</a>    `json:&#34;command_id,omitempty&#34;`
-    Label     <a href="/pkg/builtin/#string">string</a> `json:&#34;label,omitempty&#34;`
-    MenuID    <a href="/pkg/builtin/#int">int</a>    `json:&#34;menu_id,omitempty&#34;` <span class="comment">// this should never be 0 anyway</span>
-    GroupID   <a href="/pkg/builtin/#int">int</a>    `json:&#34;group_id,omitempty&#34;`
-    Value     <a href="/pkg/builtin/#bool">bool</a>   `json:&#34;value&#34;`
+    RootUrl      <a href="/pkg/builtin/#string">string</a> `json:&#34;root_url,omitempty&#34;`
+    Title        <a href="/pkg/builtin/#string">string</a> `json:&#34;title,omitempty&#34;`
+    Size         <a href="#SizeHW">SizeHW</a> `json:&#34;size,omitempty&#34;`
+    X            <a href="/pkg/builtin/#int">int</a>    `json:&#34;x,omitempty&#34;`
+    Y            <a href="/pkg/builtin/#int">int</a>    `json:&#34;y,omitempty&#34;`
+    CommandID    <a href="/pkg/builtin/#uint">uint</a>   `json:&#34;command_id,omitempty&#34;`
+    Label        <a href="/pkg/builtin/#string">string</a> `json:&#34;label,omitempty&#34;`
+    MenuID       <a href="/pkg/builtin/#uint">uint</a>   `json:&#34;menu_id,omitempty&#34;` <span class="comment">// this should never be 0 anyway</span>
+    WindowID     <a href="/pkg/builtin/#uint">uint</a>   `json:&#34;window_id,omitempty&#34;`
+    GroupID      <a href="/pkg/builtin/#uint">uint</a>   `json:&#34;group_id,omitempty&#34;`
+    Value        <a href="/pkg/builtin/#bool">bool</a>   `json:&#34;value&#34;`
+    CookieStore  <a href="/pkg/builtin/#bool">bool</a>   `json:&#34;cookie_store&#34;`
+    OffTheRecord <a href="/pkg/builtin/#bool">bool</a>   `json:&#34;off_the_record&#34;`
 }</pre>
 			<p>
 Covers all possible argument combinations.
@@ -215,11 +218,11 @@ Makes use of omit empty to adapt to different use cases
 		
 			
 			
-			<h2 id="CommandResponse">type <a href="/src/target/commands.go?s=1346:1606#L42">CommandResponse</a></h2>
+			<h2 id="CommandResponse">type <a href="/src/target/commands.go?s=1519:1779#L45">CommandResponse</a></h2>
 			<pre>type CommandResponse struct {
     Action <a href="/pkg/builtin/#string">string</a>      `json:&#34;_action,omitempty&#34;`
     Error  <a href="/pkg/builtin/#string">string</a>      `json:&#34;_error,omitempty&#34;`
-    ID     <a href="/pkg/builtin/#int">int</a>         `json:&#34;_id,omitempty&#34;`
+    ID     <a href="/pkg/builtin/#uint">uint</a>        `json:&#34;_id,omitempty&#34;`
     Result <a href="#ReplyResult">ReplyResult</a> `json:&#34;_result,omitempty&#34;`
     Event  <a href="#EventResult">EventResult</a> `json:&#34;_event,omitempty&#34;`
 }</pre>
@@ -239,10 +242,10 @@ Makes use of omit empty to adapt to different use cases
 		
 			
 			
-			<h2 id="EventResult">type <a href="/src/target/commands.go?s=1224:1344#L37">EventResult</a></h2>
+			<h2 id="EventResult">type <a href="/src/target/commands.go?s=1395:1517#L40">EventResult</a></h2>
 			<pre>type EventResult struct {
-    CommandID  <a href="/pkg/builtin/#int">int</a> `json:&#34;command_id,omitempty&#34;`
-    EventFlags <a href="/pkg/builtin/#int">int</a> `json:&#34;event_flags,omitempty&#34;`
+    CommandID  <a href="/pkg/builtin/#uint">uint</a> `json:&#34;command_id,omitempty&#34;`
+    EventFlags <a href="/pkg/builtin/#int">int</a>  `json:&#34;event_flags,omitempty&#34;`
 }</pre>
 			
 
@@ -260,9 +263,9 @@ Makes use of omit empty to adapt to different use cases
 		
 			
 			
-			<h2 id="ReplyResult">type <a href="/src/target/commands.go?s=1154:1222#L33">ReplyResult</a></h2>
+			<h2 id="ReplyResult">type <a href="/src/target/commands.go?s=1324:1393#L36">ReplyResult</a></h2>
 			<pre>type ReplyResult struct {
-    TargetID <a href="/pkg/builtin/#int">int</a> `json:&#34;_target,omitempty&#34;`
+    TargetID <a href="/pkg/builtin/#uint">uint</a> `json:&#34;_target,omitempty&#34;`
 }</pre>
 			
 
@@ -280,10 +283,10 @@ Makes use of omit empty to adapt to different use cases
 		
 			
 			
-			<h2 id="SizeHW">type <a href="/src/target/commands.go?s=37:134#L1">SizeHW</a></h2>
+			<h2 id="SizeHW">type <a href="/src/target/commands.go?s=37:136#L1">SizeHW</a></h2>
 			<pre>type SizeHW struct {
-    Width  <a href="/pkg/builtin/#int">int</a> `json:&#34;width,omitempty&#34;`
-    Height <a href="/pkg/builtin/#int">int</a> `json:&#34;height,omitempty&#34;`
+    Width  <a href="/pkg/builtin/#uint">uint</a> `json:&#34;width,omitempty&#34;`
+    Height <a href="/pkg/builtin/#uint">uint</a> `json:&#34;height,omitempty&#34;`
 }</pre>
 			
 

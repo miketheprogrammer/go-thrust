@@ -11,17 +11,18 @@ import (
 )
 
 type Menu struct {
-	TargetID         uint           `json:"target_id,omitempty"`
-	WaitingResponses []*Command     `json:"awaiting_responses,omitempty"`
-	CommandQueue     []*Command     `json:"command_queue,omitempty"`
-	Ready            bool           `json:"ready"`
-	Displayed        bool           `json:"displayed"`
-	Parent           *Menu          `json:"-"`
-	Children         []*Menu        `json:"-"`
-	Items            []*MenuItem    `json:"items,omitempty"`
-	EventRegistry    []uint         `json:"events,omitempty"`
-	SendChannel      *connection.In `json:"-"`
-	Sync             MenuSync       `jons:"-"`
+	TargetID         uint                                                 `json:"target_id,omitempty"`
+	WaitingResponses []*Command                                           `json:"awaiting_responses,omitempty"`
+	CommandQueue     []*Command                                           `json:"command_queue,omitempty"`
+	Ready            bool                                                 `json:"ready"`
+	Displayed        bool                                                 `json:"displayed"`
+	Parent           *Menu                                                `json:"-"`
+	Children         []*Menu                                              `json:"-"`
+	Items            []*MenuItem                                          `json:"items,omitempty"`
+	EventRegistry    []uint                                               `json:"events,omitempty"`
+	SendChannel      *connection.In                                       `json:"-"`
+	Sync             MenuSync                                             `jons:"-"`
+	ReplyHandlers    map[uint]func(reply CommandResponse, item *MenuItem) `json:"_"`
 }
 
 func (menu *Menu) Create(sendChannel *connection.In) {
@@ -39,6 +40,7 @@ func (menu *Menu) Create(sendChannel *connection.In) {
 		ChildStableQueue: make([]*ChildCommand, 0),
 		TreeStableQueue:  make([]*Command, 0),
 	}
+	menu.ReplyHandlers = make(map[uint]func(reply CommandResponse, item *MenuItem))
 	menu.SetSendChannel(sendChannel)
 	menu.WaitingResponses = append(menu.WaitingResponses, &menuCreate)
 	go menu.SendThread()
@@ -60,7 +62,12 @@ func (menu *Menu) HandleEvent(reply CommandResponse) {
 	for _, item := range menu.Items {
 		if reply.Event.CommandID == item.CommandID {
 			Log.Debug("Menu(", menu.TargetID, "):: Handling Event", item.CommandID, "::Handled With Flags", reply.Event.EventFlags, "With Type", item.Type)
-			item.HandleEvent()
+			handler, ok := menu.ReplyHandlers[item.CommandID]
+			if ok {
+				handler(reply, item)
+			} else {
+				item.HandleEvent()
+			}
 			return
 		}
 	}
@@ -529,6 +536,12 @@ func (menu *Menu) ItemAtCommandID(commandID uint) *MenuItem {
 		}
 	}
 	return nil
+}
+
+func (menu *Menu) RegisterEventHandlerByCommandID(commandID uint, handler func(reply CommandResponse, item *MenuItem)) {
+	menu.ReplyHandlers[commandID] = func(reply CommandResponse, item *MenuItem) {
+		handler(reply, item)
+	}
 }
 
 /*

@@ -59,31 +59,52 @@
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.Call">func (w *Window) Call(command *Command, conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.Call">func (w *Window) Call(command *Command)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.Create">func (w *Window) Create(conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.CallWhenDisplayed">func (w *Window) CallWhenDisplayed(command *Command)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.DispatchResponse">func (w *Window) DispatchResponse(reply CommandResponse, conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.CallWhenReady">func (w *Window) CallWhenReady(command *Command)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.HandleError">func (w *Window) HandleError(reply CommandResponse, conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.Create">func (w *Window) Create(sendChannel *connection.In)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.HandleEvent">func (w *Window) HandleEvent(reply CommandResponse, conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.DispatchResponse">func (w *Window) DispatchResponse(reply CommandResponse)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.HandleReply">func (w *Window) HandleReply(reply CommandResponse, conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.HandleError">func (w *Window) HandleError(reply CommandResponse)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.IsTarget">func (w *Window) IsTarget(targetId int) bool</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.HandleEvent">func (w *Window) HandleEvent(reply CommandResponse)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.Send">func (w *Window) Send(command *Command, conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.HandleReply">func (w *Window) HandleReply(reply CommandResponse)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Window.Show">func (w *Window) Show(conn net.Conn)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Window.IsTarget">func (w *Window) IsTarget(targetId uint) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Maximize">func (w *Window) Maximize()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Minimize">func (w *Window) Minimize()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Restore">func (w *Window) Restore()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Send">func (w *Window) Send(command *Command)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.SetSendChannel">func (w *Window) SetSendChannel(sendChannel *connection.In)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.Show">func (w *Window) Show()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Window.UnMaximize">func (w *Window) UnMaximize()</a></dd>
 				
 			
 			
@@ -148,18 +169,18 @@
 		
 			
 			
-			<h2 id="Window">type <a href="/src/target/window.go?s=164:455#L2">Window</a></h2>
+			<h2 id="Window">type <a href="/src/target/window.go?s=194:503#L1">Window</a></h2>
 			<pre>type Window struct {
-    TargetID         <a href="/pkg/builtin/#int">int</a>
+    TargetID         <a href="/pkg/builtin/#uint">uint</a>
     CommandHistory   []*<a href="#Command">Command</a>
     ResponseHistory  []*<a href="#CommandResponse">CommandResponse</a>
     WaitingResponses []*<a href="#Command">Command</a>
     CommandQueue     []*<a href="#Command">Command</a>
     Url              <a href="/pkg/builtin/#string">string</a>
     Title            <a href="/pkg/builtin/#string">string</a>
-    Conn             <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>
     Ready            <a href="/pkg/builtin/#bool">bool</a>
     Displayed        <a href="/pkg/builtin/#bool">bool</a>
+    SendChannel      *<a href="/pkg/github.com/miketheprogrammer/go-thrust/connection/">connection</a>.<a href="/pkg/github.com/miketheprogrammer/go-thrust/connection/#In">In</a> `json:&#34;-&#34;`
 }</pre>
 			
 
@@ -175,72 +196,128 @@
 
 			
 				
-				<h3 id="Window.Call">func (*Window) <a href="/src/target/window.go?s=2626:2680#L111">Call</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) Call(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.Call">func (*Window) <a href="/src/target/window.go?s=2606:2645#L105">Call</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Call(command *<a href="#Command">Command</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.Create">func (*Window) <a href="/src/target/window.go?s=457:495#L15">Create</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) Create(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.CallWhenDisplayed">func (*Window) <a href="/src/target/window.go?s=3042:3094#L128">CallWhenDisplayed</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) CallWhenDisplayed(command *<a href="#Command">Command</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.DispatchResponse">func (*Window) <a href="/src/target/window.go?s=2079:2150#L86">DispatchResponse</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) DispatchResponse(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.CallWhenReady">func (*Window) <a href="/src/target/window.go?s=2810:2858#L115">CallWhenReady</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) CallWhenReady(command *<a href="#Command">Command</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.HandleError">func (*Window) <a href="/src/target/window.go?s=884:950#L38">HandleError</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) HandleError(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.Create">func (*Window) <a href="/src/target/window.go?s=505:556#L14">Create</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Create(sendChannel *<a href="/pkg/github.com/miketheprogrammer/go-thrust/connection/">connection</a>.<a href="/pkg/github.com/miketheprogrammer/go-thrust/connection/#In">In</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.HandleEvent">func (*Window) <a href="/src/target/window.go?s=957:1023#L42">HandleEvent</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) HandleEvent(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.DispatchResponse">func (*Window) <a href="/src/target/window.go?s=2360:2416#L90">DispatchResponse</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) DispatchResponse(reply <a href="#CommandResponse">CommandResponse</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.HandleReply">func (*Window) <a href="/src/target/window.go?s=1030:1096#L46">HandleReply</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) HandleReply(reply <a href="#CommandResponse">CommandResponse</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.HandleError">func (*Window) <a href="/src/target/window.go?s=1129:1180#L43">HandleError</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) HandleError(reply <a href="#CommandResponse">CommandResponse</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.IsTarget">func (*Window) <a href="/src/target/window.go?s=804:848#L35">IsTarget</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) IsTarget(targetId <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				<h3 id="Window.HandleEvent">func (*Window) <a href="/src/target/window.go?s=1187:1238#L47">HandleEvent</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) HandleEvent(reply <a href="#CommandResponse">CommandResponse</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.Send">func (*Window) <a href="/src/target/window.go?s=2270:2324#L95">Send</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) Send(command *<a href="#Command">Command</a>, conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.HandleReply">func (*Window) <a href="/src/target/window.go?s=1311:1362#L51">HandleReply</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) HandleReply(reply <a href="#CommandResponse">CommandResponse</a>)</pre>
 				
 				
 				
 				
 			
 				
-				<h3 id="Window.Show">func (*Window) <a href="/src/target/window.go?s=2852:2888#L122">Show</a></h3>
-				<pre>func (w *<a href="#Window">Window</a>) Show(conn <a href="/pkg/net/">net</a>.<a href="/pkg/net/#Conn">Conn</a>)</pre>
+				<h3 id="Window.IsTarget">func (*Window) <a href="/src/target/window.go?s=1048:1093#L40">IsTarget</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) IsTarget(targetId <a href="/pkg/builtin/#uint">uint</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Maximize">func (*Window) <a href="/src/target/window.go?s=3381:3408#L149">Maximize</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Maximize()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Minimize">func (*Window) <a href="/src/target/window.go?s=3605:3632#L163">Minimize</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Minimize()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Restore">func (*Window) <a href="/src/target/window.go?s=3714:3740#L170">Restore</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Restore()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Send">func (*Window) <a href="/src/target/window.go?s=2525:2564#L100">Send</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Send(command *<a href="#Command">Command</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.SetSendChannel">func (*Window) <a href="/src/target/window.go?s=954:1013#L36">SetSendChannel</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) SetSendChannel(sendChannel *<a href="/pkg/github.com/miketheprogrammer/go-thrust/connection/">connection</a>.<a href="/pkg/github.com/miketheprogrammer/go-thrust/connection/#In">In</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.Show">func (*Window) <a href="/src/target/window.go?s=3282:3305#L141">Show</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) Show()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Window.UnMaximize">func (*Window) <a href="/src/target/window.go?s=3491:3520#L156">UnMaximize</a></h3>
+				<pre>func (w *<a href="#Window">Window</a>) UnMaximize()</pre>
 				
 				
 				

@@ -37,7 +37,9 @@ func main() {
 	}
 	out, in := connection.GetCommunicationChannels()
 
-	thrustWindow := window.Window{}
+	thrustWindow := window.Window{
+		Url: "file:///Users/mhernandez/jibe/go/src/github.com/miketheprogrammer/go-thrust/html/index.html",
+	}
 	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
 	checkList := menu.Menu{}
@@ -52,6 +54,9 @@ func main() {
 
 	fileMenu.Create(in)
 	fileMenu.AddItem(3, "Open")
+	fileMenu.RegisterEventHandlerByCommandID(4, func(reply commands.CommandResponse, item *menu.MenuItem) {
+		os.Exit(2)
+	})
 	fileMenu.AddItem(4, "Close")
 	fileMenu.AddSeparator()
 
