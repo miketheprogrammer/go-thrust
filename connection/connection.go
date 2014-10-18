@@ -34,7 +34,7 @@ var out Out
 Initializes threads with Channel Structs
 Opens Connection
 */
-func InitializeThreads(proto, address string) error {
+func InitializeThreads() error {
 	//c, err := net.Dial(proto, address)
 	//conn = c
 

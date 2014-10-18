@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"runtime"
@@ -18,20 +17,13 @@ import (
 )
 
 func main() {
-	addr := flag.String("socket", "/tmp/_thrust_shell.sock", "unix socket where thrust is running")
-	autoloaderDisabled := flag.Bool("disable-auto-loader", false, "disable auto running of thrust")
 
 	// Parses Flags
 	InitLogger()
 
-	if len(*addr) == 0 {
-		Log.Errorf("System cannot proceed without a socket to connect to. please use -socket={socket_addr}")
-		os.Exit(2)
-	}
+	connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
 
-	connection.StdOut, connection.StdIn = spawn.SpawnThrustCore(*addr, *autoloaderDisabled)
-
-	err := connection.InitializeThreads("unix", *addr)
+	err := connection.InitializeThreads()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)
