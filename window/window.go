@@ -6,6 +6,7 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
 	"github.com/miketheprogrammer/go-thrust/connection"
+	"github.com/miketheprogrammer/go-thrust/session"
 )
 
 type Window struct {
@@ -21,7 +22,7 @@ type Window struct {
 	SendChannel      *connection.In `json:"-"`
 }
 
-func (w *Window) Create(sendChannel *connection.In) {
+func (w *Window) Create(sendChannel *connection.In, sess *session.Session) {
 	url := w.Url
 	if len(url) == 0 {
 		url = "http://google.com"
@@ -38,9 +39,24 @@ func (w *Window) Create(sendChannel *connection.In) {
 			},
 		},
 	}
-	w.SetSendChannel(sendChannel)
-	w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
-	w.Send(&windowCreate)
+	if sess == nil {
+		w.SetSendChannel(sendChannel)
+		w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
+		w.Send(&windowCreate)
+	} else {
+		go func() {
+			for {
+				if sess.TargetID != 0 {
+					windowCreate.Args.SessionID = sess.TargetID
+					w.SetSendChannel(sendChannel)
+					w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
+					w.Send(&windowCreate)
+					return
+				}
+				time.Sleep(time.Microsecond * 10)
+			}
+		}()
+	}
 }
 
 func (w *Window) SetSendChannel(sendChannel *connection.In) {

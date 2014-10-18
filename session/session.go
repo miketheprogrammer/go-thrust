@@ -15,10 +15,11 @@ type Session struct {
 	ResponseHistory  []*CommandResponse
 	WaitingResponses []*Command
 	CommandQueue     []*Command
+	SendChannel      *connection.In
 }
 
 func (session *Session) Create(sendChannel *connection.In) {
-	command := commands.Commands{
+	command := Command{
 		Action:     "create",
 		ObjectType: "session",
 		Args: CommandArguments{
@@ -26,6 +27,7 @@ func (session *Session) Create(sendChannel *connection.In) {
 			OffTheRecord: session.OffTheRecord,
 		},
 	}
+	session.SendChannel = sendChannel
 	session.WaitingResponses = append(session.WaitingResponses, &command)
 	session.Send(&command)
 }
@@ -57,6 +59,15 @@ func (session *Session) HandleReply(reply CommandResponse) {
 				}
 			}
 		}
+	}
+}
+
+func (session *Session) DispatchResponse(reply CommandResponse) {
+	switch reply.Action {
+	case "event":
+		session.HandleEvent(reply)
+	case "reply":
+		session.HandleReply(reply)
 	}
 }
 

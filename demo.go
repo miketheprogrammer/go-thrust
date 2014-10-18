@@ -12,6 +12,7 @@ import (
 	"github.com/miketheprogrammer/go-thrust/connection"
 	"github.com/miketheprogrammer/go-thrust/dispatcher"
 	"github.com/miketheprogrammer/go-thrust/menu"
+	"github.com/miketheprogrammer/go-thrust/session"
 	"github.com/miketheprogrammer/go-thrust/spawn"
 	"github.com/miketheprogrammer/go-thrust/window"
 )
@@ -37,8 +38,11 @@ func main() {
 	}
 	out, in := connection.GetCommunicationChannels()
 
+	mainSession := session.Session{}
+	mainSession.Create(in)
+
 	thrustWindow := window.Window{
-		Url: "http://brach.cc",
+		Url: "http://breach.cc/",
 	}
 	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
@@ -46,7 +50,7 @@ func main() {
 	radioList := menu.Menu{}
 	viewMenu := menu.Menu{}
 	// Calls to other methods after create are Queued until Create returns
-	thrustWindow.Create(in)
+	thrustWindow.Create(in, nil)
 	thrustWindow.Show()
 
 	rootMenu.Create(in)
@@ -107,6 +111,10 @@ func main() {
 
 	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
 		rootMenu.DispatchResponse(c)
+	})
+
+	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
+		mainSession.DispatchResponse(c)
 	})
 	for {
 		select {

@@ -17,11 +17,11 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) (io.ReadCloser, io.Wr
 	var thrustExecPath string
 	var thrustBoostrapPath string
 	if strings.Contains(runtime.GOOS, "darwin") {
-		thrustExecPath = "./vendor/darwin/x64/ThrustShell.app/Contents/MacOS/ThrustShell"
+		thrustExecPath = "./vendor/darwin/x64/v" + THRUST_VERSION + "/ThrustShell.app/Contents/MacOS/ThrustShell"
 		thrustBoostrapPath = "./tools/bootstrap_darwin.sh"
 	}
 	if strings.Contains(runtime.GOOS, "linux") {
-		thrustExecPath = "./vendor/linux/x64/thrust_shell"
+		thrustExecPath = "./vendor/linux/x64/v" + THRUST_VERSION + "/thrust_shell"
 		thrustBoostrapPath = "./tools/bootstrap_linux.sh"
 	}
 
@@ -30,14 +30,29 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) (io.ReadCloser, io.Wr
 			Log.Info("Could not find executable:", thrustExecPath)
 			Log.Info("Attempting to Download and Install the Thrust Core Executable")
 
-			installCmd := exec.Command("sh", thrustBoostrapPath)
-			installCmd.Stdout = os.Stdout
-			installCmd.Stderr = os.Stderr
+			installCmd := exec.Command("sh", thrustBoostrapPath, THRUST_VERSION)
+			if Log.LogDebug() {
+				installCmd.Stdout = os.Stdout
+				installCmd.Stderr = os.Stderr
+			}
 
+			installDoneChan := make(chan bool, 1)
 			installCmd.Start()
-			Log.Info("Waiting for install to finish....")
-			installErr := installCmd.Wait()
+			fmt.Print("Installing ")
+			go func() {
+				for {
+					select {
+					case <-installDoneChan:
+						return
+					default:
+						fmt.Print(".")
+						time.Sleep(time.Second)
+					}
+				}
+			}()
 
+			installErr := installCmd.Wait()
+			installDoneChan <- true
 			if installErr != nil {
 				Log.Errorf("Could not bootstrap, ErrorCode:", err)
 			} else {
@@ -67,7 +82,7 @@ func SpawnThrustCore(addr string, autoloaderDisabled bool) (io.ReadCloser, io.Wr
 
 		cmd.Start()
 
-		time.Sleep(time.Millisecond * 1000)
+		//time.Sleep(time.Millisecond * 1000)
 		Log.Info("Returning to Main Process.")
 		return cmdOut, cmdIn
 	} else {
