@@ -3,29 +3,26 @@ go-thrust
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust) to be used in Breach.cc(http://breach.cc) via Official Go Implementation @ (http://github.com/miketheprogrammer/breach-go).
 
-Running on OSX 10.9
+Running on OSX 10.9 or Linux (This is just for the demo, Thrust as it stands now is really a Library to be used in other applications.)
 ==================
-Included in vendor are the binaries
-Start thrust using
+Go Thrust will automatically install Thrust Core dependencies at runtime.
+
+Start Go Thrust using binaries
 ```bash
-./vendor/darwin/10.9/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path=/tmp/
-thrust.sock
-# This is no longer needed, Thrust-go will detect darwin as your runtime, and try to spawn this binary.
-# if that does not work run the aformentioned binary and then run thrust with
-# go run demo.go -socket=/tmp/thrust.sock -disable-auto-loader=true
+Download the release for your distribution from the releases page.
+unzip the contents.
+run ./Thrust or the absolute path to the executable
 ```
-Start Thrust Go using
+Start Go Thrust using source and GoLang runtime
 ```bash
-go run demo.go -socket=/tmp/thrust.sock
+make build.release
+cd release
+./Thrust
 ```
 
 Command Line Switches
 ========================
 ```bash
--socket=path  #path to the socket you want to use. Will create if not exist
--disable-auto-loader=bool #disable auto run of thrust core, 
-#will need to run thrust core individually with the expected socket so that thrust core can create it.
-
 #LOGGING
 #Inherits Switches from http://godoc.org/github.com/alexcesaro/log/stdlog
 #Added below for ease, but for up to date info visit the page.
@@ -40,49 +37,6 @@ Command Line Switches
     #outputs all logs in memory as well as the future log events. This
     #feature should not be used with long-running processes.
 ```
-
-
-Building from source
-======
-Get Chromium DepotTools from here
-http://www.chromium.org/developers/how-tos/install-depot-tools
-Make sure to follow instructions for setting path.
-
-
-Clone Thrust Core from here
-https://github.com/breach/thrust/
-
-From the thrust core directory run 
-First run the boostrap script:
-```bash
-./scripts/bootstrap.py 
-```
-Then generate build files with:
-
-```bash
-GYP_GENERATORS=ninja gyp --depth . thrust_shell.gyp
-```
-Finally run ninja:
-
-```bash
-ninja -C out/Debug thrust_shell
-```
-
-Now you can run thrust 
-I run it on OSX with the command
-```bash
- ./out/Debug/ThrustShell.app/Contents/MacOS/ThrustShell -socket-path={somepathhere}
-```
-
-
-From here down only works while I have  func main in the repo which will be removed soon
-Now back in the go-thrust directory
-
-```bash
-go build -o thrust src/main.go
-./thrust -socket={socketaddrusedinstartingthrusthere}
-```
-
 
 Roadmap to v1.0 :
 ================
