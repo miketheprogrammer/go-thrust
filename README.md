@@ -16,7 +16,7 @@ run ./Thrust or the absolute path to the executable
 Start Go Thrust using source and GoLang runtime
 ```bash
 make build.release
-cd release
+cd release/go-thrust/
 ./Thrust
 ```
 
