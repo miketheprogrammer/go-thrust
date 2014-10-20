@@ -46,14 +46,14 @@ func (c Command) Send(conn net.Conn) {
 }
 
 /*
-This object is used in CommandRespons's of Type Reply
+This object is used in CommandResponse's of Type Reply
 */
 type ReplyResult struct {
 	TargetID uint `json:"_target,omitempty"`
 }
 
 /*
-This object is used in CommandRespons's of Type Event
+This object is used in CommandResponse's of Type Event
 */
 type EventResult struct {
 	CommandID  uint `json:"command_id,omitempty"`

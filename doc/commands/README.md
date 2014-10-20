@@ -73,7 +73,7 @@ type EventResult struct {
 }
 ```
 
-This object is used in CommandRespons's of Type Event
+This object is used in CommandResponse's of Type Event
 
 #### type ReplyResult
 
@@ -83,7 +83,7 @@ type ReplyResult struct {
 }
 ```
 
-This object is used in CommandRespons's of Type Reply
+This object is used in CommandResponse's of Type Reply
 
 #### type SizeHW
 
