@@ -9,4 +9,4 @@
 
 ## Tutorials
 
-* [Basic Browser](tutorial/basic_browser)
+* [Basic Browser](tutorials/basic_browser)
