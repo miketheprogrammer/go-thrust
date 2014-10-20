@@ -15,7 +15,7 @@ build.tutorials:
 	rm -rf tutorial/tools
 	cp -rf tools tutorial
 	rm -f tutorial/basic_browser
-	go build -o tutorial/basic_browser1 tutorial/basic_browser.go
+	go build -o tutorial/basic_browser tutorial/basic_browser.go
 
 
 dist.darwin: build.release

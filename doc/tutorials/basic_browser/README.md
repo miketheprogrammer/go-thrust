@@ -128,10 +128,11 @@ func main () {
 }
 ```
 
-There is one majore part left, your dispatching thread. We need to create a thread that will dispatch the commands to handlers. As soon as the api is standardized this may be removed, but for now, you handle it.
-
+There is one major part left, registering handlers, and running the main loop
+This API is going to change alot, as we need to expose more control, and allow you to tie into events.
 ```go
 func main () {
+  // Parses Flags
   // Initialize the Logger
   InitLogger()
 
@@ -166,19 +167,11 @@ func main () {
   thrustWindow.Maximize()
 
   // Register a handler for thrustWindow
-  dispatcher.RegisterHandler(func(c commands.CommandResponse) {
-    thrustWindow.DispatchResponse(c)
-  })
-  // Create your dispatching thread.
-  for {
-    select {
-    case response := <-out.CommandResponses:
-      dispatcher.Dispatch(response)
-    default:
-      break
-    }
-    time.Sleep(time.Microsecond * 10)
-  }
+  dispatcher.RegisterHandler(thrustWindow.DispatchResponse)
+  // Start the main loop
+  // Takes a *connection.Out as an argument.
+  dispatcher.RunLoop(out)
+
 }
 ```
 
