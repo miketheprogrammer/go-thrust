@@ -17,6 +17,12 @@ func Dispatch(command commands.CommandResponse)
 func RegisterHandler(f DispatcherHandleFunc)
 ```
 
+#### func  RunLoop
+
+```go
+func RunLoop(outChannels *connection.Out)
+```
+
 #### type DispatcherHandleFunc
 
 ```go

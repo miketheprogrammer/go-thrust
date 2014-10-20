@@ -1,6 +1,11 @@
 package dispatcher
 
-import "github.com/miketheprogrammer/go-thrust/commands"
+import (
+	"time"
+
+	"github.com/miketheprogrammer/go-thrust/commands"
+	"github.com/miketheprogrammer/go-thrust/connection"
+)
 
 type DispatcherHandleFunc func(commands.CommandResponse)
 
@@ -13,5 +18,17 @@ func RegisterHandler(f DispatcherHandleFunc) {
 func Dispatch(command commands.CommandResponse) {
 	for _, f := range registry {
 		go f(command)
+	}
+}
+
+func RunLoop(outChannels *connection.Out) {
+	for {
+		select {
+		case response := <-outChannels.CommandResponses:
+			Dispatch(response)
+		default:
+			break
+		}
+		time.Sleep(time.Microsecond * 10)
 	}
 }

@@ -3,9 +3,10 @@ go-thrust
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust) to be used in Breach.cc(http://breach.cc) via Official Go Implementation @ (http://github.com/miketheprogrammer/breach-go).
 
-Running on OSX 10.9 or Linux (This is just for the demo, Thrust as it stands now is really a Library to be used in other applications.)
+Running DEMO binary on OSX 10.9 or Linux (This is just for the demo, Thrust as it stands now is really a Library to be used in other applications.)
 ==================
 Go Thrust will automatically install Thrust Core dependencies at runtime.
+
 
 Start Go Thrust using binaries
 ```bash
@@ -15,6 +16,7 @@ run ./Thrust or the absolute path to the executable
 ```
 Start Go Thrust using source and GoLang runtime
 ```bash
+./install-go-deps.sh #installs current dependencies
 make build.release
 cd release/go-thrust/
 ./Thrust

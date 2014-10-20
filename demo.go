@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"time"
 
 	"github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
@@ -97,26 +96,11 @@ func main() {
 
 	thrustWindow.Maximize()
 
-	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
-		thrustWindow.DispatchResponse(c)
-	})
+	dispatcher.RegisterHandler(thrustWindow.DispatchResponse)
+	dispatcher.RegisterHandler(rootMenu.DispatchResponse)
+	dispatcher.RegisterHandler(mainSession.DispatchResponse)
 
-	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
-		rootMenu.DispatchResponse(c)
-	})
-
-	dispatcher.RegisterHandler(func(c commands.CommandResponse) {
-		mainSession.DispatchResponse(c)
-	})
-	for {
-		select {
-		case response := <-out.CommandResponses:
-			dispatcher.Dispatch(response)
-		default:
-			break
-		}
-		time.Sleep(time.Microsecond * 10)
-
-	}
-
+	// BLOCKING. This is not a thread,
+	// It is meant to run on the main thread, and keep the process alive.
+	dispatcher.RunLoop(out)
 }
