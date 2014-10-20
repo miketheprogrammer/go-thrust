@@ -1,5 +1,12 @@
 package menu
 
+/*
+Package menu:
+Provides common objects and methods for working with menus in
+Thrust. Unfortunately, we have had to use GoRoutines in this and other packages to ensure that information is passed to GoLang in the proper order.
+Please be aware of this when using this package in your own library.
+The reason this is unfortunate is that as library writers it is best to leave GoRoutines out of your library and let the user decide when to use them. However with I/O you typically need to use GoRoutines in some way or another.
+*/
 import (
 	"runtime"
 	"time"
@@ -10,6 +17,11 @@ import (
 	"github.com/miketheprogrammer/go-thrust/window"
 )
 
+/*
+The base Menu structure.
+Provides all the necessary attributes to work with asynchronous calls to the menu API.
+The TargetID is assigned by ThrustCore, so on init of this object, there is no TargetID. A Goroutine is dispatched to get the targetID.
+*/
 type Menu struct {
 	TargetID         uint                                                 `json:"target_id,omitempty"`
 	WaitingResponses []*Command                                           `json:"awaiting_responses,omitempty"`
@@ -25,6 +37,11 @@ type Menu struct {
 	ReplyHandlers    map[uint]func(reply CommandResponse, item *MenuItem) `json:"_"`
 }
 
+/*
+Create a new menu object.
+Dispatches a call to ThrustCore to generate the object and return the new
+TargetID in a reply.
+*/
 func (menu *Menu) Create(sendChannel *connection.In) {
 	menuCreate := Command{
 		Action:     "create",
@@ -47,17 +64,33 @@ func (menu *Menu) Create(sendChannel *connection.In) {
 	menu.Send(&menuCreate)
 }
 
+/*
+Helper Setter for SendChannel, in case we make it private in the future.
+Use this for full forwards compatibility.
+*/
 func (menu *Menu) SetSendChannel(sendChannel *connection.In) {
 	menu.SendChannel = sendChannel
 }
 
+/*
+Check if the current menu is the menu we are looking for.
+*/
 func (menu *Menu) IsTarget(targetId uint) bool {
 	return targetId == menu.TargetID
 }
+
+/*
+Handler for Error responses from ThrustCore
+This should be changed to private as soon as API stabilizes.
+*/
 func (menu *Menu) HandleError(reply CommandResponse) {
 
 }
 
+/*
+Handler for Event responses from ThrustCore
+This should be changed to private as soon as API stabilizes.
+*/
 func (menu *Menu) HandleEvent(reply CommandResponse) {
 	for _, item := range menu.Items {
 		if reply.Event.CommandID == item.CommandID {
@@ -73,6 +106,10 @@ func (menu *Menu) HandleEvent(reply CommandResponse) {
 	}
 }
 
+/*
+Handler for Reply responses from ThrustCore
+This should be changed to private as soon as API stabilizes.
+*/
 func (menu *Menu) HandleReply(reply CommandResponse) {
 
 	for k, v := range menu.WaitingResponses {
@@ -113,6 +150,9 @@ func (menu *Menu) HandleReply(reply CommandResponse) {
 	}
 }
 
+/*
+Sets the menu Displayed attribute, this is a tracking attribute and has no effect on ThrustCore or UI Layer.
+*/
 func (menu *Menu) setDisplayed(displayed bool) {
 	menu.Displayed = displayed
 
@@ -123,6 +163,9 @@ func (menu *Menu) setDisplayed(displayed bool) {
 	}
 }
 
+/*
+Dispatch CommandResponses to the proper delegates (Error, Event, Reply)
+*/
 func (menu *Menu) DispatchResponse(reply CommandResponse) {
 	switch reply.Action {
 	case "event":
@@ -138,6 +181,11 @@ func (menu *Menu) DispatchResponse(reply CommandResponse) {
 	}
 }
 
+/*
+Thread for Sending Commands based on current state of the Menu.
+Some commands require other events in the system to have already taken place.
+This thread ensures that you can run almost any command at anytime, and have it take place in the correct order. This further insures that the underlying ThrustCore api does not crash, do to improper api knowledge.
+*/
 func (menu *Menu) SendThread() {
 	//removeItemAt for []ChildCommand
 	CCremoveItemAt := func(a []*ChildCommand, i int) []*ChildCommand {
@@ -224,10 +272,16 @@ func (menu *Menu) SendThread() {
 	}()
 }
 
+/*
+This method queues a Command for the SendThread
+*/
 func (menu *Menu) Send(command *Command) {
 	menu.SendChannel.Commands <- command
 }
 
+/*
+This Methods turns a Command into a Call, there are two main types of Actions for outgoing commands, create/call. There may be more added later.
+*/
 func (menu *Menu) Call(command *Command) {
 	command.Action = "call"
 	command.TargetID = menu.TargetID
@@ -239,11 +293,18 @@ func (menu *Menu) Call(command *Command) {
 	menu.Send(command)
 }
 
+/*
+This methods queues up "Calls" to go out only when the Menu State is "Ready"
+*/
 func (menu *Menu) CallWhenReady(command *Command) {
 	menu.WaitingResponses = append(menu.WaitingResponses, command)
 	menu.Sync.ReadyQueue = append(menu.Sync.ReadyQueue, command)
 }
 
+/*
+This method queues up "Calls" to go out only when the state of the Child is Stable.
+Stable means that the child is Ready and has no AwaitingResponses
+*/
 func (menu *Menu) CallWhenChildStable(command *Command, child *Menu) {
 	menu.WaitingResponses = append(menu.WaitingResponses, command)
 	menu.Sync.ChildStableQueue = append(menu.Sync.ChildStableQueue, &ChildCommand{
@@ -252,10 +313,17 @@ func (menu *Menu) CallWhenChildStable(command *Command, child *Menu) {
 	})
 }
 
+/*
+This method queues up "Calls" to go out only when the state of the menu is Stable.
+Stable means that the menu is Ready and has no AwaitingResponses
+*/
 func (menu *Menu) CallWhenTreeStable(command *Command) {
 	menu.Sync.TreeStableQueue = append(menu.Sync.TreeStableQueue, command)
 }
 
+/*
+This method queues up "Calls" to go out only when the menu is Displayed
+*/
 func (menu *Menu) CallWhenDisplayed(command *Command) {
 	menu.Sync.DisplayedQueue = append(menu.Sync.DisplayedQueue, command)
 }
