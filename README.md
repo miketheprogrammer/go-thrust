@@ -61,7 +61,7 @@ Please note Complete Support will never be toggled until Thrust core is stable.
   - [ ] Complete Support
 
 - [ ] Add Session Support
-  - [ ] Basic Support
+  - [X] Basic Support
   - [ ] Complete Support
 
 - [X] Implement Package Connection
@@ -80,9 +80,9 @@ Please note Complete Support will never be toggled until Thrust core is stable.
 
 - [ ] Refactor menu.SetChecked to accept a nillable menu item pointer, so we dont have to waste resources finding the item in the Tree
 
-- [ ] Refactor CallWhen* methods, Due to the nature of using GoRoutines, there is the chance that calls will execute out of the original order they were intended.
+- [X] Refactor CallWhen* methods, Due to the nature of using GoRoutines, there is the chance that calls will execute out of the original order they were intended.
 
-- [ ] Create a script to autodownload binaries
+- [X] Create a script to autodownload binaries
 
 - [X] Refactor Logging
 
