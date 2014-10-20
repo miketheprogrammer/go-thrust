@@ -14,7 +14,7 @@ func Dispatch(command commands.CommandResponse)
 #### func  RegisterHandler
 
 ```go
-func RegisterHandler(f DispatcherHandleFunc)
+func RegisterHandler(f HandleFunc)
 ```
 
 #### func  RunLoop
@@ -23,8 +23,8 @@ func RegisterHandler(f DispatcherHandleFunc)
 func RunLoop(outChannels *connection.Out)
 ```
 
-#### type DispatcherHandleFunc
+#### type HandleFunc
 
 ```go
-type DispatcherHandleFunc func(commands.CommandResponse)
+type HandleFunc func(commands.CommandResponse)
 ```
