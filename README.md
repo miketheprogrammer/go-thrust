@@ -40,6 +40,10 @@ Command Line Switches
     #feature should not be used with long-running processes.
 ```
 
+DOCUMENTATION
+================
+* [Index](docs/)
+
 Roadmap to v1.0 :
 ================
 Please note Complete Support will never be toggled until Thrust core is stable.
