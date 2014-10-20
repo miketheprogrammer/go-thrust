@@ -4,6 +4,9 @@ import (
 	"net"
 )
 
+/*
+Simple struct defining Height and Width
+*/
 type SizeHW struct {
 	Width  uint `json:"width,omitempty"`
 	Height uint `json:"height,omitempty"`
@@ -42,17 +45,25 @@ func (c Command) Send(conn net.Conn) {
 
 }
 
-//{"_action":"reply","_error":"","_id":1,"_result":{"_target":3}}
-
+/*
+This object is used in CommandRespons's of Type Reply
+*/
 type ReplyResult struct {
 	TargetID uint `json:"_target,omitempty"`
 }
 
+/*
+This object is used in CommandRespons's of Type Event
+*/
 type EventResult struct {
 	CommandID  uint `json:"command_id,omitempty"`
 	EventFlags int  `json:"event_flags,omitempty"`
 }
 
+/*
+CommandRespons's are objects defining the JSON received from ThrustCore as a
+response to a Command from Go-Thrust
+*/
 type CommandResponse struct {
 	Action string      `json:"_action,omitempty"`
 	Error  string      `json:"_error,omitempty"`

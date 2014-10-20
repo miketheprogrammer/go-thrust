@@ -61,6 +61,8 @@ type CommandResponse struct {
 }
 ```
 
+CommandRespons's are objects defining the JSON received from ThrustCore as a
+response to a Command from Go-Thrust
 
 #### type EventResult
 
@@ -71,6 +73,7 @@ type EventResult struct {
 }
 ```
 
+This object is used in CommandRespons's of Type Event
 
 #### type ReplyResult
 
@@ -80,6 +83,7 @@ type ReplyResult struct {
 }
 ```
 
+This object is used in CommandRespons's of Type Reply
 
 #### type SizeHW
 
@@ -89,3 +93,5 @@ type SizeHW struct {
 	Height uint `json:"height,omitempty"`
 }
 ```
+
+Simple struct defining Height and Width
