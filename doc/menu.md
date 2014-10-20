@@ -45,6 +45,10 @@ type Menu struct {
 }
 ```
 
+The base Menu structure. Provides all the necessary attributes to work with
+asynchronous calls to the menu API. The TargetID is assigned by ThrustCore, so
+on init of this object, there is no TargetID. A Goroutine is dispatched to get
+the targetID.
 
 #### func (*Menu) AddCheckItem
 
@@ -98,60 +102,77 @@ On Linux and Windows systems, Attach the menu to a window
 ```go
 func (menu *Menu) Call(command *Command)
 ```
+This Methods turns a Command into a Call, there are two main types of Actions
+for outgoing commands, create/call. There may be more added later.
 
 #### func (*Menu) CallWhenChildStable
 
 ```go
 func (menu *Menu) CallWhenChildStable(command *Command, child *Menu)
 ```
+This method queues up "Calls" to go out only when the state of the Child is
+Stable. Stable means that the child is Ready and has no AwaitingResponses
 
 #### func (*Menu) CallWhenDisplayed
 
 ```go
 func (menu *Menu) CallWhenDisplayed(command *Command)
 ```
+This method queues up "Calls" to go out only when the menu is Displayed
 
 #### func (*Menu) CallWhenReady
 
 ```go
 func (menu *Menu) CallWhenReady(command *Command)
 ```
+This methods queues up "Calls" to go out only when the Menu State is "Ready"
 
 #### func (*Menu) CallWhenTreeStable
 
 ```go
 func (menu *Menu) CallWhenTreeStable(command *Command)
 ```
+This method queues up "Calls" to go out only when the state of the menu is
+Stable. Stable means that the menu is Ready and has no AwaitingResponses
 
 #### func (*Menu) Create
 
 ```go
 func (menu *Menu) Create(sendChannel *connection.In)
 ```
+Create a new menu object. Dispatches a call to ThrustCore to generate the object
+and return the new TargetID in a reply.
 
 #### func (*Menu) DispatchResponse
 
 ```go
 func (menu *Menu) DispatchResponse(reply CommandResponse)
 ```
+Dispatch CommandResponses to the proper delegates (Error, Event, Reply)
 
 #### func (*Menu) HandleError
 
 ```go
 func (menu *Menu) HandleError(reply CommandResponse)
 ```
+Handler for Error responses from ThrustCore This should be changed to private as
+soon as API stabilizes.
 
 #### func (*Menu) HandleEvent
 
 ```go
 func (menu *Menu) HandleEvent(reply CommandResponse)
 ```
+Handler for Event responses from ThrustCore This should be changed to private as
+soon as API stabilizes.
 
 #### func (*Menu) HandleReply
 
 ```go
 func (menu *Menu) HandleReply(reply CommandResponse)
 ```
+Handler for Reply responses from ThrustCore This should be changed to private as
+soon as API stabilizes.
 
 #### func (*Menu) IsStable
 
@@ -166,6 +187,7 @@ successfully) and it has no Commands awaiting Responses.
 ```go
 func (menu *Menu) IsTarget(targetId uint) bool
 ```
+Check if the current menu is the menu we are looking for.
 
 #### func (*Menu) IsTreeStable
 
@@ -211,12 +233,18 @@ func (menu *Menu) RegisterEventHandlerByCommandID(commandID uint, handler func(r
 ```go
 func (menu *Menu) Send(command *Command)
 ```
+This method queues a Command for the SendThread
 
 #### func (*Menu) SendThread
 
 ```go
 func (menu *Menu) SendThread()
 ```
+Thread for Sending Commands based on current state of the Menu. Some commands
+require other events in the system to have already taken place. This thread
+ensures that you can run almost any command at anytime, and have it take place
+in the correct order. This further insures that the underlying ThrustCore api
+does not crash, do to improper api knowledge.
 
 #### func (*Menu) SetApplicationMenu
 
@@ -244,6 +272,8 @@ Enables or Disables an item in the UI
 ```go
 func (menu *Menu) SetSendChannel(sendChannel *connection.In)
 ```
+Helper Setter for SendChannel, in case we make it private in the future. Use
+this for full forwards compatibility.
 
 #### func (*Menu) SetVisible
 
