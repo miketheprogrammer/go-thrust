@@ -42,7 +42,7 @@ Command Line Switches
 
 DOCUMENTATION
 ================
-* [Index](tree/master/doc/)
+* [Index](../tree/master/doc/)
 
 Roadmap to v1.0 :
 ================
