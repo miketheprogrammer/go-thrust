@@ -46,3 +46,11 @@ release/go-thrust/go-thrust/vendor/linux/x64/thrust_shell
 release/vendor/darwin/x64/ThrustShell.app
 
 dist/*
+
+tutorial/vendor/linux/x64/content_shell.pak
+tutorial/vendor/linux/x64/icudtl.dat
+tutorial/vendor/linux/x64/libchromiumcontent.so
+tutorial/vendor/linux/x64/libffmpegsumo.so
+tutorial/vendor/linux/x64/thrust_shell
+
+tutorial/vendor/darwin/x64/ThrustShell.app
