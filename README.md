@@ -99,6 +99,17 @@ Helper methods receive the UpperCamelCase version of their relative names in Thr
 i.e. insert_item_at == InsertItemAt
 
 
+Using Go-Thrust as a Library and bundling your final release
+==========================
+To use go-thrust as a library, simple use the code in the same way you would use any GoLang library.
+
+When prepping your releases, please try to stick to the contract of our release folder, view MakeFile tag build.release for an example.
+
+However if you want to make your own folder structure, feel free to modify the spawn package and relevant tools files to suit your needs.
+
+As long as spawn, can successfully install, find, and run the Thrust Core binaries, then you are golden.
+
+
 
 Extra Notes (This section quickly gets outdated, ill try to keep it updated, but it really just for reference)
 ================
