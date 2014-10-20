@@ -7,11 +7,11 @@ import (
 	"github.com/miketheprogrammer/go-thrust/connection"
 )
 
-type DispatcherHandleFunc func(commands.CommandResponse)
+type HandleFunc func(commands.CommandResponse)
 
-var registry []DispatcherHandleFunc
+var registry []HandleFunc
 
-func RegisterHandler(f DispatcherHandleFunc) {
+func RegisterHandler(f HandleFunc) {
 	registry = append(registry, f)
 }
 
