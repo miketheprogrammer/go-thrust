@@ -1,18 +1,25 @@
 package commands
 
-import (
-	"net"
-)
+/*
+commands package contains structures for working with JSON RPC
+Calls to ThrustCore
+*/
 
 /*
-Simple struct defining Height and Width
+Command defines the structure used in send json rpc messages to ThrustCore
 */
-type SizeHW struct {
-	Width  uint `json:"width,omitempty"`
-	Height uint `json:"height,omitempty"`
+type Command struct {
+	ID         uint             `json:"_id"`
+	Action     string           `json:"_action"`
+	ObjectType string           `json:"_type,omitempty"`
+	Method     string           `json:"_method"`
+	TargetID   uint             `json:"_target,omitempty"`
+	Args       CommandArguments `json:"_args"`
 }
 
 /*
+CommandArguments defines the structure used in providing arguments
+to Command's when talking to ThrustCore
 Covers all possible argument combinations.
 Makes use of omit empty to adapt to different use cases
 */
@@ -32,28 +39,24 @@ type CommandArguments struct {
 	CookieStore  bool   `json:"cookie_store"`
 	OffTheRecord bool   `json:"off_the_record"`
 }
-type Command struct {
-	ID         uint             `json:"_id"`
-	Action     string           `json:"_action"`
-	ObjectType string           `json:"_type,omitempty"`
-	Method     string           `json:"_method"`
-	TargetID   uint             `json:"_target,omitempty"`
-	Args       CommandArguments `json:"_args"`
-}
 
-func (c Command) Send(conn net.Conn) {
-
+/*
+SizeHW is a simple struct defining Height and Width
+*/
+type SizeHW struct {
+	Width  uint `json:"width,omitempty"`
+	Height uint `json:"height,omitempty"`
 }
 
 /*
-This object is used in CommandResponse's of Type Reply
+ReplyResult is used in CommandResponse's of Type Reply
 */
 type ReplyResult struct {
 	TargetID uint `json:"_target,omitempty"`
 }
 
 /*
-This object is used in CommandResponse's of Type Event
+EventResult is used in CommandResponse's of Type Event
 */
 type EventResult struct {
 	CommandID  uint `json:"command_id,omitempty"`
@@ -61,8 +64,8 @@ type EventResult struct {
 }
 
 /*
-CommandRespons's are objects defining the JSON received from ThrustCore as a
-response to a Command from Go-Thrust
+CommandResponse defines the structure of a response
+from a Command sent to ThrustCore
 */
 type CommandResponse struct {
 	Action string      `json:"_action,omitempty"`

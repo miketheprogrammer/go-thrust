@@ -18,12 +18,7 @@ type Command struct {
 }
 ```
 
-
-#### func (Command) Send
-
-```go
-func (c Command) Send(conn net.Conn)
-```
+Command defines the structure used in send json rpc messages to ThrustCore
 
 #### type CommandArguments
 
@@ -46,8 +41,9 @@ type CommandArguments struct {
 }
 ```
 
-Covers all possible argument combinations. Makes use of omit empty to adapt to
-different use cases
+CommandArguments defines the structure used in providing arguments to Command's
+when talking to ThrustCore Covers all possible argument combinations. Makes use
+of omit empty to adapt to different use cases
 
 #### type CommandResponse
 
@@ -61,8 +57,8 @@ type CommandResponse struct {
 }
 ```
 
-CommandRespons's are objects defining the JSON received from ThrustCore as a
-response to a Command from Go-Thrust
+CommandResponse defines the structure of a response from a Command sent to
+ThrustCore
 
 #### type EventResult
 
@@ -73,7 +69,7 @@ type EventResult struct {
 }
 ```
 
-This object is used in CommandResponse's of Type Event
+EventResult is used in CommandResponse's of Type Event
 
 #### type ReplyResult
 
@@ -83,7 +79,7 @@ type ReplyResult struct {
 }
 ```
 
-This object is used in CommandResponse's of Type Reply
+ReplyResult is used in CommandResponse's of Type Reply
 
 #### type SizeHW
 
@@ -94,4 +90,4 @@ type SizeHW struct {
 }
 ```
 
-Simple struct defining Height and Width
+SizeHW is a simple struct defining Height and Width

@@ -71,15 +71,15 @@ func (session *Session) DispatchResponse(reply CommandResponse) {
 	}
 }
 
-func (session *Session) InvokeCookiesLoad(response CommandResponse) {
+func (session *Session) CookiesLoad(response CommandResponse) {
 
 }
 
-func (session *Session) InvokeCookiesLoadForKey(response CommandResponse) {
+func (session *Session) CookiesLoadForKey(response CommandResponse) {
 
 }
 
-func (session *Session) InvokeCookiesFlush(response CommandResponse) {
+func (session *Session) CookiesFlush(response CommandResponse) {
 
 }
 
