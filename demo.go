@@ -49,10 +49,11 @@ func main() {
 
 	fileMenu.Create(in)
 	fileMenu.AddItem(3, "Open")
-	fileMenu.RegisterEventHandlerByCommandID(4, func(reply commands.CommandResponse, item *menu.MenuItem) {
-		os.Exit(2)
-	})
+
 	fileMenu.AddItem(4, "Close")
+	fileMenu.RegisterEventHandlerByCommandID(4, func(reply commands.CommandResponse, item *menu.MenuItem) {
+		fmt.Println("Close button clicked.")
+	})
 	fileMenu.AddSeparator()
 
 	checkList.Create(in)

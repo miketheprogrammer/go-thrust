@@ -18,8 +18,8 @@ import (
 )
 
 /*
-The base Menu structure.
-Provides all the necessary attributes to work with asynchronous calls to the menu API.
+Menu is the basic object for creating and working with Menu's
+Provides all the necessary attributes and methods to work with asynchronous calls to the menu API.
 The TargetID is assigned by ThrustCore, so on init of this object, there is no TargetID. A Goroutine is dispatched to get the targetID.
 */
 type Menu struct {
@@ -65,7 +65,7 @@ func (menu *Menu) Create(sendChannel *connection.In) {
 }
 
 /*
-Helper Setter for SendChannel, in case we make it private in the future.
+SetSendChannel is a helper Setter for SendChannel, in case we make it private in the future.
 Use this for full forwards compatibility.
 */
 func (menu *Menu) SetSendChannel(sendChannel *connection.In) {
@@ -73,14 +73,14 @@ func (menu *Menu) SetSendChannel(sendChannel *connection.In) {
 }
 
 /*
-Check if the current menu is the menu we are looking for.
+IsTarget checks if the current menu is the menu we are looking for.
 */
 func (menu *Menu) IsTarget(targetId uint) bool {
 	return targetId == menu.TargetID
 }
 
 /*
-Handler for Error responses from ThrustCore
+HandleError is a handler for Error responses from ThrustCore
 This should be changed to private as soon as API stabilizes.
 */
 func (menu *Menu) HandleError(reply CommandResponse) {
@@ -88,7 +88,7 @@ func (menu *Menu) HandleError(reply CommandResponse) {
 }
 
 /*
-Handler for Event responses from ThrustCore
+HandleEvent is a handler for Event responses from ThrustCore
 This should be changed to private as soon as API stabilizes.
 */
 func (menu *Menu) HandleEvent(reply CommandResponse) {
@@ -107,7 +107,7 @@ func (menu *Menu) HandleEvent(reply CommandResponse) {
 }
 
 /*
-Handler for Reply responses from ThrustCore
+HandleReply is a handler for Reply responses from ThrustCore
 This should be changed to private as soon as API stabilizes.
 */
 func (menu *Menu) HandleReply(reply CommandResponse) {
@@ -151,7 +151,7 @@ func (menu *Menu) HandleReply(reply CommandResponse) {
 }
 
 /*
-Sets the menu Displayed attribute, this is a tracking attribute and has no effect on ThrustCore or UI Layer.
+setDisplayed sets the menu Displayed attribute, this is a tracking attribute and has no effect on ThrustCore or UI Layer. Thus is is private.
 */
 func (menu *Menu) setDisplayed(displayed bool) {
 	menu.Displayed = displayed
@@ -164,7 +164,7 @@ func (menu *Menu) setDisplayed(displayed bool) {
 }
 
 /*
-Dispatch CommandResponses to the proper delegates (Error, Event, Reply)
+DispatchResponse dispatches CommandResponses to the proper delegates (Error, Event, Reply)
 */
 func (menu *Menu) DispatchResponse(reply CommandResponse) {
 	switch reply.Action {
@@ -182,7 +182,7 @@ func (menu *Menu) DispatchResponse(reply CommandResponse) {
 }
 
 /*
-Thread for Sending Commands based on current state of the Menu.
+SendThread is a Thread for Sending Commands based on current state of the Menu.
 Some commands require other events in the system to have already taken place.
 This thread ensures that you can run almost any command at anytime, and have it take place in the correct order. This further insures that the underlying ThrustCore api does not crash, do to improper api knowledge.
 */
@@ -273,14 +273,14 @@ func (menu *Menu) SendThread() {
 }
 
 /*
-This method queues a Command for the SendThread
+Send emits a Command over the Command SendChannel to be delivered to ThrustCore
 */
 func (menu *Menu) Send(command *Command) {
 	menu.SendChannel.Commands <- command
 }
 
 /*
-This Methods turns a Command into a Call, there are two main types of Actions for outgoing commands, create/call. There may be more added later.
+Call turns a Command into an action:call, there are two main types of Actions for outgoing commands, create/call. There may be more added later.
 */
 func (menu *Menu) Call(command *Command) {
 	command.Action = "call"
@@ -294,7 +294,7 @@ func (menu *Menu) Call(command *Command) {
 }
 
 /*
-This methods queues up "Calls" to go out only when the Menu State is "Ready"
+CallWhenReady queues up "Calls" to go out only when the Menu State is "Ready"
 */
 func (menu *Menu) CallWhenReady(command *Command) {
 	menu.WaitingResponses = append(menu.WaitingResponses, command)
@@ -302,8 +302,7 @@ func (menu *Menu) CallWhenReady(command *Command) {
 }
 
 /*
-This method queues up "Calls" to go out only when the state of the Child is Stable.
-Stable means that the child is Ready and has no AwaitingResponses
+CallWhenChildStable queues up "Calls" to go out only when the state of the Child is Stable. Stable means that the child is Ready and has no AwaitingResponses
 */
 func (menu *Menu) CallWhenChildStable(command *Command, child *Menu) {
 	menu.WaitingResponses = append(menu.WaitingResponses, command)
@@ -314,22 +313,22 @@ func (menu *Menu) CallWhenChildStable(command *Command, child *Menu) {
 }
 
 /*
-This method queues up "Calls" to go out only when the state of the menu is Stable.
-Stable means that the menu is Ready and has no AwaitingResponses
+CallWhenTreeStable queues up "Calls" to go out only when the state of the menu is Stable. Stable means that the menu is Ready and has no AwaitingResponses
 */
 func (menu *Menu) CallWhenTreeStable(command *Command) {
 	menu.Sync.TreeStableQueue = append(menu.Sync.TreeStableQueue, command)
 }
 
 /*
-This method queues up "Calls" to go out only when the menu is Displayed
+CallWhenDisplayed queues up "Calls" to go out only when
+the menu is Displayed
 */
 func (menu *Menu) CallWhenDisplayed(command *Command) {
 	menu.Sync.DisplayedQueue = append(menu.Sync.DisplayedQueue, command)
 }
 
 /*
-Add a MenuItem to both the internal representation of menu and the external representation of menu
+AddItem adds a MenuItem to both the internal representation of menu and the external representation of menu
 */
 func (menu *Menu) AddItem(commandID uint, label string) {
 	command := Command{
@@ -351,7 +350,7 @@ func (menu *Menu) AddItem(commandID uint, label string) {
 }
 
 /*
-Add a CheckItem to both the internal representation of menu and the external representation of menu
+AddCheckItem adds a CheckItem to both the internal representation of menu and the external representation of menu
 */
 func (menu *Menu) AddCheckItem(commandID uint, label string) {
 	command := Command{
@@ -372,7 +371,7 @@ func (menu *Menu) AddCheckItem(commandID uint, label string) {
 }
 
 /*
-Add a RadioItem to both the internal representation of menu and the external representation of menu
+AddRadioItem adds a RadioItem to both the internal representation of menu and the external representation of menu
 */
 func (menu *Menu) AddRadioItem(commandID uint, label string, groupID uint) {
 	command := Command{
@@ -395,7 +394,7 @@ func (menu *Menu) AddRadioItem(commandID uint, label string, groupID uint) {
 }
 
 /*
-Add a SubMenu to both the internal representation of menu and the external representation of menu
+AddSubmenu adds a SubMenu to both the internal representation of menu and the external representation of menu
 */
 func (menu *Menu) AddSubmenu(commandID uint, label string, child *Menu) {
 	command := Command{
@@ -420,7 +419,7 @@ func (menu *Menu) AddSubmenu(commandID uint, label string, child *Menu) {
 }
 
 /*
- Checks or Unchecks a CheckItem in the UI
+SetChecked Checks or Unchecks a CheckItem in the UI
 */
 func (menu *Menu) SetChecked(commandID uint, checked bool) {
 	command := Command{
@@ -440,7 +439,9 @@ func (menu *Menu) SetChecked(commandID uint, checked bool) {
 }
 
 /*
- Checks or Unchecks a CheckItem in the UI
+ToggleRadio Checks or Unchecks a RadioItem in the UI.
+It is used by the default event handler to turn on the expected item,
+and turn of other items in the group.
 */
 func (menu *Menu) ToggleRadio(commandID, groupID uint, checked bool) {
 	for _, item := range menu.RadioGroupAtGroupID(groupID) {
@@ -462,7 +463,10 @@ func (menu *Menu) ToggleRadio(commandID, groupID uint, checked bool) {
 
 }
 
-// Enables or Disables an item in the UI
+/*
+SetEnabled sets whether or not a given item can receive
+actions via the UI.
+*/
 func (menu *Menu) SetEnabled(commandID uint, enabled bool) {
 	command := Command{
 		Method: "set_enabled",
@@ -480,7 +484,10 @@ func (menu *Menu) SetEnabled(commandID uint, enabled bool) {
 	menu.CallWhenDisplayed(&command)
 }
 
-// Enables or Disables an item in the UI
+/*
+SetVisible sets a boolean visibility attribute in the UI for
+a menu item with the given commandID.
+*/
 func (menu *Menu) SetVisible(commandID uint, visible bool) {
 	command := Command{
 		Method: "set_visible",
@@ -499,7 +506,7 @@ func (menu *Menu) SetVisible(commandID uint, visible bool) {
 }
 
 /*
-Add a Seperator to both the internal representation of menu and the external representation of menu
+AddSeperator adds a Seperator Item to both the internal representation of menu and the external representation of menu.
 */
 func (menu *Menu) AddSeparator() {
 	command := Command{
@@ -514,7 +521,7 @@ func (menu *Menu) AddSeparator() {
 }
 
 /*
-On Darwin systems, Set the application menu in the UI
+SetApplicationMenu sets the Application Menu on Darwin Systems
 */
 func (menu *Menu) SetApplicationMenu() {
 	if runtime.GOOS != "darwin" {
@@ -532,10 +539,11 @@ func (menu *Menu) SetApplicationMenu() {
 }
 
 /*
-On Linux and Windows systems, Attach the menu to a window
+AttachToWindow attaches a menu to a Window object on
+Linux and Windows
 */
 func (menu *Menu) AttachToWindow(w *window.Window) {
-	if runtime.GOOS != "linux" {
+	if runtime.GOOS != "linux" || runtime.GOOS != "windows" {
 		return
 	}
 
@@ -560,8 +568,7 @@ func (menu *Menu) AttachToWindow(w *window.Window) {
 }
 
 /*
-A menu is stable if and only if, it is Ready (meaning it was created successfully)
-and it has no Commands awaiting Responses.
+IsStable returns the a boolean value indicating that the menu is Ready and has no WaitingResponses
 */
 func (menu *Menu) IsStable() bool {
 	return menu.Ready && len(menu.WaitingResponses) == 0
@@ -587,9 +594,8 @@ func (menu *Menu) IsTreeStable() bool {
 }
 
 /*
-Recursively searches the Menu Tree for an item with the commandID
-Returns the first found match.
-A proper menu should not reuse commandID's
+ItemAtCommandID recursively searches the Menu Tree for an item with the commandID. Returns the first found match. A proper menu should not reuse
+commandID's
 */
 func (menu *Menu) ItemAtCommandID(commandID uint) *MenuItem {
 	for _, item := range menu.Items {
