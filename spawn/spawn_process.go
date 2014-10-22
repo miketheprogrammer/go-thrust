@@ -39,7 +39,7 @@ func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
 			Log.Info("Could not find executable:", thrustExecPath)
 			Log.Info("Attempting to Download and Install the Thrust Core Executable")
 
-			downloadFromUrl("https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-darwin-x64.zip", THRUST_VERSION)
+			downloadFromUrl(GetDownloadUrl(), THRUST_VERSION)
 			unzip(strings.Replace("/tmp/$V", "$V", THRUST_VERSION, 1), thrustPath)
 
 		}
