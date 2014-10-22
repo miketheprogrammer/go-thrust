@@ -11,3 +11,7 @@ func GetThrustDirectory(base string) string {
 func GetExecutablePath(base string) string {
 	return GetThrustDirectory(base) + "/ThrustShell.app/Contents/MacOS/ThrustShell"
 }
+
+func GetDownloadUrl() string {
+	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-darwin-x64.zip"
+}

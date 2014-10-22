@@ -37,6 +37,7 @@ func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
 	if len(thrustExecPath) > 0 {
 		if _, err := os.Stat(thrustExecPath); os.IsNotExist(err) {
 			Log.Info("Could not find executable:", thrustExecPath)
+
 			Log.Info("Attempting to Download and Install the Thrust Core Executable")
 
 			downloadFromUrl(GetDownloadUrl(), THRUST_VERSION)
@@ -159,20 +160,20 @@ func unzip(src, dest string) error {
 
 		fpath := filepath.Join(dest, f.Name)
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(fpath, f.Mode())
+			os.MkdirAll(fpath, 0775)
 		} else {
 			var fdir string
 			if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
 				fdir = fpath[:lastIndex]
 			}
 
-			err = os.MkdirAll(fdir, f.Mode())
+			err = os.MkdirAll(fdir, 0775)
 			if err != nil {
 				log.Fatal(err)
 				return err
 			}
 			f, err := os.OpenFile(
-				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0775)
 			if err != nil {
 				return err
 			}
