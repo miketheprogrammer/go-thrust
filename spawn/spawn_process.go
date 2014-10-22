@@ -4,8 +4,11 @@ package spawn
 Package spawn implements methods and interfaces used in downloading and spawning the underlying thrust core binary.
 */
 import (
+	"archive/zip"
 	"fmt"
 	"io"
+	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -25,57 +28,20 @@ Go-Thrust and all *-Thrust packages communicate with Thrust Core via Stdin/Stdou
 using -log=debug as a command switch will give you the most information about what is going on. -log=info will give you notices that stuff is happening.
 Any log level higher than that will output nothing.
 */
-func SpawnThrustCore() (io.ReadCloser, io.WriteCloser) {
 
-	var thrustExecPath string
-	var thrustBoostrapPath string
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(2)
-	}
-	if strings.Contains(runtime.GOOS, "darwin") {
-		thrustExecPath = dir + "/vendor/darwin/x64/v" + THRUST_VERSION + "/ThrustShell.app/Contents/MacOS/ThrustShell"
-		thrustBoostrapPath = dir + "/tools/bootstrap_darwin.sh"
-	}
-	if strings.Contains(runtime.GOOS, "linux") {
-		thrustExecPath = dir + "/vendor/linux/x64/v" + THRUST_VERSION + "/thrust_shell"
-		thrustBoostrapPath = dir + "/tools/bootstrap_linux.sh"
-	}
-
+func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
+	//  if
+	var thrustExecPath, thrustPath string
+	thrustExecPath = GetExecutablePath(dir)
+	thrustPath = GetThrustDirectory(dir)
 	if len(thrustExecPath) > 0 {
 		if _, err := os.Stat(thrustExecPath); os.IsNotExist(err) {
 			Log.Info("Could not find executable:", thrustExecPath)
 			Log.Info("Attempting to Download and Install the Thrust Core Executable")
 
-			installCmd := exec.Command("sh", thrustBoostrapPath, THRUST_VERSION)
-			if Log.LogDebug() {
-				installCmd.Stdout = os.Stdout
-				installCmd.Stderr = os.Stderr
-			}
+			downloadFromUrl("https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-darwin-x64.zip", THRUST_VERSION)
+			unzip(strings.Replace("/tmp/$V", "$V", THRUST_VERSION, 1), thrustPath)
 
-			installDoneChan := make(chan bool, 1)
-			installCmd.Start()
-			fmt.Print("Installing ")
-			go func() {
-				for {
-					select {
-					case <-installDoneChan:
-						return
-					default:
-						fmt.Print(".")
-						time.Sleep(time.Second)
-					}
-				}
-			}()
-
-			installErr := installCmd.Wait()
-			installDoneChan <- true
-			if installErr != nil {
-				Log.Errorf("Could not bootstrap, ErrorCode:", err)
-			} else {
-				Log.Info("... Done Bootstrapping")
-			}
 		}
 
 		Log.Info("Attempting to start Thrust Core")
@@ -100,8 +66,7 @@ func SpawnThrustCore() (io.ReadCloser, io.WriteCloser) {
 
 		cmd.Start()
 
-		//time.Sleep(time.Millisecond * 1000)
-		Log.Info("Returning to Main Process.")
+		Log.Info("Thrust Core started.")
 		return cmdOut, cmdIn
 	} else {
 		fmt.Println("===============WARNING================")
@@ -109,4 +74,116 @@ func SpawnThrustCore() (io.ReadCloser, io.WriteCloser) {
 		fmt.Println("===============END====================")
 	}
 	return nil, nil
+}
+
+func downloadFromUrl(url, version string) {
+	url = strings.Replace(url, "$V", version, 2)
+	fileName := strings.Replace("/tmp/$V", "$V", version, 1)
+	if Log.LogInfo() {
+		fmt.Println("Downloading", url, "to", fileName)
+	}
+
+	quit := make(chan int, 1)
+
+	go func() {
+		for {
+			select {
+			case <-quit:
+				fmt.Print("\n")
+				return
+			default:
+				if Log.LogInfo() {
+					fmt.Print(".")
+				}
+			}
+			time.Sleep(time.Second)
+		}
+	}()
+
+	// TODO: check file existence first with io.IsExist
+	output, err := os.Create(fileName)
+	if err != nil {
+		fmt.Println("Error while creating", fileName, "-", err)
+		return
+	}
+	defer output.Close()
+
+	response, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Error while downloading", url, "-", err)
+		return
+	}
+	defer response.Body.Close()
+
+	n, err := io.Copy(output, response.Body)
+	if err != nil {
+		fmt.Println("Error while downloading", url, "-", err)
+		return
+	}
+	quit <- 1
+
+	fmt.Println(n, "bytes downloaded.")
+}
+func unzip(src, dest string) error {
+	r, err := zip.OpenReader(src)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+	if Log.LogInfo() {
+		fmt.Println("Unzipping", src, "to", dest)
+	}
+
+	quit := make(chan int, 1)
+
+	go func() {
+		for {
+			select {
+			case <-quit:
+				fmt.Print("\n")
+				return
+			default:
+				if Log.LogInfo() {
+					fmt.Print(".")
+				}
+			}
+			time.Sleep(time.Second)
+		}
+	}()
+	for _, f := range r.File {
+		rc, err := f.Open()
+		if err != nil {
+			return err
+		}
+		defer rc.Close()
+
+		fpath := filepath.Join(dest, f.Name)
+		if f.FileInfo().IsDir() {
+			os.MkdirAll(fpath, f.Mode())
+		} else {
+			var fdir string
+			if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
+				fdir = fpath[:lastIndex]
+			}
+
+			err = os.MkdirAll(fdir, f.Mode())
+			if err != nil {
+				log.Fatal(err)
+				return err
+			}
+			f, err := os.OpenFile(
+				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			if err != nil {
+				return err
+			}
+			defer f.Close()
+
+			_, err = io.Copy(f, rc)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	quit <- 1
+	return nil
 }

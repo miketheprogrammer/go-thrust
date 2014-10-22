@@ -1,10 +1,6 @@
 build.release:
-	rm -rf release/go-thrust/vendor/darwin/x64/*
-	touch release/go-thrust/vendor/darwin/x64/README.md
-	rm -rf release/go-thrust/vendor/linux/x64/*
-	touch release/go-thrust/vendor/linux/x64/README.md
-	cp -rf tools release/go-thrust
-	rm -f release/go-thrust/Thrust
+	rm -rf release/go-thrust/*
+	mkdir -p release/go-thrust
 	go build -o release/go-thrust/Thrust
 
 build.tutorials:
