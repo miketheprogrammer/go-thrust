@@ -137,7 +137,10 @@ func main () {
   InitLogger()
 
   // Spawn Thrust core and connect it to the connection package
-  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
+  // providing an empty basepath to spawnthrustcore uses the users home 
+  // directory for storage.
+
+  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore("")
 
   // Initialize the Connection packages threads
   err := connection.InitializeThreads()
@@ -165,6 +168,9 @@ func main () {
 
   // Maximize our new window
   thrustWindow.Maximize()
+
+  // Lets bring our new window to focus.
+  thrustWindow.Focus()
 
   // Register a handler for thrustWindow
   dispatcher.RegisterHandler(thrustWindow.DispatchResponse)

@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -30,7 +31,15 @@ Any log level higher than that will output nothing.
 */
 
 func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
-	//  if
+	if len(dir) == 0 {
+		usr, err := user.Current()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(usr.HomeDir)
+		// Parses Flags
+		dir = usr.HomeDir
+	}
 	var thrustExecPath, thrustPath string
 	thrustExecPath = GetExecutablePath(dir)
 	thrustPath = GetThrustDirectory(dir)
