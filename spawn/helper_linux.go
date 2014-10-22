@@ -4,11 +4,11 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/common"
 )
 
-func GetThrustDirectory(based string) string {
+func GetThrustDirectory(base string) string {
 	return base + "/vendor/linux/x64/v" + THRUST_VERSION
 }
 
-func GetExecutablePath(based string) string {
+func GetExecutablePath(base string) string {
 	return GetThrustDirectory(base) + "/thrust_shell"
 }
 
