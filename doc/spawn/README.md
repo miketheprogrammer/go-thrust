@@ -8,7 +8,7 @@
 #### func  SpawnThrustCore
 
 ```go
-func SpawnThrustCore() (io.ReadCloser, io.WriteCloser)
+func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser)
 ```
 The SpawnThrustCore method is a bootstrap and run method. It will try to detect
 an installation of thrust, if it cannot find it it will download the version of

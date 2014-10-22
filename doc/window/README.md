@@ -53,6 +53,12 @@ func (w *Window) Create(sendChannel *connection.In, sess *session.Session)
 func (w *Window) DispatchResponse(reply CommandResponse)
 ```
 
+#### func (*Window) Focus
+
+```go
+func (w *Window) Focus()
+```
+
 #### func (*Window) HandleError
 
 ```go
@@ -111,6 +117,12 @@ func (w *Window) SetSendChannel(sendChannel *connection.In)
 
 ```go
 func (w *Window) Show()
+```
+
+#### func (*Window) UnFocus
+
+```go
+func (w *Window) UnFocus()
 ```
 
 #### func (*Window) UnMaximize

@@ -1,8 +1,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"os"
+	"os/user"
 	"runtime"
 
 	"github.com/miketheprogrammer/go-thrust/commands"
@@ -16,13 +19,18 @@ import (
 )
 
 func main() {
-
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(usr.HomeDir)
 	// Parses Flags
+	baseDir := flag.String("basedir", usr.HomeDir, "Base Directory for Storing files.")
 	InitLogger()
 
-	connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
+	connection.StdOut, connection.StdIn = spawn.SpawnThrustCore(*baseDir)
 
-	err := connection.InitializeThreads()
+	err = connection.InitializeThreads()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)
@@ -96,6 +104,8 @@ func main() {
 	}
 
 	thrustWindow.Maximize()
+
+	thrustWindow.Focus()
 
 	dispatcher.RegisterHandler(thrustWindow.DispatchResponse)
 	dispatcher.RegisterHandler(rootMenu.DispatchResponse)

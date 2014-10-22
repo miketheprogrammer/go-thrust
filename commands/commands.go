@@ -38,6 +38,7 @@ type CommandArguments struct {
 	Value        bool   `json:"value"`
 	CookieStore  bool   `json:"cookie_store"`
 	OffTheRecord bool   `json:"off_the_record"`
+	Focus        bool   `json:"focus"`
 }
 
 /*

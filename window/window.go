@@ -199,3 +199,25 @@ func (w *Window) Restore() {
 	}
 	w.CallWhenDisplayed(&command)
 }
+
+func (w *Window) Focus() {
+	command := Command{
+		Method: "focus",
+		Args: CommandArguments{
+			Focus: true,
+		},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) UnFocus() {
+	command := Command{
+		Method: "show",
+		Args: CommandArguments{
+			Focus: false,
+		},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
