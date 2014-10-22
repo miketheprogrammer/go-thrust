@@ -4,12 +4,6 @@ build.release:
 	go build -o release/go-thrust/Thrust
 
 build.tutorials:
-	rm -rf tutorial/vendor/darwin/x64/*
-	touch tutorial/vendor/darwin/x64/README.md
-	rm -rf tutorial/vendor/linux/x64/*
-	touch tutorial/vendor/linux/x64/README.md
-	rm -rf tutorial/tools
-	cp -rf tools tutorial
 	rm -f tutorial/basic_browser
 	go build -o tutorial/basic_browser tutorial/basic_browser.go
 

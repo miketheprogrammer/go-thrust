@@ -52,5 +52,6 @@ tutorial/vendor/linux/x64/icudtl.dat
 tutorial/vendor/linux/x64/libchromiumcontent.so
 tutorial/vendor/linux/x64/libffmpegsumo.so
 tutorial/vendor/linux/x64/thrust_shell
+tutorial/basic_browser
 
 tutorial/vendor/darwin/x64/ThrustShell.app
