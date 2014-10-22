@@ -5,15 +5,32 @@
 
 ## Usage
 
+#### func  GetDownloadUrl
+
+```go
+func GetDownloadUrl() string
+```
+GetDownloadUrl returns the interpolatable version of the Thrust download url
+Differs between builds based on OS
+
+#### func  GetExecutablePath
+
+```go
+func GetExecutablePath(base string) string
+```
+GetExecutablePath returns the path to the Thrust Executable Differs between
+builds based on OS
+
+#### func  GetThrustDirectory
+
+```go
+func GetThrustDirectory(base string) string
+```
+GetThrustDirectory returns the Directory where the unzipped thrust contents are.
+Differs between builds based on OS
+
 #### func  SpawnThrustCore
 
 ```go
 func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser)
 ```
-The SpawnThrustCore method is a bootstrap and run method. It will try to detect
-an installation of thrust, if it cannot find it it will download the version of
-Thrust detailed in the "common" package. Once downloaded, it will launch a
-process. Go-Thrust and all *-Thrust packages communicate with Thrust Core via
-Stdin/Stdout. using -log=debug as a command switch will give you the most
-information about what is going on. -log=info will give you notices that stuff
-is happening. Any log level higher than that will output nothing.
