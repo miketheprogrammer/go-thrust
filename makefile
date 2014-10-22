@@ -5,7 +5,7 @@ build.release:
 
 build.tutorials:
 	rm -f tutorial/basic_browser
-	go build -o tutorial/basic_browser tutorial/basic_browser.go
+	go build -o tutorial/bin/basic_browser tutorial/basic_browser.go
 
 
 dist.darwin: build.release
