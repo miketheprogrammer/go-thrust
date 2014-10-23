@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/Unknwon/cae/zip"
 	"github.com/miketheprogrammer/go-thrust/common"
 )
 
@@ -24,6 +25,10 @@ Differs between builds based on OS
 */
 func GetThrustDirectory() string {
 	return base + "/vendor/darwin/x64/v" + common.THRUST_VERSION
+}
+
+func GetAppDirectory() string {
+	return base + "/vendor/darwin/x64/v" + common.THRUST_VERSION + "/" + common.ApplicationName + ".app"
 }
 
 /*
@@ -60,10 +65,46 @@ func executableNotExist() bool {
 }
 
 func prepareExecutable() {
-	downloadFromUrl(GetDownloadUrl(), common.THRUST_VERSION)
-	unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+	path := downloadFromUrl(GetDownloadUrl(), common.THRUST_VERSION)
+	//unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+	zip.ExtractTo(path, GetThrustDirectory())
+
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+common.ApplicationName)
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+common.ApplicationName+".app")
+
+	ApplySymlinks()
+}
+
+func ApplySymlinks() {
+	fmt.Println("Applying Symlinks")
+	fmt.Println(
+		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"),
+		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"),
+		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"),
+		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"),
+		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"),
+		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"))
+
+	fmt.Println(
+		os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"),
+		os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Frameworks",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"),
+		os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"),
+		os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Resources",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"),
+		os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/ThrustShell Framework",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"),
+		os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A/Libraries/Libraries",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"))
+
 }
 
 func prepareInfoPropertiesListTemplate() bool {

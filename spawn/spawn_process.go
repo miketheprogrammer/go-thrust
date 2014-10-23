@@ -31,6 +31,10 @@ Any log level higher than that will output nothing.
 */
 
 func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
+	dir, err := filepath.Abs(dir)
+	if err != nil {
+		fmt.Println("Could not calculate absolute path", err)
+	}
 	if len(dir) == 0 {
 		usr, err := user.Current()
 		if err != nil {
@@ -84,7 +88,7 @@ func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
 	return nil, nil
 }
 
-func downloadFromUrl(url, version string) {
+func downloadFromUrl(url, version string) string{
 	url = strings.Replace(url, "$V", version, 2)
 	fileName := strings.Replace("/tmp/$V", "$V", version, 1)
 	if Log.LogInfo() {
@@ -112,25 +116,27 @@ func downloadFromUrl(url, version string) {
 	output, err := os.Create(fileName)
 	if err != nil {
 		fmt.Println("Error while creating", fileName, "-", err)
-		return
+		return ""
 	}
 	defer output.Close()
 
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println("Error while downloading", url, "-", err)
-		return
+		return ""
 	}
 	defer response.Body.Close()
 
 	n, err := io.Copy(output, response.Body)
 	if err != nil {
 		fmt.Println("Error while downloading", url, "-", err)
-		return
+		return ""
 	}
 	quit <- 1
 
 	fmt.Println(n, "bytes downloaded.")
+
+	return fileName
 }
 func unzip(src, dest string) error {
 	r, err := zip.OpenReader(src)
