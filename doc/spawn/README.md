@@ -5,6 +5,26 @@
 
 ## Usage
 
+#### func  ApplySymlinks
+
+```go
+func ApplySymlinks()
+```
+
+#### func  Bootstrap
+
+```go
+func Bootstrap()
+```
+SetThrustApplicationTitle sets the title in the Info.plist. This method only
+exists on Darwin.
+
+#### func  GetAppDirectory
+
+```go
+func GetAppDirectory() string
+```
+
 #### func  GetDownloadUrl
 
 ```go
@@ -16,7 +36,7 @@ Differs between builds based on OS
 #### func  GetExecutablePath
 
 ```go
-func GetExecutablePath(base string) string
+func GetExecutablePath() string
 ```
 GetExecutablePath returns the path to the Thrust Executable Differs between
 builds based on OS
@@ -24,10 +44,17 @@ builds based on OS
 #### func  GetThrustDirectory
 
 ```go
-func GetThrustDirectory(base string) string
+func GetThrustDirectory() string
 ```
 GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
+
+#### func  SetBaseDirectory
+
+```go
+func SetBaseDirectory(b string)
+```
+SetBaseDirectory sets the base directory used in the other helper methods
 
 #### func  SpawnThrustCore
 
