@@ -543,10 +543,6 @@ AttachToWindow attaches a menu to a Window object on
 Linux and Windows
 */
 func (menu *Menu) AttachToWindow(w *window.Window) {
-	if runtime.GOOS != "linux" || runtime.GOOS != "windows" {
-		return
-	}
-
 	go func() {
 		for {
 			if w.TargetID != 0 {
