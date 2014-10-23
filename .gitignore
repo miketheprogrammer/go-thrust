@@ -48,3 +48,5 @@ release/vendor/darwin/x64/ThrustShell.app
 dist/*
 
 tutorial/bin/*
+
+release
