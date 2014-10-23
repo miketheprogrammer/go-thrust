@@ -1,5 +1,6 @@
 go-thrust
 =========
+Current Version 0.2.0
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust) to be used in Breach.cc(http://breach.cc) via Official Go Implementation @ (http://github.com/miketheprogrammer/breach-go).
 
@@ -17,14 +18,19 @@ run ./Thrust or the absolute path to the executable
 Start Go Thrust using source and GoLang runtime
 ```bash
 ./install-go-deps.sh #installs current dependencies
-make build.release
-cd release/go-thrust/
-./Thrust
+mkdir -f release/
+mkdir -f release/go-thrust
+go build -o release/go-thrust/Thrust demo.go
+./release/go-thrust/Thrust -basedir=./release/go-thrust
 ```
 
 Command Line Switches
 ========================
 ```bash
+-basedir=string (DEMO ONLY)
+    #where you want the core files to be stored.
+    #on initial run, all files 
+
 #LOGGING
 #Inherits Switches from http://godoc.org/github.com/alexcesaro/log/stdlog
 #Added below for ease, but for up to date info visit the page.
