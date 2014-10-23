@@ -9,6 +9,8 @@ import (
 //Could probably move this to a factory function
 var ActionId uint = 0
 
+var ApplicationName string = "Go Thrust"
+
 const (
 	SOCKET_BOUNDARY = "--(Foo)++__THRUST_SHELL_BOUNDARY__++(Bar)--"
 )

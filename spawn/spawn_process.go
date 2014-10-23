@@ -40,19 +40,17 @@ func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
 		// Parses Flags
 		dir = usr.HomeDir
 	}
-	var thrustExecPath, thrustPath string
-	thrustExecPath = GetExecutablePath(dir)
-	thrustPath = GetThrustDirectory(dir)
+
+	SetBaseDirectory(dir)
+
+	var thrustExecPath string
+
+	thrustExecPath = GetExecutablePath()
 	if len(thrustExecPath) > 0 {
-		if _, err := os.Stat(thrustExecPath); os.IsNotExist(err) {
-			Log.Info("Could not find executable:", thrustExecPath)
 
-			Log.Info("Attempting to Download and Install the Thrust Core Executable")
+		Bootstrap()
 
-			downloadFromUrl(GetDownloadUrl(), THRUST_VERSION)
-			unzip(strings.Replace("/tmp/$V", "$V", THRUST_VERSION, 1), thrustPath)
-
-		}
+		thrustExecPath = GetExecutablePath()
 
 		Log.Info("Attempting to start Thrust Core")
 		Log.Debug("CMD:", thrustExecPath)
