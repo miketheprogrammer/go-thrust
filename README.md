@@ -2,7 +2,7 @@ go-thrust
 =========
 Current Version 0.2.0
 
-Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust) to be used in Breach.cc(http://breach.cc) via Official Go Implementation @ (http://github.com/miketheprogrammer/breach-go).
+Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
 Running DEMO binary on OSX 10.9 or Linux (This is just for the demo, Thrust as it stands now is really a Library to be used in other applications.)
 ==================
@@ -52,7 +52,7 @@ DOCUMENTATION
 
 Roadmap to v1.0 :
 ================
-Please note Complete Support will never be toggled until Thrust core is stable.
+Please note Complete Support *may* not be toggled until Thrust core is stable.
 
 - [X] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
 - [ ] Remove overuse of pointers in structs where modification will not take place
@@ -109,11 +109,7 @@ Using Go-Thrust as a Library and bundling your final release
 ==========================
 To use go-thrust as a library, simple use the code in the same way you would use any GoLang library.
 
-When prepping your releases, please try to stick to the contract of our release folder, view MakeFile tag build.release for an example.
-
-However if you want to make your own folder structure, feel free to modify the spawn package and relevant tools files to suit your needs.
-
-As long as spawn, can successfully install, find, and run the Thrust Core binaries, then you are golden.
+- More info to come on Prepping releases.
 
 
 

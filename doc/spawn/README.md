@@ -5,12 +5,6 @@
 
 ## Usage
 
-#### func  ApplySymlinks
-
-```go
-func ApplySymlinks()
-```
-
 #### func  Bootstrap
 
 ```go

@@ -59,11 +59,17 @@ func Bootstrap() {
 
 }
 
+/*
+executableNotExist checks if the executable does not exist
+*/
 func executableNotExist() bool {
 	_, err := os.Stat(GetExecutablePath())
 	return os.IsNotExist(err)
 }
 
+/*
+prepareExecutable dowloads, unzips and does alot of other magic to prepare our thrust core build.
+*/
 func prepareExecutable() {
 	path := downloadFromUrl(GetDownloadUrl(), common.THRUST_VERSION)
 	//unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
@@ -72,10 +78,13 @@ func prepareExecutable() {
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+common.ApplicationName)
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+common.ApplicationName+".app")
 
-	ApplySymlinks()
+	applySymlinks()
 }
 
-func ApplySymlinks() {
+/*
+ApplySymLinks exists because our unzip utility does not respect deferred symlinks. It applies all the neccessary symlinks to make the thrust core exe connect to the thrust core libs.
+*/
+func applySymlinks() {
 	fmt.Println("Applying Symlinks")
 	fmt.Println(
 		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"),
