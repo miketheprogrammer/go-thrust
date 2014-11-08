@@ -115,82 +115,21 @@ To use go-thrust as a library, simple use the code in the same way you would use
 
 Extra Notes (This section quickly gets outdated, ill try to keep it updated, but it really just for reference)
 ================
-Example Menu State @ during set_application_menu
 
-```javascript
-{
-    "target_id": 2,
-    "awaiting_responses": [
-        {
-            "_id": 0,
-            "_action": "",
-            "_method": "set_application_menu",
-            "_args": {
-                "size": {},
-                "menu_id": 2,
-                "value": false
-            }
-        }
-    ],
-    "ready": true,
-    "Displayed": false,
-    "items": [
-        {
-            "command_id": 2,
-            "label": "Root",
-            "type": "item"
-        },
-        {
-            "command_id": 1,
-            "label": "File",
-            "submenu": {
-                "target_id": 3,
-                "ready": true,
-                "Displayed": false,
-                "items": [
-                    {
-                        "command_id": 3,
-                        "label": "Open",
-                        "type": "item"
-                    },
-                    {
-                        "command_id": 4,
-                        "label": "Close",
-                        "type": "item"
-                    },
-                    {
-                        "type": "separator"
-                    },
-                    {
-                        "command_id": 7,
-                        "label": "CheckList",
-                        "submenu": {
-                            "target_id": 4,
-                            "ready": true,
-                            "Displayed": false,
-                            "items": [
-                                {
-                                    "command_id": 5,
-                                    "label": "Do 1",
-                                    "type": "check",
-                                    "checked": true
-                                },
-                                {
-                                    "type": "separator"
-                                },
-                                {
-                                    "command_id": 6,
-                                    "label": "Do 2",
-                                    "type": "check",
-                                    "checked": true
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-}
+- Future Architecture
+There needs to be consideration into how an application will be created.
+While we should leave the core API's open enough to allow different architectures, there should be a primary guiding one.
+
+The UI Layer
+    - Should we do single page app style? using a framework.
+        - Probably more responsive
+    - Or should it be driven by templates in GO
+        - Of course has the cost of network, and rebuilding socket connections on every load.
+        - Benefit: When webview tag is added, various components can be registered, rather than being a single page app.
+
+
+
+
+
 ```
 
