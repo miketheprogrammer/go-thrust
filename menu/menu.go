@@ -535,23 +535,21 @@ func (menu *Menu) SetApplicationMenu() {
 }
 
 /*
-
-Attach attaches a menu to a context. This function currently does not work.
-For now always use SetApplicationMenu
+Popup creates a popup menu on the given window
 */
-func (menu *Menu) Attach(w *window.Window) {
+func (menu *Menu) Popup(w *window.Window) {
 	go func() {
 		for {
 			if w.TargetID != 0 {
 				command := Command{
-					Method: "attach",
+					Method: "popup",
 					Args: CommandArguments{
 						WindowID: w.TargetID,
 					},
 				}
 
 				// Thread to wait for Stable Menu State
-				menu.CallWhenTreeStable(&command)
+				menu.CallWhenDisplayed(&command)
 				return
 			}
 			time.Sleep(time.Microsecond * 10)

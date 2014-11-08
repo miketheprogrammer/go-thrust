@@ -1,6 +1,7 @@
 go-thrust
 =========
-Current Version 0.2.0
+Current Go-Thrust Version 0.2.4
+Current Thrust Version 0.7.4
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
@@ -49,6 +50,11 @@ Command Line Switches
 DOCUMENTATION
 ================
 * [Index](https://github.com/miketheprogrammer/go-thrust/tree/master/doc)
+
+Current Platform Specific Cases:
+================
+Currently Darwin handles Application Menus different from other systems.
+The "Root" menu is always named the project name. However on linux, the name is whatever you provide. This can be seen in demo.go, and can be alleviated by trying to use the same name, or by using different logic for both cases. I make no attempt to unify it at the library level, because the user deserves the freedom to do this themselves.
 
 Roadmap to v1.0 :
 ================

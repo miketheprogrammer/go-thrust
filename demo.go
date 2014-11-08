@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
 
 	"github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
@@ -39,8 +40,13 @@ func main() {
 	mainSession := session.Session{}
 	mainSession.Create(in)
 
+	path, err := filepath.Abs("./public/index.html")
+
+	if err != nil {
+		panic(err)
+	}
 	thrustWindow := window.Window{
-		Url: "http://breach.cc/",
+		Url: "file://" + path,
 	}
 	rootMenu := menu.Menu{}
 	fileMenu := menu.Menu{}
@@ -97,6 +103,8 @@ func main() {
 	rootMenu.AddSubmenu(18, "View", &viewMenu)
 
 	rootMenu.SetApplicationMenu()
+
+	rootMenu.Popup(&thrustWindow)
 
 	thrustWindow.Maximize()
 
