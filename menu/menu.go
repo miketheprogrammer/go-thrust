@@ -8,7 +8,6 @@ Please be aware of this when using this package in your own library.
 The reason this is unfortunate is that as library writers it is best to leave GoRoutines out of your library and let the user decide when to use them. However with I/O you typically need to use GoRoutines in some way or another.
 */
 import (
-	"runtime"
 	"time"
 
 	. "github.com/miketheprogrammer/go-thrust/commands"
@@ -521,12 +520,9 @@ func (menu *Menu) AddSeparator() {
 }
 
 /*
-SetApplicationMenu sets the Application Menu on Darwin Systems
+SetApplicationMenu sets the Application Menu on system that support global application level menus such as x11, unity, darwin
 */
 func (menu *Menu) SetApplicationMenu() {
-	if runtime.GOOS != "darwin" {
-		return
-	}
 	command := Command{
 		Method: "set_application_menu",
 		Args: CommandArguments{
@@ -539,10 +535,11 @@ func (menu *Menu) SetApplicationMenu() {
 }
 
 /*
-AttachToWindow attaches a menu to a Window object on
-Linux and Windows
+
+Attach attaches a menu to a context. This function currently does not work.
+For now always use SetApplicationMenu
 */
-func (menu *Menu) AttachToWindow(w *window.Window) {
+func (menu *Menu) Attach(w *window.Window) {
 	go func() {
 		for {
 			if w.TargetID != 0 {
