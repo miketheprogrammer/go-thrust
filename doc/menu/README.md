@@ -90,13 +90,6 @@ func (menu *Menu) AddSubmenu(commandID uint, label string, child *Menu)
 AddSubmenu adds a SubMenu to both the internal representation of menu and the
 external representation of menu
 
-#### func (*Menu) AttachToWindow
-
-```go
-func (menu *Menu) AttachToWindow(w *window.Window)
-```
-AttachToWindow attaches a menu to a Window object on Linux and Windows
-
 #### func (*Menu) Call
 
 ```go
@@ -207,6 +200,13 @@ ItemAtCommandID recursively searches the Menu Tree for an item with the
 commandID. Returns the first found match. A proper menu should not reuse
 commandID's
 
+#### func (*Menu) Popup
+
+```go
+func (menu *Menu) Popup(w *window.Window)
+```
+Popup creates a popup menu on the given window
+
 #### func (Menu) PrintRecursiveWaitingResponses
 
 ```go
@@ -253,7 +253,8 @@ ThrustCore api does not crash, do to improper api knowledge.
 ```go
 func (menu *Menu) SetApplicationMenu()
 ```
-SetApplicationMenu sets the Application Menu on Darwin Systems
+SetApplicationMenu sets the Application Menu on system that support global
+application level menus such as x11, unity, darwin
 
 #### func (*Menu) SetChecked
 
