@@ -13,6 +13,7 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
 	"github.com/miketheprogrammer/go-thrust/connection"
+	"github.com/miketheprogrammer/go-thrust/dispatcher"
 	"github.com/miketheprogrammer/go-thrust/window"
 )
 
@@ -41,7 +42,8 @@ Create a new menu object.
 Dispatches a call to ThrustCore to generate the object and return the new
 TargetID in a reply.
 */
-func (menu *Menu) Create() {
+func NewMenu() *Menu {
+	menu := Menu{}
 	menuCreate := Command{
 		Action:     "create",
 		ObjectType: "menu",
@@ -59,8 +61,12 @@ func (menu *Menu) Create() {
 	menu.ReplyHandlers = make(map[uint]func(reply CommandResponse, item *MenuItem))
 	menu.SetSendChannel(connection.GetInputChannels())
 	menu.WaitingResponses = append(menu.WaitingResponses, &menuCreate)
+	dispatcher.RegisterHandler(menu.DispatchResponse)
+
 	go menu.SendThread()
 	menu.Send(&menuCreate)
+
+	return &menu
 }
 
 /*
@@ -173,11 +179,11 @@ func (menu *Menu) DispatchResponse(reply CommandResponse) {
 		menu.HandleReply(reply)
 	}
 
-	for _, child := range menu.Items {
-		if child.IsSubMenu() {
-			child.SubMenu.DispatchResponse(reply)
-		}
-	}
+	// for _, child := range menu.Items {
+	// 	if child.IsSubMenu() {
+	// 		child.SubMenu.DispatchResponse(reply)
+	// 	}
+	// }
 }
 
 /*

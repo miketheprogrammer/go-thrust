@@ -11,8 +11,7 @@ func main() {
 	common.InitLogger()
 	spawn.SetBaseDirectory("./")
 	spawn.Run()
-	thrustWindow := window.Window{Url: "http://breach.cc/"}
-	thrustWindow.Create(nil)
+	thrustWindow := window.NewWindow("http://breach.cc/", nil)
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()

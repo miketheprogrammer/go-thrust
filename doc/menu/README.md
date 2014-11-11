@@ -50,6 +50,14 @@ necessary attributes and methods to work with asynchronous calls to the menu
 API. The TargetID is assigned by ThrustCore, so on init of this object, there is
 no TargetID. A Goroutine is dispatched to get the targetID.
 
+#### func  NewMenu
+
+```go
+func NewMenu() *Menu
+```
+Create a new menu object. Dispatches a call to ThrustCore to generate the object
+and return the new TargetID in a reply.
+
 #### func (*Menu) AddCheckItem
 
 ```go
@@ -127,14 +135,6 @@ func (menu *Menu) CallWhenTreeStable(command *Command)
 ```
 CallWhenTreeStable queues up "Calls" to go out only when the state of the menu
 is Stable. Stable means that the menu is Ready and has no AwaitingResponses
-
-#### func (*Menu) Create
-
-```go
-func (menu *Menu) Create()
-```
-Create a new menu object. Dispatches a call to ThrustCore to generate the object
-and return the new TargetID in a reply.
 
 #### func (*Menu) DispatchResponse
 
@@ -311,6 +311,12 @@ type MenuItem struct {
 }
 ```
 
+
+#### func  NewMenuItem
+
+```go
+func NewMenuItem() *MenuItem
+```
 
 #### func (MenuItem) HandleEvent
 

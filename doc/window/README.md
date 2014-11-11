@@ -23,6 +23,12 @@ type Window struct {
 ```
 
 
+#### func  NewWindow
+
+```go
+func NewWindow(url string, sess *session.Session) *Window
+```
+
 #### func (*Window) Call
 
 ```go
@@ -39,12 +45,6 @@ func (w *Window) CallWhenDisplayed(command *Command)
 
 ```go
 func (w *Window) CallWhenReady(command *Command)
-```
-
-#### func (*Window) Create
-
-```go
-func (w *Window) Create(sess *session.Session)
 ```
 
 #### func (*Window) DispatchResponse

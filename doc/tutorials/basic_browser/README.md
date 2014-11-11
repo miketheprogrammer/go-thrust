@@ -56,14 +56,7 @@ func main () {
   spawn.Run()
 
   // Create the window struct with default values
-  thrustWindow := window.Window{
-    Url: "http://breach.cc/",
-  }
-
-  // Send a Create call to the Thrust core requesting the window to be created
-  // Dont worry about return values, we handle that asynchronously behind the 
-  // scenes
-  thrustWindow.Create(nil)
+  thrustWindow := window.NewWindow("http://breach.cc/", nil)
 
   // Show our new window.
   thrustWindow.Show()
@@ -80,9 +73,7 @@ Now our final step, running the dispatcher loop. This or some other loop must be
 
 The dispatcher is your key to accessing many of the internal. The method RunLoop is a helper that will serve as the standard loop, however you can feel free to implement your own, if you dont mind any compatibility issues with forward releases.
 
-Quick Note, dispatchers and other objects support registering handlers. You generally register a top level or root object with the dispatcher and then have that object process the even internally, for instance in the case of menus, register handlers per ActionId.
-
-For simplicity sake, single instance objects such as Window (only that one for now) register themselves with their default handler.
+Quick Note, dispatchers and other objects support registering handlers. Generally, objects such as Window, Menu, Session, will self register with the dispatcher.
 
 This may change in the coming weeks, but for demo purposes we wanted the simplest code possible to get started. 
 
@@ -95,14 +86,9 @@ func main () {
   spawn.Run()
 
   // Create the window struct with default values
-  thrustWindow := window.Window{
-    Url: "http://breach.cc/",
-  }
+  thrustWindow := window.NewWindow("http://breach.cc/", nil)
 
-  // Send a Create call to the Thrust core requesting the window to be created
-  // Dont worry about return values, we handle that asynchronously behind the 
-  // scenes
-  thrustWindow.Create(nil)
+
 
   // Show our new window.
   thrustWindow.Show()

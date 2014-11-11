@@ -20,6 +20,10 @@ type MenuItem struct {
 	Parent    *Menu  `json:"-"`
 }
 
+func NewMenuItem() *MenuItem {
+	return &MenuItem{}
+}
+
 func (mi MenuItem) IsSubMenu() bool {
 	return mi.SubMenu != nil
 }

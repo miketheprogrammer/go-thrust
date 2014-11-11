@@ -23,10 +23,11 @@ type Window struct {
 	SendChannel      *connection.In `json:"-"`
 }
 
-func (w *Window) Create(sess *session.Session) {
-	url := w.Url
-	if len(url) == 0 {
-		url = "http://google.com"
+func NewWindow(url string, sess *session.Session) *Window {
+	w := Window{}
+	w.Url = url
+	if len(w.Url) == 0 {
+		w.Url = "http://google.com"
 	}
 	_, sendChannel := connection.GetCommunicationChannels()
 
@@ -34,8 +35,8 @@ func (w *Window) Create(sess *session.Session) {
 		Action:     "create",
 		ObjectType: "window",
 		Args: CommandArguments{
-			RootUrl: url,
-			Title:   "helloworld",
+			RootUrl: w.Url,
+			Title:   "Application",
 			Size: SizeHW{
 				Width:  1024,
 				Height: 768,
@@ -61,6 +62,7 @@ func (w *Window) Create(sess *session.Session) {
 			}
 		}()
 	}
+	return &w
 }
 
 func (w *Window) SetSendChannel(sendChannel *connection.In) {
