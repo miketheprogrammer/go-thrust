@@ -131,7 +131,7 @@ is Stable. Stable means that the menu is Ready and has no AwaitingResponses
 #### func (*Menu) Create
 
 ```go
-func (menu *Menu) Create(sendChannel *connection.In)
+func (menu *Menu) Create()
 ```
 Create a new menu object. Dispatches a call to ThrustCore to generate the object
 and return the new TargetID in a reply.

@@ -44,7 +44,7 @@ func (w *Window) CallWhenReady(command *Command)
 #### func (*Window) Create
 
 ```go
-func (w *Window) Create(sendChannel *connection.In, sess *session.Session)
+func (w *Window) Create(sess *session.Session)
 ```
 
 #### func (*Window) DispatchResponse

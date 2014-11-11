@@ -20,10 +20,16 @@ func RegisterHandler(f HandleFunc)
 RegisterHandler registers a HandleFunc f to receive a CommandResponse when one
 is sent to the system.
 
+#### func  Run
+
+```go
+func Run(outChannels *connection.Out)
+```
+
 #### func  RunLoop
 
 ```go
-func RunLoop(outChannels *connection.Out)
+func RunLoop()
 ```
 RunLoop starts a loop that receives CommandResponses and dispatches them. This
 is a helper method, but you could just implement your own, if you only need this

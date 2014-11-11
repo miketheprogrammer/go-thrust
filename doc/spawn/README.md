@@ -43,15 +43,15 @@ func GetThrustDirectory() string
 GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 
+#### func  Run
+
+```go
+func Run() (io.ReadCloser, io.WriteCloser)
+```
+
 #### func  SetBaseDirectory
 
 ```go
 func SetBaseDirectory(b string)
 ```
 SetBaseDirectory sets the base directory used in the other helper methods
-
-#### func  SpawnThrustCore
-
-```go
-func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser)
-```
