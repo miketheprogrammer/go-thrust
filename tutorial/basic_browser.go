@@ -9,7 +9,7 @@ import (
 
 func main() {
 	common.InitLogger()
-	spawn.SetBaseDirectory("./vendor")
+	spawn.SetBaseDirectory("./")
 	spawn.Run()
 	thrustWindow := window.Window{Url: "http://breach.cc/"}
 	thrustWindow.Create(nil)

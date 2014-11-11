@@ -50,7 +50,7 @@ func main() {
 	thrustWindow.Show()
 
 	rootMenu.Create()
-	rootMenu.AddItem(2, "Root")
+	//rootMenu.AddItem(2, "Root")
 
 	fileMenu.Create()
 	fileMenu.AddItem(3, "Open")
