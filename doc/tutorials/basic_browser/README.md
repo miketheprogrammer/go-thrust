@@ -3,8 +3,7 @@
 
 For the basic browser package we first need to add our standard imports for starting Thrust as well as delcare the package name. Since its an executable, we declare pacage main.
 
-- Note: the Common package is imported using . notation, this imports all exported symbols into the local space. Symbols such as Log, InitLogger(), and SOCKET_BOUNDARY
-
+- Quick note about synchronous vs. asynchronous. Unless otherwise stated, most API commands are IO Bound, and asynchronous in nature. However, they look synchronous. Most of the nitty gritty details are abstracted away from the user, with a sort of priority queue / state driven api. Some calls will only execute when certain states have been met. For instance, you cannot set a menu as the application menu until the menu and all its items and submenus have been created and have stabilized meaning they have no events waiting to return.
 
 ```go
 package main
@@ -120,4 +119,4 @@ func main () {
 }
 ```
 
-You now have a successful window.
+You now have a successful window showing you http://breach.cc
