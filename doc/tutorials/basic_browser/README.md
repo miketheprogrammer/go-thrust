@@ -10,9 +10,7 @@ For the basic browser package we first need to add our standard imports for star
 package main
 
 import (
-  "github.com/miketheprogrammer/go-thrust/commands"
-  . "github.com/miketheprogrammer/go-thrust/common"
-  "github.com/miketheprogrammer/go-thrust/connection"
+  "github.com/miketheprogrammer/go-thrust/common"
   "github.com/miketheprogrammer/go-thrust/dispatcher"
   "github.com/miketheprogrammer/go-thrust/spawn"
   "github.com/miketheprogrammer/go-thrust/window"
@@ -26,88 +24,37 @@ func main() {
 }
 ```
 
-Please add any flags you want parsed at the beginning as the next command will parse all flags.
-The next command is InitLogger() this will initialize the core logger
+Please add any flags you want parsed at the
+beginning of your main function. 
 
 ```go
 func main () {
-  InitLogger()
+  common.InitLogger()
 }
 ```
 
-Next we need a daemon to connect to, lets connect up our autodownload/autospawner for thrust core.
-We do this by assigning the two outputs of spawn.SpawnThrustCore to connection.Stdout and connection.Stdin, dont confuse the order of these.
+Next we need a daemon to connect to, lets connect up our autodownload/autospawner for thrust core. But first, will set it to use our local directory for download storage. It will always install to a directory called vendor, wherever the path you provide is.
+If no path is provided, it will use the current users home directory (at least for now.)
 
 ```go
 func main () {
-  InitLogger()
+  common.InitLogger()
 
-  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
+  spawn.SetBaseDirectory("./")
+  spawn.Run()
 }
 ```
 
-Now, we need to initialize our connection threads.
-
-
-```go
-func main () {
-  InitLogger()
-
-  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
-
-  err := connection.InitializeThreads()
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(2) // Whatever error code you want to throw here.
-  }
-}
-```
-Next lets grab our connection channels, and store them in two variables.
-Please refer to the connection package documenation for more info on
-what is returned from GetCommunicationChannels()
-
-```go
-func main () {
-  // Initialize the Logger
-  InitLogger()
-
-  // Spawn Thrust core and connect it to the connection package
-  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
-
-  // Initialize the Connection packages threads
-  err := connection.InitializeThreads()
-
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(2) // Whatever error code you want to throw here.
-  }
-
-  // Store the communcation channels
-  out, in := connection.GetCommunicationChannels()
-}
-```
-
-Now it is time to finially create our Window.
+Now it is time to create our Window.
 We will go through several methods in the next code snippet please read the comments
 
 ```go
 func main () {
   // Initialize the Logger
-  InitLogger()
+  common.InitLogger()
 
-  // Spawn Thrust core and connect it to the connection package
-  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore()
-
-  // Initialize the Connection packages threads
-  err := connection.InitializeThreads()
-
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(2) // Whatever error code you want to throw here.
-  }
-
-  // Store the communcation channels
-  out, in := connection.GetCommunicationChannels()
+  spawn.SetBaseDirectory("./")
+  spawn.Run()
 
   // Create the window struct with default values
   thrustWindow := window.Window{
@@ -117,7 +64,7 @@ func main () {
   // Send a Create call to the Thrust core requesting the window to be created
   // Dont worry about return values, we handle that asynchronously behind the 
   // scenes
-  thrustWindow.Create(in, nil)
+  thrustWindow.Create(nil)
 
   // Show our new window.
   thrustWindow.Show()
@@ -125,33 +72,28 @@ func main () {
   // Maximize our new window
   thrustWindow.Maximize()
 
+  // Focus our window
+  thrustWindow.Focus()
 }
 ```
 
-There is one major part left, registering handlers, and running the main loop
-This API is going to change alot, as we need to expose more control, and allow you to tie into events.
+Now our final step, running the dispatcher loop. This or some other loop must be blocking to keep the process open.
+
+The dispatcher is your key to accessing many of the internal. The method RunLoop is a helper that will serve as the standard loop, however you can feel free to implement your own, if you dont mind any compatibility issues with forward releases.
+
+Quick Note, dispatchers and other objects support registering handlers. You generally register a top level or root object with the dispatcher and then have that object process the even internally, for instance in the case of menus, register handlers per ActionId.
+
+For simplicity sake, single instance objects such as Window (only that one for now) register themselves with their default handler.
+
+This may change in the coming weeks, but for demo purposes we wanted the simplest code possible to get started. 
+
 ```go
 func main () {
-  // Parses Flags
   // Initialize the Logger
-  InitLogger()
+  common.InitLogger()
 
-  // Spawn Thrust core and connect it to the connection package
-  // providing an empty basepath to spawnthrustcore uses the users home 
-  // directory for storage.
-
-  connection.StdOut, connection.StdIn = spawn.SpawnThrustCore("")
-
-  // Initialize the Connection packages threads
-  err := connection.InitializeThreads()
-
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(2) // Whatever error code you want to throw here.
-  }
-
-  // Store the communcation channels
-  out, in := connection.GetCommunicationChannels()
+  spawn.SetBaseDirectory("./")
+  spawn.Run()
 
   // Create the window struct with default values
   thrustWindow := window.Window{
@@ -161,7 +103,7 @@ func main () {
   // Send a Create call to the Thrust core requesting the window to be created
   // Dont worry about return values, we handle that asynchronously behind the 
   // scenes
-  thrustWindow.Create(in, nil)
+  thrustWindow.Create(nil)
 
   // Show our new window.
   thrustWindow.Show()
@@ -169,15 +111,12 @@ func main () {
   // Maximize our new window
   thrustWindow.Maximize()
 
-  // Lets bring our new window to focus.
+  // Focus our window
   thrustWindow.Focus()
 
-  // Register a handler for thrustWindow
-  dispatcher.RegisterHandler(thrustWindow.DispatchResponse)
-  // Start the main loop
-  // Takes a *connection.Out as an argument.
-  dispatcher.RunLoop(out)
-
+  // Finally run the dispatcher loop
+  dispatcher.RunLoop()
+  // Dont run as a goroutine unless you have another blocking action on this thread.
 }
 ```
 

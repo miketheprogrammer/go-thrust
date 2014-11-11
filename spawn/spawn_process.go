@@ -58,8 +58,6 @@ Any log level higher than that will output nothing.
 
 func Run() (io.ReadCloser, io.WriteCloser) {
 
-	InitLogger()
-
 	var thrustExecPath string
 
 	thrustExecPath = GetExecutablePath()
