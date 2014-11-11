@@ -37,14 +37,19 @@ As long as there are commands in the channel, this loop will dispatch as fast
 as possible, when all commands are exhausted this loop will run on iterations
 of 10 microseconds optimistically.
 */
-func RunLoop(outChannels *connection.Out) {
+func RunLoop() {
+	outChannels := connection.GetOutputChannels()
 	for {
-		select {
-		case response := <-outChannels.CommandResponses:
-			Dispatch(response)
-		default:
-			break
-		}
+		Run(outChannels)
 		time.Sleep(time.Microsecond * 10)
+	}
+}
+
+func Run(outChannels *connection.Out) {
+	select {
+	case response := <-outChannels.CommandResponses:
+		Dispatch(response)
+	default:
+		break
 	}
 }

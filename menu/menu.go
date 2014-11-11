@@ -41,7 +41,7 @@ Create a new menu object.
 Dispatches a call to ThrustCore to generate the object and return the new
 TargetID in a reply.
 */
-func (menu *Menu) Create(sendChannel *connection.In) {
+func (menu *Menu) Create() {
 	menuCreate := Command{
 		Action:     "create",
 		ObjectType: "menu",
@@ -57,7 +57,7 @@ func (menu *Menu) Create(sendChannel *connection.In) {
 		TreeStableQueue:  make([]*Command, 0),
 	}
 	menu.ReplyHandlers = make(map[uint]func(reply CommandResponse, item *MenuItem))
-	menu.SetSendChannel(sendChannel)
+	menu.SetSendChannel(connection.GetInputChannels())
 	menu.WaitingResponses = append(menu.WaitingResponses, &menuCreate)
 	go menu.SendThread()
 	menu.Send(&menuCreate)

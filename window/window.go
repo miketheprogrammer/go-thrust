@@ -6,6 +6,7 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
 	"github.com/miketheprogrammer/go-thrust/connection"
+	"github.com/miketheprogrammer/go-thrust/dispatcher"
 	"github.com/miketheprogrammer/go-thrust/session"
 )
 
@@ -22,11 +23,13 @@ type Window struct {
 	SendChannel      *connection.In `json:"-"`
 }
 
-func (w *Window) Create(sendChannel *connection.In, sess *session.Session) {
+func (w *Window) Create(sess *session.Session) {
 	url := w.Url
 	if len(url) == 0 {
 		url = "http://google.com"
 	}
+	_, sendChannel := connection.GetCommunicationChannels()
+
 	windowCreate := Command{
 		Action:     "create",
 		ObjectType: "window",
@@ -39,6 +42,7 @@ func (w *Window) Create(sendChannel *connection.In, sess *session.Session) {
 			},
 		},
 	}
+	dispatcher.RegisterHandler(w.DispatchResponse)
 	if sess == nil {
 		w.SetSendChannel(sendChannel)
 		w.WaitingResponses = append(w.WaitingResponses, &windowCreate)

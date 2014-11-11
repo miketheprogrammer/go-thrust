@@ -18,7 +18,7 @@ type Session struct {
 	SendChannel      *connection.In
 }
 
-func (session *Session) Create(sendChannel *connection.In) {
+func (session *Session) Create() {
 	command := Command{
 		Action:     "create",
 		ObjectType: "session",
@@ -27,7 +27,7 @@ func (session *Session) Create(sendChannel *connection.In) {
 			OffTheRecord: session.OffTheRecord,
 		},
 	}
-	session.SendChannel = sendChannel
+	session.SendChannel = connection.GetInputChannels()
 	session.WaitingResponses = append(session.WaitingResponses, &command)
 	session.Send(&command)
 }

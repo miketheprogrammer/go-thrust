@@ -18,7 +18,33 @@ import (
 	"time"
 
 	. "github.com/miketheprogrammer/go-thrust/common"
+	"github.com/miketheprogrammer/go-thrust/connection"
 )
+
+var base string
+
+/*
+SetBaseDirectory sets the base directory used in the other helper methods
+*/
+func SetBaseDirectory(dir string) error {
+	if len(dir) == 0 {
+		usr, err := user.Current()
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(usr.HomeDir)
+		// Parses Flags
+		dir = usr.HomeDir
+	}
+	dir, err := filepath.Abs(dir)
+	if err != nil {
+		fmt.Println("Could not calculate absolute path", err)
+		return err
+	}
+	base = dir
+
+	return nil
+}
 
 /*
 The SpawnThrustCore method is a bootstrap and run method.
@@ -30,22 +56,9 @@ using -log=debug as a command switch will give you the most information about wh
 Any log level higher than that will output nothing.
 */
 
-func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
-	dir, err := filepath.Abs(dir)
-	if err != nil {
-		fmt.Println("Could not calculate absolute path", err)
-	}
-	if len(dir) == 0 {
-		usr, err := user.Current()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(usr.HomeDir)
-		// Parses Flags
-		dir = usr.HomeDir
-	}
+func Run() (io.ReadCloser, io.WriteCloser) {
 
-	SetBaseDirectory(dir)
+	InitLogger()
 
 	var thrustExecPath string
 
@@ -79,7 +92,14 @@ func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
 		cmd.Start()
 
 		Log.Info("Thrust Core started.")
-		return cmdOut, cmdIn
+
+		// Setup our Connection.
+		connection.Stdout = cmdOut
+		connection.Stdin = cmdIn
+
+		connection.InitializeThreads()
+
+		return connection.Stdout, connection.Stdin
 	} else {
 		fmt.Println("===============WARNING================")
 		fmt.Println("Current operating system not supported", runtime.GOOS)
@@ -88,7 +108,7 @@ func SpawnThrustCore(dir string) (io.ReadCloser, io.WriteCloser) {
 	return nil, nil
 }
 
-func downloadFromUrl(url, version string) string{
+func downloadFromUrl(url, version string) string {
 	url = strings.Replace(url, "$V", version, 2)
 	fileName := strings.Replace("/tmp/$V", "$V", version, 1)
 	if Log.LogInfo() {

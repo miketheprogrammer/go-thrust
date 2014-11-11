@@ -15,8 +15,8 @@ import (
 
 // Single Connection
 //var conn net.Conn
-var StdIn io.WriteCloser
-var StdOut io.ReadCloser
+var Stdin io.WriteCloser
+var Stdout io.ReadCloser
 
 type In struct {
 	Commands chan *commands.Command
@@ -34,7 +34,7 @@ var out Out
 Initializes threads with Channel Structs
 Opens Connection
 */
-func InitializeThreads() error {
+func InitializeThreads() {
 	//c, err := net.Dial(proto, address)
 	//conn = c
 
@@ -51,7 +51,7 @@ func InitializeThreads() error {
 	go Reader(&out, &in)
 	go Writer(&out, &in)
 
-	return nil
+	return
 }
 
 func GetOutputChannels() *Out {
@@ -68,8 +68,8 @@ func GetCommunicationChannels() (*Out, *In) {
 
 func Reader(out *Out, in *In) {
 
-	r := bufio.NewReader(StdOut)
-	defer StdIn.Close()
+	r := bufio.NewReader(Stdout)
+	defer Stdin.Close()
 	for {
 		select {
 		case quit := <-in.Quit:
@@ -110,10 +110,10 @@ func Writer(out *Out, in *In) {
 			cmd, _ := json.Marshal(command)
 			Log.Debug("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
 
-			StdIn.Write(cmd)
-			StdIn.Write([]byte("\n"))
-			StdIn.Write([]byte(SOCKET_BOUNDARY))
-			StdIn.Write([]byte("\n"))
+			Stdin.Write(cmd)
+			Stdin.Write([]byte("\n"))
+			Stdin.Write([]byte(SOCKET_BOUNDARY))
+			Stdin.Write([]byte("\n"))
 		}
 		time.Sleep(time.Microsecond * 100)
 	}
