@@ -6,6 +6,7 @@
 * [Window](window/)
 * [Spawn](spawn/)
 * [Dispatcher](dispatcher/)
+* [Session](session/)
 
 ## Tutorials
 
