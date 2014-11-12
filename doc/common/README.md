@@ -28,11 +28,11 @@ var ApplicationName string = "Go Thrust"
 ```
 
 ```go
-var Log log.Logger
+var Log *golog.Logger
 ```
 
 #### func  InitLogger
 
 ```go
-func InitLogger()
+func InitLogger(sLevel string)
 ```
