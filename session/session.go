@@ -129,37 +129,3 @@ type SessionInvokable interface {
 	InvokeCookiesDelete(args *CommandResponseArguments, session *Session)
 	InvokeCookieForceKeepSessionState(args *CommandResponseArguments, session *Session)
 }
-
-type DummySession struct{}
-
-func NewDummySession() (dummy *DummySession) {
-	return &DummySession{}
-}
-
-func (d DummySession) InvokeCookiesLoad(args *CommandResponseArguments, session *Session) {
-
-}
-
-func (d DummySession) InvokeCookiesLoadForKey(args *CommandResponseArguments, session *Session) {
-
-}
-
-func (d DummySession) InvokeCookiesFlush(args *CommandResponseArguments, session *Session) {
-
-}
-
-func (d DummySession) InvokeCookiesAdd(args *CommandResponseArguments, session *Session) {
-
-}
-
-func (d DummySession) InvokeCookiesUpdateAccessTime(args *CommandResponseArguments, session *Session) {
-
-}
-
-func (d DummySession) InvokeCookiesDelete(args *CommandResponseArguments, session *Session) {
-
-}
-
-func (d DummySession) InvokeCookieForceKeepSessionState(args *CommandResponseArguments, session *Session) {
-
-}
