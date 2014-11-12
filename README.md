@@ -12,7 +12,7 @@ Start Go Thrust using source and GoLang runtime
 ./install-go-deps.sh #installs current dependencies
 make tutorials
 # then execute one of the many tutorials
-#./tutorial/bin/basic_browser
+#./tutorial/bin/basic_window
 #./tutorial/bin/basic_menu
 #./tutorial/bin/basic_menu_events
 ```
@@ -22,6 +22,9 @@ Forward:
 Go-Thrust is a cross platform GUI Application development base. It aims to provide the
 essentials to create a cross platform application using web technologies such as, (HTML,CSS,JS),
 as well as new technologies like Websockets, Webview, etcetera. Go-Thrust is the supported Go Library for accessing the underlying technology Thrust. Thrust builds upon the efforts of predecessors like ExoBrowser, Node-Webkit, and Atom-Shell to create an easily buildable Webbrowser base. Thrust consists essentially of a C/C++ implementation of the Chromium Content Library (Blink/V8) and abstracts away most of the nitty gritty platform specific implementations.
+
+While Go Thrust and Thrust are in their infancy, they already provide some pretty nice features.
+Expect many more to come.
 
 Thrust exposes all of this beautifully over an Stdin/Stdout pipe speaking a JSONRPC protocol.
 

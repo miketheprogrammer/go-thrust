@@ -39,6 +39,7 @@ type CommandArguments struct {
 	CookieStore  bool   `json:"cookie_store"`
 	OffTheRecord bool   `json:"off_the_record"`
 	Focus        bool   `json:"focus"`
+	Path         string `json:"path,omitempty"`
 }
 
 /*
@@ -69,9 +70,20 @@ CommandResponse defines the structure of a response
 from a Command sent to ThrustCore
 */
 type CommandResponse struct {
-	Action string      `json:"_action,omitempty"`
-	Error  string      `json:"_error,omitempty"`
-	ID     uint        `json:"_id,omitempty"`
-	Result ReplyResult `json:"_result,omitempty"`
-	Event  EventResult `json:"_event,omitempty"`
+	Action   string                   `json:"_action,omitempty"`
+	Error    string                   `json:"_error,omitempty"`
+	ID       uint                     `json:"_id,omitempty"`
+	Result   ReplyResult              `json:"_result,omitempty"`
+	Event    EventResult              `json:"_event,omitempty"`
+	Args     CommandResponseArguments `json:"_args,omitempty"`
+	TargetID uint                     `json:"_target,omitempty"`
+	Method   string                   `json:"_method,omitempty"`
+}
+
+/*
+Command Response Arguments covers all possible cases of CommandResponses that contain an _args parameter.
+This is often the case with methods on the Session Object that are Invoked from the core.
+*/
+type CommandResponseArguments struct {
+	key string `json:"key,omitempty"`
 }

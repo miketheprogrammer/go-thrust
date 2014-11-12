@@ -1,6 +1,7 @@
 package window
 
 import (
+	"fmt"
 	"time"
 
 	. "github.com/miketheprogrammer/go-thrust/commands"
@@ -52,6 +53,7 @@ func NewWindow(url string, sess *session.Session) *Window {
 		go func() {
 			for {
 				if sess.TargetID != 0 {
+					fmt.Println("sess", sess.TargetID)
 					windowCreate.Args.SessionID = sess.TargetID
 					w.SetSendChannel(sendChannel)
 					w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
