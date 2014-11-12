@@ -15,17 +15,6 @@ type ChildCommand struct {
 ```
 
 
-#### type Item
-
-```go
-type Item interface {
-	IsSubMenu() bool
-	IsCommandId() bool
-	Handle()
-}
-```
-
-
 #### type Menu
 
 ```go
