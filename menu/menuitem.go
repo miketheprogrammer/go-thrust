@@ -2,12 +2,6 @@ package menu
 
 import . "github.com/miketheprogrammer/go-thrust/common"
 
-type Item interface {
-	IsSubMenu() bool
-	IsCommandId() bool
-	Handle()
-}
-
 type MenuItem struct {
 	CommandID uint   `json:"command_id,omitempty"`
 	Label     string `json:"label,omitempty"`
