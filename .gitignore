@@ -52,3 +52,5 @@ tutorial/bin/*
 release
 
 vendor
+
+dummy_session
