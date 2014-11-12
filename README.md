@@ -5,49 +5,27 @@ Current Thrust Version 0.7.4
 
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
-Running DEMO binary on OSX 10.9 or Linux (This is just for the demo, Thrust as it stands now is really a Library to be used in other applications.)
+Quick Start, see it in action
 ==================
-Go Thrust will automatically install Thrust Core dependencies at runtime.
-
-
-Start Go Thrust using binaries
-```bash
-Download the release for your distribution from the releases page.
-unzip the contents.
-run ./Thrust or the absolute path to the executable
-```
 Start Go Thrust using source and GoLang runtime
 ```bash
 ./install-go-deps.sh #installs current dependencies
-mkdir -f release/
-mkdir -f release/go-thrust
-go build -o release/go-thrust/Thrust demo.go
-./release/go-thrust/Thrust -basedir=./release/go-thrust
+make tutorials
+# then execute one of the many tutorials
+#./tutorial/bin/basic_browser
+#./tutorial/bin/basic_menu
+#./tutorial/bin/basic_menu_events
 ```
 
-Command Line Switches
-========================
-```bash
--basedir=string (DEMO ONLY)
-    #where you want the core files to be stored.
-    #on initial run, all files 
+Forward:
+==================
+Go-Thrust is a cross platform GUI Application development base. It aims to provide the
+essentials to create a cross platform application using web technologies such as, (HTML,CSS,JS),
+as well as new technologies like Websockets, Webview, etcetera. Go-Thrust is the supported Go Library for accessing the underlying technology Thrust. Thrust builds upon the efforts of predecessors like ExoBrowser, Node-Webkit, and Atom-Shell to create an easily buildable Webbrowser base. Thrust consists essentially of a C/C++ implementation of the Chromium Content Library (Blink/V8) and abstracts away most of the nitty gritty platform specific implementations.
 
-#LOGGING
-#Inherits Switches from http://godoc.org/github.com/alexcesaro/log/stdlog
-#Added below for ease, but for up to date info visit the page.
--log=loglevel
-    #Log events at or above this level are logged.
--stderr=bool
-    #Logs are written to standard error (stderr) instead of standard
-    #output.
--flushlog=none
-    #Until this level is reached nothing is output and logs are stored
-    #in the memory. Once a log event is at or above this level, it
-    #outputs all logs in memory as well as the future log events. This
-    #feature should not be used with long-running processes.
-```
+Thrust exposes all of this beautifully over an Stdin/Stdout pipe speaking a JSONRPC protocol.
 
-DOCUMENTATION
+DOCUMENTATION (Docs and Tutorials)
 ================
 * [Index](https://github.com/miketheprogrammer/go-thrust/tree/master/doc)
 
@@ -56,56 +34,6 @@ Current Platform Specific Cases:
 Currently Darwin handles Application Menus different from other systems.
 The "Root" menu is always named the project name. However on linux, the name is whatever you provide. This can be seen in demo.go, and can be alleviated by trying to use the same name, or by using different logic for both cases. I make no attempt to unify it at the library level, because the user deserves the freedom to do this themselves.
 
-Roadmap to v1.0 :
-================
-Please note Complete Support *may* not be toggled until Thrust core is stable.
-
-- [ ] Add kiosk support (core.0.7.3)
-- [X] Queue Requests prior to Object being created to matain a synchronous looking API without the need for alot of state checks
-- [ ] Remove overuse of pointers in structs where modification will not take place
-- [ ] Add Window Support
-  - [X] Basic Support
-  - [X] Refactor Connection usage
-  - [ ] Complete Support 
-    - Accessors (core.0.7.3)
-    - Events (core.0.7.3)
-
-- [ ] Add Menu Support
-  - [X] Basic Support
-  - [X] Refactor Connection usage
-  - [ ] Complete Support
-
-- [ ] Add Session Support
-  - [X] Basic Support
-  - [ ] Complete Support
-
-- [X] Implement Package Connection
-
-- [x] Seperate out in to packages other than main
-  - [X] Package Window
-  - [X] Package Menu
-  - [X] Package Commands
-  - [X] Package Spawn
-
-- [ ] Remove func Main as this is a Library
-  - [ ] Should use Tests instead
-
-- [X] Refactor how Dispatching occurs
-  - [X] We should not have to manually dispatch, there should be a registration method 
-
-- [ ] Refactor menu.SetChecked to accept a nillable menu item pointer, so we dont have to waste resources finding the item in the Tree
-
-- [X] Refactor CallWhen* methods, Due to the nature of using GoRoutines, there is the chance that calls will execute out of the original order they were intended.
-
-- [X] Create a script to autodownload binaries
-
-- [X] Refactor Logging
-
-- [ ] SubMenus need order preservation
-
-- [X] vendor folders need versioning
-
-- [X] Need to fix Pathing for autoinstall and autorun. Relative paths will not work for most use cases.
 
 This thrust client exposes enough Methods to be fairly forwards compatible even without adding new helper methods. The beauty of working with a stable JSON RPC Protocol is that most methods are just helpers around build that data structure.
 
@@ -122,9 +50,11 @@ To use go-thrust as a library, simple use the code in the same way you would use
 
 
 
-Extra Notes (This section quickly gets outdated, ill try to keep it updated, but it really just for reference)
+The Future of Go-Thrust
 ================
+Any user of Go-Thrust should feel free to contribute Ideas, Code, anything that can help move this project in the right direction. The ideal goal is to stay as much out of the way, but still provide a useful system.
 
+Some questions and thoughts: 
 - Future Architecture
 There needs to be consideration into how an application will be created.
 While we should leave the core API's open enough to allow different architectures, there should be a primary guiding one.

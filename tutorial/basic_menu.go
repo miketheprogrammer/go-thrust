@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/miketheprogrammer/go-thrust/common"
 	"github.com/miketheprogrammer/go-thrust/dispatcher"
 	"github.com/miketheprogrammer/go-thrust/menu"
 	"github.com/miketheprogrammer/go-thrust/spawn"
@@ -9,7 +8,6 @@ import (
 )
 
 func main() {
-	common.InitLogger()
 	spawn.SetBaseDirectory("./")
 	spawn.Run()
 	thrustWindow := window.NewWindow("http://breach.cc/", nil)
