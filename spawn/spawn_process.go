@@ -108,9 +108,9 @@ func Run() (io.ReadCloser, io.WriteCloser) {
 	return nil, nil
 }
 
-func downloadFromUrl(url, version string) string {
+func downloadFromUrl(url, filepath, version string) string {
 	url = strings.Replace(url, "$V", version, 2)
-	fileName := strings.Replace("/tmp/$V", "$V", version, 1)
+	fileName := strings.Replace(filepath, "$V", version, 1)
 	if Log.LogInfo() {
 		fmt.Println("Downloading", url, "to", fileName)
 	}

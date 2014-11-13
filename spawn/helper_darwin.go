@@ -62,7 +62,7 @@ func executableNotExist() bool {
 prepareExecutable dowloads, unzips and does alot of other magic to prepare our thrust core build.
 */
 func prepareExecutable() {
-	path := downloadFromUrl(GetDownloadUrl(), common.THRUST_VERSION)
+	path := downloadFromUrl(GetDownloadUrl(), "/tmp/$V", common.THRUST_VERSION)
 	//unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
 	zip.ExtractTo(path, GetThrustDirectory())
 
