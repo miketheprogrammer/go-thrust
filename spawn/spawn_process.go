@@ -55,7 +55,7 @@ Go-Thrust and all *-Thrust packages communicate with Thrust Core via Stdin/Stdou
 using -log=debug as a command switch will give you the most information about what is going on. -log=info will give you notices that stuff is happening.
 Any log level higher than that will output nothing.
 */
-func Run(autoDownloadEnabled bool) (io.ReadCloser, io.WriteCloser) {
+func Run(autoDownloadEnabled bool) {
 	if Log == nil {
 		InitLogger("debug")
 	}
@@ -99,14 +99,13 @@ func Run(autoDownloadEnabled bool) (io.ReadCloser, io.WriteCloser) {
 		connection.Stdin = cmdIn
 
 		connection.InitializeThreads()
-
-		return connection.Stdout, connection.Stdin
+		return
 	} else {
 		fmt.Println("===============WARNING================")
 		fmt.Println("Current operating system not supported", runtime.GOOS)
 		fmt.Println("===============END====================")
 	}
-	return nil, nil
+	return
 }
 
 func downloadFromUrl(url, filepath, version string) string {
