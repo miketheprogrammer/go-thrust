@@ -3,6 +3,7 @@ go-thrust
 Current Go-Thrust Version 0.2.4
 Current Thrust Version 0.7.4
 
+![Logo Thrust](http://i.imgur.com/DwFKI0J.png)
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
 Quick Start, see it in action
