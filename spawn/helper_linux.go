@@ -7,15 +7,6 @@ import (
 	"github.com/miketheprogrammer/go-thrust/common"
 )
 
-var base string
-
-/*
-SetBaseDirectory sets the base directory used in the other helper methods
-*/
-func SetBaseDirectory(b string) {
-	base = b
-}
-
 /*
 GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
