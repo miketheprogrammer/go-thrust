@@ -21,7 +21,7 @@ GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 */
 func GetThrustDirectory() string {
-	return base + "/vendor/linux/x64/v" + common.THRUST_VERSION
+	return base + "\\vendor\\linux\\x64\\v" + common.THRUST_VERSION
 }
 
 /*
@@ -29,7 +29,7 @@ GetExecutablePath returns the path to the Thrust Executable
 Differs between builds based on OS
 */
 func GetExecutablePath() string {
-	return GetThrustDirectory() + "/thrust_shell"
+	return GetThrustDirectory() + "\\thrust_shell"
 }
 
 /*
@@ -56,5 +56,5 @@ func executableNotExist() bool {
 
 func prepareExecutable() {
 	downloadFromUrl(GetDownloadUrl(), common.THRUST_VERSION)
-	unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+	unzip(strings.Replace("C:\\temp\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
 }
