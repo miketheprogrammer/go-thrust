@@ -8,6 +8,8 @@ Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
 Quick Start, see it in action
 ==================
+On Linux/Darwin
+
 Start Go Thrust using source and GoLang runtime
 ```bash
 ./install-go-deps.sh #installs current dependencies
@@ -16,6 +18,15 @@ make tutorials
 #./tutorial/bin/basic_window
 #./tutorial/bin/basic_menu
 #./tutorial/bin/basic_menu_events
+#./tutorial/bin/basic_multiple_windows
+#./tutorial/bin/advanced_session
+#./tutorial/bin/basic_webserver_app
+```
+
+On Windows just use go run
+```bash
+go run tutorial/basic_window.go
+# ... etcetera
 ```
 
 Forward:
@@ -38,12 +49,14 @@ Current Platform Specific Cases:
 Currently Darwin handles Application Menus different from other systems.
 The "Root" menu is always named the project name. However on linux, the name is whatever you provide. This can be seen in demo.go, and can be alleviated by trying to use the same name, or by using different logic for both cases. I make no attempt to unify it at the library level, because the user deserves the freedom to do this themselves.
 
-
 This thrust client exposes enough Methods to be fairly forwards compatible even without adding new helper methods. The beauty of working with a stable JSON RPC Protocol is that most methods are just helpers around build that data structure.
 
 Helper methods receive the UpperCamelCase version of their relative names in Thrust.
 
 i.e. insert_item_at == InsertItemAt
+
+Please note **** That the intended use case of Application Menus is to only support 
+OSX and Unity/X11 global menu bars. This means that you should implement most menus in html and javascript, using IPC/RPC to communicate with the host application. The side effect is primarily that Windows, and certain unix/linux systems will not load ApplicationMenus 
 
 
 Using Go-Thrust as a Library and bundling your final release
