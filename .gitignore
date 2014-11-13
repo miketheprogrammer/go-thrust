@@ -54,3 +54,5 @@ release
 vendor
 
 dummy_session
+
+cache/*
