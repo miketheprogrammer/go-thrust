@@ -37,7 +37,7 @@ func NewWindow(url string, sess *session.Session) *Window {
 		ObjectType: "window",
 		Args: CommandArguments{
 			RootUrl: w.Url,
-			Title:   "Application",
+			Title:   ApplicationName,
 			Size: SizeHW{
 				Width:  1024,
 				Height: 768,
