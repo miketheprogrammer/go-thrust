@@ -1,10 +1,11 @@
-NOV132014 (Version 0.3.1):
+NOV132014 (Version 0.3.2):
 
 Important Changes:
 - Upgraded Thrust Core to version 0.7.5
 - Implemented Session and SessionInvokable interface.
 - Windows Support.
 - Added optional auto download to spawn.Run()
+- Remove return values from spawn.Run()
 
 Trivial Changes:
 - Added several tutorials
