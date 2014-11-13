@@ -7,8 +7,6 @@ import (
 	"github.com/miketheprogrammer/go-thrust/common"
 )
 
-var base string
-
 /*
 SetBaseDirectory sets the base directory used in the other helper methods
 */
