@@ -15,12 +15,13 @@ on the principle of single value return. Do we worry about different types or do
 If we use different types, we will just have to add them to a CommandResponse from the Caller anyway.
 I would say different types will keep the user from shooting himself in the foot.
 */
+
 type SessionInvokable interface {
-	InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session)
+	InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie)
+	InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie)
+	InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session) bool
+	InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session) bool
+	InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session) bool
+	InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session) bool
 	InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, session *Session)
 }

@@ -1,5 +1,7 @@
 package commands
 
+import "encoding/json"
+
 /*
 commands package contains structures for working with JSON RPC
 Calls to ThrustCore
@@ -54,7 +56,8 @@ type SizeHW struct {
 ReplyResult is used in CommandResponse's of Type Reply
 */
 type ReplyResult struct {
-	TargetID uint `json:"_target,omitempty"`
+	TargetID uint            `json:"_target,omitempty"`
+	Cookies  json.RawMessage `json:"cookies"`
 }
 
 /*

@@ -1,6 +1,9 @@
 package session
 
-import "github.com/miketheprogrammer/go-thrust/commands"
+import (
+	"github.com/miketheprogrammer/go-thrust/commands"
+	"github.com/miketheprogrammer/go-thrust/common"
+)
 
 type DummySession struct{}
 
@@ -8,30 +11,43 @@ func NewDummySession() (dummy *DummySession) {
 	return &DummySession{}
 }
 
-func (d DummySession) InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session) {
+/*
+For Simplicity type declarations
+*/
+func (ds DummySession) InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie) {
+	common.Log.Debug("InvokeCookiesLoad")
+	cookies = make([]Cookie, 0)
 
+	return cookies
 }
 
-func (d DummySession) InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session) {
+func (ds DummySession) InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie) {
+	common.Log.Debug("InvokeCookiesLoadForKey")
+	cookies = make([]Cookie, 0)
 
+	return cookies
 }
 
-func (d DummySession) InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session) {
-
+func (ds DummySession) InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session) bool {
+	common.Log.Debug("InvokeCookiesFlush")
+	return false
 }
 
-func (d DummySession) InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session) {
-
+func (ds DummySession) InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session) bool {
+	common.Log.Debug("InvokeCookiesAdd")
+	return false
 }
 
-func (d DummySession) InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session) {
-
+func (ds DummySession) InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session) bool {
+	common.Log.Debug("InvokeCookiesUpdateAccessTime")
+	return false
 }
 
-func (d DummySession) InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session) {
-
+func (ds DummySession) InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session) bool {
+	common.Log.Debug("InvokeCookiesDelete")
+	return false
 }
 
-func (d DummySession) InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, session *Session) {
-
+func (ds DummySession) InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, session *Session) {
+	common.Log.Debug("InvokeCookieForceKeepSessionState")
 }

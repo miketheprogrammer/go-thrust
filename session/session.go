@@ -6,6 +6,7 @@ interfaces that will assist in accessing the
 default Session or implementing your own Custom Session.
 */
 import (
+	"encoding/json"
 	"fmt"
 
 	. "github.com/miketheprogrammer/go-thrust/commands"
@@ -21,6 +22,7 @@ type Session struct {
 	TargetID                 uint
 	CookieStore              bool
 	OffTheRecord             bool
+	Path                     bool
 	Ready                    bool
 	CommandHistory           []*Command
 	ResponseHistory          []*CommandResponse
@@ -36,13 +38,13 @@ incognito which is a boolean, meaning dont persist session state
 after close.
 overrideDefaultSession which is a boolean that till tell thrust core
 to try to invoke session methods from us.
-saveType a.k.a `path` in the Thrust Core documentation, this value can be a string
-"cache" or "storage", indicating whether or not you want memory vs. disk storage.
+path string is the path to store session data.
 */
-func NewSession(incognito, overrideDefaultSession bool, saveType string) *Session {
+func NewSession(incognito, overrideDefaultSession bool, path string) *Session {
 	session := Session{
 		CookieStore:  overrideDefaultSession,
 		OffTheRecord: incognito,
+		Path:         path,
 	}
 	if overrideDefaultSession == true {
 		session.SetInvokable(*NewDummySession())
@@ -53,7 +55,7 @@ func NewSession(incognito, overrideDefaultSession bool, saveType string) *Sessio
 		Args: CommandArguments{
 			CookieStore:  session.CookieStore,
 			OffTheRecord: session.OffTheRecord,
-			Path:         saveType,
+			Path:         session.Path,
 		},
 	}
 	session.SendChannel = connection.GetInputChannels()
@@ -65,11 +67,28 @@ func NewSession(incognito, overrideDefaultSession bool, saveType string) *Sessio
 
 func (session *Session) HandleInvoke(reply CommandResponse) {
 	if reply.TargetID == session.TargetID {
+		response := &CommandResponse{
+			Action: "reply",
+			ID:     reply.ID,
+			Result: ReplyResult{},
+		}
 		switch reply.Method {
 		case "cookies_load":
-			session.SessionOverrideInterface.InvokeCookiesLoad(&reply.Args, session)
+			cookies := session.SessionOverrideInterface.InvokeCookiesLoad(&reply.Args, session)
+			marshaledCookies, err := json.Marshal(cookies)
+			if err != nil {
+				Log.Error(err)
+			} else {
+				response.Result.Cookies = marshaledCookies
+			}
 		case "cookies_load_for_key":
-			session.SessionOverrideInterface.InvokeCookiesLoadForKey(&reply.Args, session)
+			cookies := session.SessionOverrideInterface.InvokeCookiesLoadForKey(&reply.Args, session)
+			marshaledCookies, err := json.Marshal(cookies)
+			if err != nil {
+				Log.Error(err)
+			} else {
+				response.Result.Cookies = marshaledCookies
+			}
 		case "cookies_flush":
 			session.SessionOverrideInterface.InvokeCookiesFlush(&reply.Args, session)
 		case "cookies_add":
@@ -81,6 +100,8 @@ func (session *Session) HandleInvoke(reply CommandResponse) {
 		case "cookies_force_keep_session_state":
 			session.SessionOverrideInterface.InvokeCookieForceKeepSessionState(&reply.Args, session)
 		}
+		Log.Info("Sending Response to Invoke")
+		session.SendChannel.CommandResponses <- response
 	}
 }
 

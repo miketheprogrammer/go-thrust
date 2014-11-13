@@ -19,8 +19,9 @@ var Stdin io.WriteCloser
 var Stdout io.ReadCloser
 
 type In struct {
-	Commands chan *commands.Command
-	Quit     chan int
+	Commands         chan *commands.Command
+	CommandResponses chan *commands.CommandResponse
+	Quit             chan int
 }
 type Out struct {
 	CommandResponses chan commands.CommandResponse
@@ -39,8 +40,9 @@ func InitializeThreads() {
 	//conn = c
 
 	in = In{
-		Commands: make(chan *commands.Command),
-		Quit:     make(chan int),
+		Commands:         make(chan *commands.Command),
+		CommandResponses: make(chan *commands.CommandResponse),
+		Quit:             make(chan int),
 	}
 
 	out = Out{
@@ -102,6 +104,15 @@ func Reader(out *Out, in *In) {
 func Writer(out *Out, in *In) {
 	for {
 		select {
+		case response := <-in.CommandResponses:
+			Log.Info("CommandResponse Marhshaling.")
+			cmd, _ := json.Marshal(response)
+			Log.Debug("Writing RESPONSE", string(cmd), "\n", SOCKET_BOUNDARY)
+
+			Stdin.Write(cmd)
+			Stdin.Write([]byte("\n"))
+			Stdin.Write([]byte(SOCKET_BOUNDARY))
+			Stdin.Write([]byte("\n"))
 		case command := <-in.Commands:
 			ActionId += 1
 			command.ID = ActionId
@@ -115,6 +126,7 @@ func Writer(out *Out, in *In) {
 			Stdin.Write([]byte(SOCKET_BOUNDARY))
 			Stdin.Write([]byte("\n"))
 		}
+
 		time.Sleep(time.Microsecond * 100)
 	}
 }
