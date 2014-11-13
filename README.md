@@ -77,18 +77,11 @@ The Future of Go-Thrust
 ================
 Any user of Go-Thrust should feel free to contribute Ideas, Code, anything that can help move this project in the right direction. The ideal goal is to stay as much out of the way, but still provide a useful system.
 
-Some questions and thoughts: 
-- Future Architecture
-There needs to be consideration into how an application will be created.
-While we should leave the core API's open enough to allow different architectures, there should be a primary guiding one.
+Some questions and thoughts:
 
-The UI Layer
-    - Should we do single page app style? using a framework.
-        - Probably more responsive
-    - Or should it be driven by templates in GO
-        - Of course has the cost of network, and rebuilding socket connections on every load.
-        - Benefit: When webview tag is added, various components can be registered, rather than being a single page app.
+There needs to be a UI => Application Connector. Unfortunately this is such an important part in the system design I dont think just one person should decide how it will look. As of right now in go-thrust's current state, you have to do any boilerplate webserver code yourself. For instance, I want to plug my ui, into GoLang, how do I do it. Create a Websocket server, use JSONRPC similar to how Go-Thrust contacts thrustcore. Ideally this process can be abstracted out a bit, but how do we develop a system generic enough to expose common interfaces and methods. 
 
+For example, do we write and manage api bindings for every go stl object. Like Filesystem. What is important to the core, and what can an implementor add.
 
 
 
