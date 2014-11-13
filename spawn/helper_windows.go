@@ -46,6 +46,7 @@ func executableNotExist() bool {
 }
 
 func prepareExecutable() {
-	downloadFromUrl(GetDownloadUrl(), "C:\\temp\\$V", common.THRUST_VERSION)
-	unzip(strings.Replace("C:\\temp\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+	common.Log.Debug(os.Getenv("TEMP") + "\\$V")
+	downloadFromUrl(GetDownloadUrl(), os.Getenv("TEMP")+"\\$V", common.THRUST_VERSION)
+	unzip(strings.Replace(os.Getenv("TEMP")+"\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
 }
