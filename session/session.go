@@ -1,5 +1,10 @@
 package session
 
+/*
+Pacage Session contains an API Binding, and
+interfaces that will assist in accessing the
+default Session or implementing your own Custom Session.
+*/
 import (
 	"fmt"
 
@@ -9,6 +14,9 @@ import (
 	"github.com/miketheprogrammer/go-thrust/dispatcher"
 )
 
+/*
+Session is the core API Binding object used to communicate with Thrust.
+*/
 type Session struct {
 	TargetID                 uint
 	CookieStore              bool
@@ -22,6 +30,15 @@ type Session struct {
 	SessionOverrideInterface SessionInvokable
 }
 
+/*
+NewSession is a constructor that takes 3 arguments,
+incognito which is a boolean, meaning dont persist session state
+after close.
+overrideDefaultSession which is a boolean that till tell thrust core
+to try to invoke session methods from us.
+saveType a.k.a `path` in the Thrust Core documentation, this value can be a string
+"cache" or "storage", indicating whether or not you want memory vs. disk storage.
+*/
 func NewSession(incognito, overrideDefaultSession bool, saveType string) *Session {
 	session := Session{
 		CookieStore:  overrideDefaultSession,
@@ -110,22 +127,4 @@ func (session *Session) Send(command *Command) {
 
 func (session *Session) SetInvokable(si SessionInvokable) {
 	session.SessionOverrideInterface = si
-}
-
-/*
-Methods prefixed with Invoke are methods that can be called by ThrustCore, this differs to our
-standard call/reply, or event actions, since we are now the responder.
-*/
-/*
-SessionInvokable is an interface designed to allow you to create your own Session Store.
-Simple build a structure that supports these methods, and call session.SetInvokable(myInvokable)
-*/
-type SessionInvokable interface {
-	InvokeCookiesLoad(args *CommandResponseArguments, session *Session)
-	InvokeCookiesLoadForKey(args *CommandResponseArguments, session *Session)
-	InvokeCookiesFlush(args *CommandResponseArguments, session *Session)
-	InvokeCookiesAdd(args *CommandResponseArguments, session *Session)
-	InvokeCookiesUpdateAccessTime(args *CommandResponseArguments, session *Session)
-	InvokeCookiesDelete(args *CommandResponseArguments, session *Session)
-	InvokeCookieForceKeepSessionState(args *CommandResponseArguments, session *Session)
 }
