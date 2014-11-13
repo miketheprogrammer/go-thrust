@@ -28,7 +28,8 @@ GetDownloadUrl returns the interpolatable version of the Thrust download url
 Differs between builds based on OS
 */
 func GetDownloadUrl() string {
-	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-windows-ia32.zip"
+	//https://github.com/breach/thrust/releases/download/v0.7.5/thrust-v0.7.5-win32-ia32.zip
+	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-win32-ia32.zip"
 }
 
 /*
