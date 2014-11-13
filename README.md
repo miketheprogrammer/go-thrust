@@ -13,7 +13,13 @@ On Linux/Darwin
 Start Go Thrust using source and GoLang runtime
 ```bash
 ./install-go-deps.sh #installs current dependencies
-make tutorials
+go build -o tutorial/bin/basic_window tutorial/basic_window.go
+go build -o tutorial/bin/basic_menu tutorial/basic_menu.go
+go build -o tutorial/bin/basic_menu_events tutorial/basic_menu_events.go
+go build -o tutorial/bin/basic_session tutorial/basic_session.go
+go build -o tutorial/bin/basic_multiple_windows tutorial/basic_multiple_windows.go
+go build -o tutorial/bin/advanced_session tutorial/advanced_session.go
+go build -o tutorial/bin/basic_webserver_app tutorial/basic_webserver_app.go
 # then execute one of the many tutorials
 #./tutorial/bin/basic_window
 #./tutorial/bin/basic_menu

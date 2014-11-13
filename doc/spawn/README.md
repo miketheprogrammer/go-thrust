@@ -46,12 +46,19 @@ Differs between builds based on OS
 #### func  Run
 
 ```go
-func Run() (io.ReadCloser, io.WriteCloser)
+func Run(autoDownloadEnabled bool) (io.ReadCloser, io.WriteCloser)
 ```
+The SpawnThrustCore method is a bootstrap and run method. It will try to detect
+an installation of thrust, if it cannot find it it will download the version of
+Thrust detailed in the "common" package. Once downloaded, it will launch a
+process. Go-Thrust and all *-Thrust packages communicate with Thrust Core via
+Stdin/Stdout. using -log=debug as a command switch will give you the most
+information about what is going on. -log=info will give you notices that stuff
+is happening. Any log level higher than that will output nothing.
 
 #### func  SetBaseDirectory
 
 ```go
-func SetBaseDirectory(b string)
+func SetBaseDirectory(dir string) error
 ```
 SetBaseDirectory sets the base directory used in the other helper methods

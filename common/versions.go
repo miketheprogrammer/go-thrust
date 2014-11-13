@@ -2,5 +2,5 @@ package common
 
 const (
 	THRUST_VERSION    = "0.7.5"
-	THRUST_GO_VERSION = "0.3.0"
+	THRUST_GO_VERSION = "0.3.1"
 )

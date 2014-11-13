@@ -91,7 +91,8 @@ EventResult is used in CommandResponse's of Type Event
 
 ```go
 type ReplyResult struct {
-	TargetID uint `json:"_target,omitempty"`
+	TargetID uint            `json:"_target,omitempty"`
+	Cookies  json.RawMessage `json:"cookies"`
 }
 ```
 

@@ -12,7 +12,7 @@ func main() {
 	  use basic setup
 	*/
 	spawn.SetBaseDirectory("./")
-	spawn.Run()
+	spawn.Run(true)
 
 	/*
 	   Start of Basic Session Tutorial area

@@ -9,22 +9,25 @@
 
 ```go
 type Cookie struct {
-	Source string `json:"source"`
-	Name   string `json:"name"`
-	Value  string `json:"value"`
-	// Need to check what type value is,
-	// Im on train so have no wifi
-	Domain     string    `json:"domain"`
-	Path       string    `json:"path"`
-	Creation   time.Date `json:"creation"`
-	Expiry     time.Date `json:"expiry"`
-	LastAccess time.Date `json:"last_access"`
-	Secure     bool      `json:"secure"`
-	HttpOnly   bool      `json:"http_only"`
-	Priority   uint8     `json:"priority"`
+	Source     string `json:"source"`
+	Name       string `json:"name"`
+	Value      string `json:"value"`
+	Domain     string `json:"domain"`
+	Path       string `json:"path"`
+	Creation   int64  `json:"creation"`
+	Expiry     int64  `json:"expiry"`
+	LastAccess int64  `json:"last_access"`
+	Secure     uint   `json:"secure"`
+	HttpOnly   bool   `json:"http_only"`
+	Priority   uint   `json:"priority"`
 }
 ```
 
+Cookie source the source url name the cookie name value the cookie value domain
+the cookie domain path the cookie path creation the creation date expiry the
+expiration date last_access the last time the cookie was accessed secure is the
+cookie secure http_only is the cookie only valid for HTTP priority internal
+priority information
 
 #### type DummySession
 
@@ -42,43 +45,44 @@ func NewDummySession() (dummy *DummySession)
 #### func (DummySession) InvokeCookieForceKeepSessionState
 
 ```go
-func (d DummySession) InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, session *Session)
 ```
 
 #### func (DummySession) InvokeCookiesAdd
 
 ```go
-func (d DummySession) InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session) bool
 ```
 
 #### func (DummySession) InvokeCookiesDelete
 
 ```go
-func (d DummySession) InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session) bool
 ```
 
 #### func (DummySession) InvokeCookiesFlush
 
 ```go
-func (d DummySession) InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session) bool
 ```
 
 #### func (DummySession) InvokeCookiesLoad
 
 ```go
-func (d DummySession) InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie)
 ```
+For Simplicity type declarations
 
 #### func (DummySession) InvokeCookiesLoadForKey
 
 ```go
-func (d DummySession) InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie)
 ```
 
 #### func (DummySession) InvokeCookiesUpdateAccessTime
 
 ```go
-func (d DummySession) InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session)
+func (ds DummySession) InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session) bool
 ```
 
 #### type Session
@@ -88,6 +92,7 @@ type Session struct {
 	TargetID                 uint
 	CookieStore              bool
 	OffTheRecord             bool
+	Path                     string
 	Ready                    bool
 	CommandHistory           []*Command
 	ResponseHistory          []*CommandResponse
@@ -98,12 +103,17 @@ type Session struct {
 }
 ```
 
+Session is the core API Binding object used to communicate with Thrust.
 
 #### func  NewSession
 
 ```go
-func NewSession(incognito, overrideDefaultSession bool, saveType string) *Session
+func NewSession(incognito, overrideDefaultSession bool, path string) *Session
 ```
+NewSession is a constructor that takes 3 arguments, incognito which is a
+boolean, meaning dont persist session state after close. overrideDefaultSession
+which is a boolean that till tell thrust core to try to invoke session methods
+from us. path string is the path to store session data.
 
 #### func (*Session) DispatchResponse
 
@@ -139,20 +149,12 @@ func (session *Session) SetInvokable(si SessionInvokable)
 
 ```go
 type SessionInvokable interface {
-	InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session)
-	InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session)
+	InvokeCookiesLoad(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie)
+	InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, session *Session) (cookies []Cookie)
+	InvokeCookiesFlush(args *commands.CommandResponseArguments, session *Session) bool
+	InvokeCookiesAdd(args *commands.CommandResponseArguments, session *Session) bool
+	InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, session *Session) bool
+	InvokeCookiesDelete(args *commands.CommandResponseArguments, session *Session) bool
 	InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, session *Session)
 }
 ```
-
-Methods prefixed with Invoke are methods that can be called by ThrustCore, this
-differs to our standard call/reply, or event actions, since we are now the
-responder.
-
-SessionInvokable is an interface designed to allow you to create your own
-Session Store. Simple build a structure that supports these methods, and call
-session.SetInvokable(myInvokable)

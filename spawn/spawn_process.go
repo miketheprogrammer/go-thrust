@@ -55,8 +55,7 @@ Go-Thrust and all *-Thrust packages communicate with Thrust Core via Stdin/Stdou
 using -log=debug as a command switch will give you the most information about what is going on. -log=info will give you notices that stuff is happening.
 Any log level higher than that will output nothing.
 */
-
-func Run() (io.ReadCloser, io.WriteCloser) {
+func Run(autoDownloadEnabled bool) (io.ReadCloser, io.WriteCloser) {
 	if Log == nil {
 		InitLogger("debug")
 	}
@@ -65,7 +64,9 @@ func Run() (io.ReadCloser, io.WriteCloser) {
 	thrustExecPath = GetExecutablePath()
 	if len(thrustExecPath) > 0 {
 
-		Bootstrap()
+		if autoDownloadEnabled == true {
+			Bootstrap()
+		}
 
 		thrustExecPath = GetExecutablePath()
 

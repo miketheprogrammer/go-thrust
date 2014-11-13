@@ -8,7 +8,7 @@
 ```go
 const (
 	THRUST_VERSION    = "0.7.5"
-	THRUST_GO_VERSION = "0.2.5"
+	THRUST_GO_VERSION = "0.3.1"
 )
 ```
 

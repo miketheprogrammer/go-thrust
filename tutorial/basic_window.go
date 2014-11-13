@@ -8,7 +8,7 @@ import (
 
 func main() {
 	spawn.SetBaseDirectory("./")
-	spawn.Run()
+	spawn.Run(true)
 	thrustWindow := window.NewWindow("http://breach.cc/", nil)
 	thrustWindow.Show()
 	thrustWindow.Maximize()

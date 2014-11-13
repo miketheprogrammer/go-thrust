@@ -18,7 +18,7 @@ func main() {
 	http.HandleFunc("/", handler)
 
 	spawn.SetBaseDirectory("./")
-	spawn.Run()
+	spawn.Run(true)
 
 	mysession := session.NewSession(false, false, "cache")
 
