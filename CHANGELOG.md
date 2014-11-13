@@ -5,6 +5,7 @@ Important Changes:
 - Implemented Session and SessionInvokable interface.
 - Windows Support.
 - Added optional auto download to spawn.Run()
+
 Trivial Changes:
 - Added several tutorials
 
@@ -15,6 +16,7 @@ Important Changes:
 - Removed Menu.AttachToWindow
 - Added Menu.Popup
 - Support added for Webview.
+
 Trivial Changes:
 - demo.go now opens public/index.html
 - public/index.html now has an example of webview
