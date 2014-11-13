@@ -7,21 +7,12 @@ import (
 	"github.com/miketheprogrammer/go-thrust/common"
 )
 
-var base string
-
-/*
-SetBaseDirectory sets the base directory used in the other helper methods
-*/
-func SetBaseDirectory(b string) {
-	base = b
-}
-
 /*
 GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 */
 func GetThrustDirectory() string {
-	return base + "/vendor/linux/x64/v" + common.THRUST_VERSION
+	return base + "\\vendor\\windows\\ia32\\v" + common.THRUST_VERSION
 }
 
 /*
@@ -29,7 +20,7 @@ GetExecutablePath returns the path to the Thrust Executable
 Differs between builds based on OS
 */
 func GetExecutablePath() string {
-	return GetThrustDirectory() + "/thrust_shell"
+	return GetThrustDirectory() + "\\thrust_shell.exe"
 }
 
 /*
@@ -37,7 +28,8 @@ GetDownloadUrl returns the interpolatable version of the Thrust download url
 Differs between builds based on OS
 */
 func GetDownloadUrl() string {
-	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-linux-x64.zip"
+	//https://github.com/breach/thrust/releases/download/v0.7.5/thrust-v0.7.5-win32-ia32.zip
+	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-win32-ia32.zip"
 }
 
 /*
@@ -55,6 +47,7 @@ func executableNotExist() bool {
 }
 
 func prepareExecutable() {
-	downloadFromUrl(GetDownloadUrl(), "/tmp/$V", common.THRUST_VERSION)
-	unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+	common.Log.Debug(os.Getenv("TEMP") + "\\$V")
+	downloadFromUrl(GetDownloadUrl(), os.Getenv("TEMP")+"\\$V", common.THRUST_VERSION)
+	unzip(strings.Replace(os.Getenv("TEMP")+"\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
 }

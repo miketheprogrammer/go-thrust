@@ -22,7 +22,7 @@ type Session struct {
 	TargetID                 uint
 	CookieStore              bool
 	OffTheRecord             bool
-	Path                     bool
+	Path                     string
 	Ready                    bool
 	CommandHistory           []*Command
 	ResponseHistory          []*CommandResponse
