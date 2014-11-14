@@ -1,8 +1,6 @@
 package dispatcher
 
 import (
-	"time"
-
 	"github.com/miketheprogrammer/go-thrust/commands"
 	"github.com/miketheprogrammer/go-thrust/connection"
 )
@@ -34,22 +32,16 @@ need this loop to be the blocking loop.
 For Instance, in a HTTP Server setting, you might want to run this as a
 goroutine and then let the servers blocking handler keep the process open.
 As long as there are commands in the channel, this loop will dispatch as fast
-as possible, when all commands are exhausted this loop will run on iterations
-of 10 microseconds optimistically.
+as possible
 */
 func RunLoop() {
 	outChannels := connection.GetOutputChannels()
 	for {
 		Run(outChannels)
-		time.Sleep(time.Microsecond * 10)
 	}
 }
 
 func Run(outChannels *connection.Out) {
-	select {
-	case response := <-outChannels.CommandResponses:
-		Dispatch(response)
-	default:
-		break
-	}
+	response := <-outChannels.CommandResponses
+	Dispatch(response)
 }

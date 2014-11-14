@@ -1,7 +1,6 @@
 go-thrust
 =========
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/miketheprogrammer/go-thrust?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-Current Go-Thrust Version 0.3.2
+Current Go-Thrust Version 0.3.3
 Current Thrust Version 0.7.5
 
 ![Logo Thrust](http://i.imgur.com/DwFKI0J.png)
@@ -11,6 +10,7 @@ Chat with us
 ==================
 irc: #breach on freenode - this is the entire breach/thrust community
 gitter.im : https://gitter.im/miketheprogrammer/go-thrust - focused on go-thrust.
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/miketheprogrammer/go-thrust?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 Quick Start, see it in action

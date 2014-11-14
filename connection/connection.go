@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"os"
 	"strings"
-	"time"
 
 	"github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
@@ -70,42 +68,28 @@ func GetCommunicationChannels() (*Out, *In) {
 
 func Reader(out *Out, in *In) {
 
-	r := bufio.NewReader(Stdout)
+	reader := bufio.NewReader(Stdout)
 	defer Stdin.Close()
 	for {
-		select {
-		case quit := <-in.Quit:
-			Log.Errorf("Connection Reader Received a Quit message from somewhere ... Exiting Now")
-			os.Exit(quit)
-		default:
-			//a := <-in.Quit
-			//fmt.Println(a)
-			line, err := r.ReadString(byte('\n'))
-			if err != nil {
-				fmt.Println(err)
-				panic(err)
-			}
-
-			Log.Debug("SOCKET::Line", line)
-			if !strings.Contains(line, SOCKET_BOUNDARY) {
-				response := commands.CommandResponse{}
-				json.Unmarshal([]byte(line), &response)
-				//Log.Debug(response)
-				out.CommandResponses <- response
-			}
-
+		line, err := reader.ReadString(byte('\n'))
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
 		}
-		time.Sleep(time.Microsecond * 100)
 
+		Log.Debug("SOCKET::Line", line)
+		if !strings.Contains(line, SOCKET_BOUNDARY) {
+			response := commands.CommandResponse{}
+			json.Unmarshal([]byte(line), &response)
+			out.CommandResponses <- response
+		}
 	}
-
 }
 
 func Writer(out *Out, in *In) {
 	for {
 		select {
 		case response := <-in.CommandResponses:
-			Log.Info("CommandResponse Marhshaling.")
 			cmd, _ := json.Marshal(response)
 			Log.Debug("Writing RESPONSE", string(cmd), "\n", SOCKET_BOUNDARY)
 
@@ -126,7 +110,5 @@ func Writer(out *Out, in *In) {
 			Stdin.Write([]byte(SOCKET_BOUNDARY))
 			Stdin.Write([]byte("\n"))
 		}
-
-		time.Sleep(time.Microsecond * 100)
 	}
 }
