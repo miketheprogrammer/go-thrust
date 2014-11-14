@@ -2,12 +2,10 @@ package spawn
 
 import (
 	"fmt"
+	"github.com/miketheprogrammer/go-thrust/common"
 	"io/ioutil"
 	"os"
 	"strings"
-
-	"github.com/Unknwon/cae/zip"
-	"github.com/miketheprogrammer/go-thrust/common"
 )
 
 /*
@@ -63,9 +61,9 @@ prepareExecutable dowloads, unzips and does alot of other magic to prepare our t
 */
 func prepareExecutable() {
 	path := downloadFromUrl(GetDownloadUrl(), "/tmp/$V", common.THRUST_VERSION)
-	//unzip(strings.Replace("/tmp/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
-	zip.ExtractTo(path, GetThrustDirectory())
-
+	if err := unzip(path, GetThrustDirectory()); err != nil {
+		panic(err)
+	}
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+common.ApplicationName)
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+common.ApplicationName+".app")
 
