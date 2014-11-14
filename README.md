@@ -6,6 +6,12 @@ Current Thrust Version 0.7.5
 ![Logo Thrust](http://i.imgur.com/DwFKI0J.png)
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
+Chat with us
+==================
+irc: #breach on freenode - this is the entire breach/thrust community
+gitter.im : https://gitter.im/miketheprogrammer/go-thrust - focused on go-thrust.
+
+
 Quick Start, see it in action
 ==================
 On Linux/Darwin
