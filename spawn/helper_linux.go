@@ -12,7 +12,7 @@ GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 */
 func GetThrustDirectory() string {
-	return base + "/vendor/linux/x64/v" + common.THRUST_VERSION
+	return base + "./vendor/linux/x64/v" + common.THRUST_VERSION
 }
 
 /*
