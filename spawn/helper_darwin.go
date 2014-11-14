@@ -2,10 +2,11 @@ package spawn
 
 import (
 	"fmt"
-	"github.com/miketheprogrammer/go-thrust/common"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/miketheprogrammer/go-thrust/common"
 )
 
 /*
@@ -39,13 +40,20 @@ func GetDownloadUrl() string {
 /*
 SetThrustApplicationTitle sets the title in the Info.plist. This method only exists on Darwin.
 */
-func Bootstrap() {
+func Bootstrap() error {
 	if executableNotExist() == true {
-		prepareExecutable()
-		prepareInfoPropertiesListTemplate()
-		writeInfoPropertiesList()
+		var err error
+		if err = prepareExecutable(); err != nil {
+			return err
+		}
+		if err = prepareInfoPropertiesListTemplate(); err != nil {
+			return err
+		}
+		if err = writeInfoPropertiesList(); err != nil {
+			return err
+		}
 	}
-
+	return nil
 }
 
 /*
@@ -56,56 +64,129 @@ func executableNotExist() bool {
 	return os.IsNotExist(err)
 }
 
+func pathNotExist(path string) bool {
+	_, err := os.Stat(path)
+	return os.IsNotExist(err)
+}
+
 /*
 prepareExecutable dowloads, unzips and does alot of other magic to prepare our thrust core build.
 */
-func prepareExecutable() {
-	path := downloadFromUrl(GetDownloadUrl(), "/tmp/$V", common.THRUST_VERSION)
-	if err := unzip(path, GetThrustDirectory()); err != nil {
-		panic(err)
+func prepareExecutable() error {
+	path, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", common.THRUST_VERSION)
+	if err != nil {
+		return err
+	}
+	if err = unzip(path, GetThrustDirectory()); err != nil {
+		return err
 	}
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+common.ApplicationName)
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+common.ApplicationName+".app")
 
-	applySymlinks()
+	if err = applySymlinks(); err != nil {
+		panic(err)
+		return err
+	}
+
+	return nil
 }
 
 /*
 ApplySymLinks exists because our unzip utility does not respect deferred symlinks. It applies all the neccessary symlinks to make the thrust core exe connect to the thrust core libs.
 */
-func applySymlinks() {
+func applySymlinks() error {
+	fmt.Println("Removing bad symlinks")
+	var err error
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current") == false {
+		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks") == false {
+		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries") == false {
+		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Libraries"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources") == false {
+		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Resources"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework") == false {
+		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries") == false {
+		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"); err != nil {
+			return err
+		}
+	}
+
 	fmt.Println("Applying Symlinks")
-	fmt.Println(
-		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"),
-		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"),
-		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"),
-		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"),
-		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"),
-		os.Remove(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"))
 
-	fmt.Println(
-		os.Symlink(
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current") == true {
+		if err = os.Symlink(
 			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"),
-		os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Frameworks",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"),
-		os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"),
-		os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Resources",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"),
-		os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/ThrustShell Framework",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"),
-		os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A/Libraries/Libraries",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"))
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"); err != nil {
+			return err
+		}
+	}
 
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks") == true {
+		if err = os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Frameworks",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries") == true {
+		if err = os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources") == true {
+		if err = os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Resources",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework") == true {
+		if err = os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/ThrustShell Framework",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"); err != nil {
+			return err
+		}
+	}
+
+	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries") == true {
+		if err = os.Symlink(
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A/Libraries/Libraries",
+			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
-func prepareInfoPropertiesListTemplate() bool {
+func prepareInfoPropertiesListTemplate() error {
 	plistPath := getInfoPropertiesListDirectory() + "/Info.plist"
 
 	if _, err := os.Stat(plistPath + ".tmpl"); os.IsNotExist(err) {
@@ -113,7 +194,7 @@ func prepareInfoPropertiesListTemplate() bool {
 
 		if err != nil {
 			fmt.Println(err)
-			return false
+			return err
 		}
 
 		plistTmpl := strings.Replace(string(plist), "ThrustShell", "$$", -1)
@@ -123,28 +204,37 @@ func prepareInfoPropertiesListTemplate() bool {
 
 		err = ioutil.WriteFile(plistPath+".tmpl", []byte(plistTmpl), 0775)
 
-		return true
+		if err != nil {
+			return err
+		}
+
+		return nil
 	}
 
-	return true
+	return nil
 }
 
-func writeInfoPropertiesList() {
+func writeInfoPropertiesList() error {
 	plistPath := getInfoPropertiesListDirectory() + "/Info.plist"
-	if prepareInfoPropertiesListTemplate() == true {
+	if err := prepareInfoPropertiesListTemplate(); err == nil {
 		plistTmpl, err := ioutil.ReadFile(plistPath + ".tmpl")
 
 		if err != nil {
 			fmt.Println(err)
-			return
+			return err
 		}
 
 		plist := strings.Replace(string(plistTmpl), "$$", common.ApplicationName, -1)
 
 		err = ioutil.WriteFile(plistPath, []byte(plist), 0775)
+		if err != nil {
+			return err
+		}
 	} else {
 		fmt.Println("Could not change title")
+		return nil
 	}
+	return nil
 }
 
 func getInfoPropertiesListDirectory() string {
