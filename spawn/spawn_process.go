@@ -76,7 +76,7 @@ func Run() {
 
 		if e1 != nil {
 			fmt.Println(e1)
-			os.Exit(2)
+			os.Exit(2) // need to improve exit codes
 		}
 
 		if e2 != nil {
