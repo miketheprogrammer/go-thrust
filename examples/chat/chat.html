@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>{{template "chat.js"}}</script>
+    <style>{{template "chat.css"}}</style>
+  </head>
+  <body onLoad="init();" height="100%">
+    <div id="msg"></div>
+    <form name="msgform" action="#" onsubmit="return send();">
+      <input type="text" name="name" size="0" value="J. Doe" />
+      <input type="text" name="message" size="0" value="" />
+      <input type="submit" value="send" />
+    </form>
+  </body>
+</html>
