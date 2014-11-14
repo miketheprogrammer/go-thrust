@@ -1,3 +1,7 @@
+NOV132014 (Version 0.3.3):
+  Improved CPU Usage - More battery power for all.
+  Added basic chat client/server example.
+
 NOV132014 (Version 0.3.2):
 
 Important Changes:

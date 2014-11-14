@@ -1,6 +1,6 @@
 go-thrust
 =========
-Current Go-Thrust Version 0.3.2
+Current Go-Thrust Version 0.3.3
 Current Thrust Version 0.7.5
 
 ![Logo Thrust](http://i.imgur.com/DwFKI0J.png)
