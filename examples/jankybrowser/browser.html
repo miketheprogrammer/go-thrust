@@ -1,0 +1,249 @@
+<html>
+  <head>
+    <style>
+      html, body,
+      header {
+        clear: both;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      header {
+        border-bottom: 1px solid gray;
+      }
+
+      header input {
+        margin: 8px;
+      }
+
+      #nav {
+        float: left;
+      }
+
+      #nav .forward,
+      #nav .backward {
+        font-weight: bold;
+        float: left;
+        padding: 8px;
+        padding-top: 10px;
+      }
+
+      #tabs-wrapper, #tabs {
+        margin: 0;
+        padding: 0;
+      }
+
+      #tabs-wrapper {
+        height: 40px;
+        overflow: hidden;
+      }
+
+      .tabs {
+        height: 100%;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .tabs li {
+        float: left;
+        line-height: 0.5em;
+        padding: 15px;
+      }
+
+      .tabs li.active {
+        background-color: gray;
+      }
+
+      li.tab {
+        border: 1px solid black;
+      }
+
+      .tab .tab-close {
+        cursor: pointer;
+        float: right;
+        font-size: 0.5em;
+        left: 5px;
+        padding-left: 3px;
+        position: relative;
+        top: -8px;
+      }
+
+      #new {
+        border: solid 1px gray;
+        cursor: pointer;
+        float: right;
+        position: absolute;
+        right: 10px;
+        text-align: center;
+        top: 10px;
+        width: 20px;
+        -webkit-user-select: none;
+        z-index: 1000;
+      }
+
+      #page-content {
+        height: 100%;
+        width: 100%;
+      }
+
+      #page-content .page {
+        height: 100%;
+        transition: left 0.7s ease-in-out;
+        position: absolute;
+        left: -100%;
+        width: 100%;
+      }
+
+      #page-content .page.active {
+        left: 0;
+      }
+    </style>
+    <script type="text/javascript">
+
+function urlToTtile(url) {
+  var a = document.createElement("a");
+  a.href = url;
+
+  var hostname = a.hostname;
+  hostname = hostname.split(".").slice(-2).join(".");
+
+  return hostname;
+}
+
+var loc;
+var tabs;
+var newTab;
+var pageContent;
+var navForward;
+var navBackward;
+
+var activePage;
+var activeTab;
+var activeWV;
+
+function activate(page, tab) {
+  if(activePage && activePage !== page) {
+    activePage.classList.remove("active");
+  }
+
+  if(activeTab && activeTab !== tab) {
+    activeTab.classList.remove("active");
+  }
+
+  activePage = page;
+  activeTab = tab;
+  activeWV = page.firstElementChild;
+
+  activePage.classList.add("active");
+  activeTab.classList.add("active");
+
+  loc.value = activeWV.src;
+}
+
+window.onload = function() {
+  var $ = document.querySelector.bind(document);
+
+  loc = $("header input");
+  tabs = $("ul.tabs");
+  newTab = $("#new");
+  pageContent = $("#page-content");
+  navForward = $("#nav .forward");
+  navBackward = $("#nav .backward");
+
+  function openNewTab(url) {
+    var page = document.createElement("div");
+    page.className = "page";
+
+    var webview = document.createElement("webview");
+    page.appendChild(webview);
+
+    pageContent.appendChild(page);
+
+    if(url) {
+      webview.src = url;
+    }
+
+    var tab = document.createElement("li");
+    tab.className = "tab";
+
+    var label = document.createTextNode(urlToTtile(url));
+    tab.appendChild(label);
+
+    var close = document.createElement("div");
+    close.className = "tab-close";
+    close.textContent = "X";
+    tab.appendChild(close);
+
+    tabs.appendChild(tab);
+
+    function handleTabClick() {
+      console.log("clicking tab");
+      activate(page, tab);
+    }
+
+    function handleCloseClick(evt) {
+      console.log("closing tab");
+      tab.removeEventListener(handleTabClick);
+      webview.removeEventListener(handleTabClick);
+      close.removeEventListener(handleCloseClick);
+
+      tab.parentNode.removeChild(tab);
+      webview.parentNode.removeChild(webview);
+
+      evt.stopPropagation();
+    }
+
+    tab.addEventListener("click", handleTabClick, false);
+    close.addEventListener("click", handleCloseClick, true);
+
+    webview.addEventListener("title-set", function(evt) {
+      label.textContent = evt.title;
+    }, false);
+
+    activate(page, tab);
+  }
+
+  loc.addEventListener("keypress", function(evt) {
+    if(evt.keyCode === 13) {
+      console.log("changing location " + loc.value);
+
+      activeWV.src = loc.value;
+    }
+  }, false);
+
+  newTab.addEventListener("click", function() {
+    openNewTab("http://www.google.com");
+  }, false);
+
+  navBackward.addEventListener("click", function() {
+    activeWV.back();
+  });
+
+  navForward.addEventListener("click", function() {
+    activeWV.forward();
+  });
+
+  openNewTab("http://www.google.com");
+};
+
+    </script>
+  </head>
+  <body>
+    <header>
+      <div id="nav">
+        <div class="backward">&lt;</div>
+        <div class="forward">&gt;</div>
+        <input id="location" />
+      </div>
+      <div id="tabs-wrapper">
+        <ul class="tabs"></ul>
+        <div id="new">+</div>
+      </div>
+    </header>
+    <div id="page-content"></div>
+  </body>
+</html>
