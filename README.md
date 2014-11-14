@@ -1,5 +1,6 @@
 go-thrust
 =========
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/miketheprogrammer/go-thrust?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Current Go-Thrust Version 0.3.2
 Current Thrust Version 0.7.5
 
