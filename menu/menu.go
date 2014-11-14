@@ -224,7 +224,7 @@ func (menu *Menu) SendThread() {
 			if menu.IsTreeStable() {
 				menu.Sync.TreeStableChan <- true
 			}
-			time.Sleep(time.Microsecond * 10)
+			time.Sleep(time.Microsecond * 100)
 		}
 	}()
 
@@ -272,7 +272,6 @@ func (menu *Menu) SendThread() {
 				menu.Sync.TreeStableQueue = CremoveItemAt(menu.Sync.TreeStableQueue, 0)
 				menu.Call(command)
 			}
-			time.Sleep(time.Microsecond * 10)
 		}
 	}()
 }
