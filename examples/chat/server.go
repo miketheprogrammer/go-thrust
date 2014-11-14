@@ -52,7 +52,6 @@ type Outgoing struct {
 func index(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	fmt.Println("http handler handler \n\n\n asjhjdlaskd")
 	err := html.ExecuteTemplate(w, "chat.html", nil)
 	if err != nil {
 		log.Printf("Template error: %v", err)
