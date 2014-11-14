@@ -20,7 +20,6 @@ func main() {
 	spawn.Run(true)
 	thrustWindow := window.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
 	thrustWindow.Show()
-	thrustWindow.Maximize()
 	thrustWindow.Focus()
 	// BLOCKING - Dont run before youve excuted all commands you want first.
 	dispatcher.RunLoop()

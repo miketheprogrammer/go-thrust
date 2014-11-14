@@ -141,11 +141,11 @@ func main() {
 	http.Handle("/", http.HandlerFunc(index))
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 
+	/* Lets start Thrust on the server anyway. */
 	spawn.SetBaseDirectory("./")
 	spawn.Run(true)
 	thrustWindow := window.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
 	thrustWindow.Show()
-	thrustWindow.Maximize()
 	thrustWindow.Focus()
 	// BLOCKING - Dont run before youve excuted all commands you want first.
 	go dispatcher.RunLoop()
