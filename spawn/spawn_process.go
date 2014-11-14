@@ -33,7 +33,6 @@ func SetBaseDirectory(dir string) error {
 			fmt.Println(err)
 		}
 		fmt.Println(usr.HomeDir)
-		// Parses Flags
 		dir = usr.HomeDir
 	}
 	dir, err := filepath.Abs(dir)

@@ -1,0 +1,63 @@
+#msg {
+    border: 1px solid gray;
+    padding: 0.5em;
+    max-height: 80%;
+}
+
+#msg p {
+    margin: 0.1em;
+}
+
+#msg span {
+    margin-right: 0.5em;
+}
+
+#msg .time {
+    font-family: monospace;
+    font-size: 80%;
+    color: #404040;
+    float: right;
+}
+
+#msg .from {
+    color: blue;
+}
+
+#msg .from:after {
+    content: ":";
+}
+
+#msg .message {
+}
+
+form[name="msgform"] {
+    max-width: 95%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-flow: row nowrap;
+    -moz-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
+    -ms-flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-flow: row nowrap;
+}
+
+form[name="msgform"] input {
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
+    -ms-flex: 1 auto;
+    flex: 1 auto;
+}
+
+form[name="msgform"] input[name="name"] {
+    max-width: 8em;
+}
+
+form[name="msgform"] input[type="submit"] {
+    -webkit-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+}

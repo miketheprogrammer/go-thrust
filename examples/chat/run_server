@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+cd -- "$(dirname -- "$0")"
+
+declare -a ASSETS=(chat.html chat.js chat.css)
+
+for asset in "${ASSETS[@]}"; do
+    var="$(printf "$asset" | tr -c 'a-zA-Z' '_')"
+    bin2go -pkg=main -in="$asset" -out="$asset.go" "$var"
+done
+exec go run server.go "${ASSETS[@]/%/.go}" "$@"
