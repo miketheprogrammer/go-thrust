@@ -35,10 +35,14 @@ func GetDownloadUrl() string {
 /*
 SetThrustApplicationTitle sets the title in the Info.plist. This method only exists on Darwin.
 */
-func Bootstrap() {
+func Bootstrap() error {
 	if executableNotExist() == true {
-		prepareExecutable()
+		if err := prepareExecutable(); err != nil {
+			return err
+		}
+		return nil
 	}
+	return nil
 }
 
 func executableNotExist() bool {
@@ -46,8 +50,14 @@ func executableNotExist() bool {
 	return os.IsNotExist(err)
 }
 
-func prepareExecutable() {
-	common.Log.Debug(os.Getenv("TEMP") + "\\$V")
-	downloadFromUrl(GetDownloadUrl(), os.Getenv("TEMP")+"\\$V", common.THRUST_VERSION)
-	unzip(strings.Replace(os.Getenv("TEMP")+"\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+func prepareExecutable() error {
+	common.Log.Debug(base + "\\$V")
+	_, err := downloadFromUrl(GetDownloadUrl(), base+"\\$V", common.THRUST_VERSION)
+	if err != nil {
+		return err
+	}
+	if err = unzip(strings.Replace(base+"\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory()); err != nil {
+		return err
+	}
+	return nil
 }
