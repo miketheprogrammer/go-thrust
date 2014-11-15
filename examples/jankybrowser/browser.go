@@ -34,7 +34,7 @@ func index(w http.ResponseWriter, req *http.Request) {
 func main() {
 	flag.Parse()
 	spawn.SetBaseDirectory("./")
-	spawn.Run(true)
+	spawn.Run()
 	thrustWindow := window.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
 	thrustWindow.Show()
 	thrustWindow.Focus()
