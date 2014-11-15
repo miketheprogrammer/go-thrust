@@ -1,13 +1,3 @@
-## Packages
-
-* [Commands](commands/)
-* [Common](common/)
-* [Menu](menu/)
-* [Window](window/)
-* [Spawn](spawn/)
-* [Dispatcher](dispatcher/)
-* [Session](session/)
-
 ## Tutorials
 
 * [Basic Window](tutorials/basic_window)
