@@ -3,6 +3,14 @@ go-thrust
 Current Go-Thrust Version 0.3.3
 Current Thrust Version 0.7.5
 
+```bash
+go get -d github.com/miketheprogrammer/go-thrust
+
+# -d instructs go get not to try to build, after go get, please do following the install instructions
+#install deps
+go get -v github.com/alexcesaro/log
+```
+
 ![Logo Thrust](http://i.imgur.com/DwFKI0J.png)
 Official GoLang Thrust Client for Thrust (https://github.com/breach/thrust)
 
@@ -19,7 +27,9 @@ On Linux/Darwin
 
 Start Go Thrust using source and GoLang runtime
 ```bash
-./install-go-deps.sh #installs current dependencies
+#install deps
+go get -v github.com/alexcesaro/log
+# build tutorials
 go build -o tutorial/bin/basic_window tutorial/basic_window.go
 go build -o tutorial/bin/basic_menu tutorial/basic_menu.go
 go build -o tutorial/bin/basic_menu_events tutorial/basic_menu_events.go
