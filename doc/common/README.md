@@ -7,7 +7,6 @@
 
 ```go
 const (
-	THRUST_VERSION    = "0.7.5"
 	THRUST_GO_VERSION = "0.3.1"
 )
 ```
@@ -21,11 +20,8 @@ const (
 ```go
 var ActionId uint = 0
 ```
-Global ID tracking for Commands Could probably move this to a factory function
 
-```go
-var ApplicationName string = "Go Thrust"
-```
+Global ID tracking for Commands Could probably move this to a factory function
 
 ```go
 var Log *golog.Logger
