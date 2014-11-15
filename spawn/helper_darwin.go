@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/miketheprogrammer/go-thrust/common"
+	"github.com/miketheprogrammer/go-thrust"
 )
 
 /*
@@ -14,11 +14,11 @@ GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 */
 func GetThrustDirectory() string {
-	return base + "/vendor/darwin/x64/v" + common.THRUST_VERSION
+	return base + "/vendor/darwin/x64/v" + thrustVersion
 }
 
 func GetAppDirectory() string {
-	return base + "/vendor/darwin/x64/v" + common.THRUST_VERSION + "/" + common.ApplicationName + ".app"
+	return base + "/vendor/darwin/x64/v" + thrustVersion + "/" + thrust.ApplicationName + ".app"
 }
 
 /*
@@ -26,7 +26,7 @@ GetExecutablePath returns the path to the Thrust Executable
 Differs between builds based on OS
 */
 func GetExecutablePath() string {
-	return GetThrustDirectory() + "/" + common.ApplicationName + ".app/Contents/MacOS/" + common.ApplicationName
+	return GetThrustDirectory() + "/" + thrust.ApplicationName + ".app/Contents/MacOS/" + thrust.ApplicationName
 }
 
 /*
@@ -73,15 +73,15 @@ func pathNotExist(path string) bool {
 prepareExecutable dowloads, unzips and does alot of other magic to prepare our thrust core build.
 */
 func prepareExecutable() error {
-	path, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", common.THRUST_VERSION)
+	path, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", thrustVersion)
 	if err != nil {
 		return err
 	}
 	if err = unzip(path, GetThrustDirectory()); err != nil {
 		return err
 	}
-	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+common.ApplicationName)
-	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+common.ApplicationName+".app")
+	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+thrust.ApplicationName)
+	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+thrust.ApplicationName+".app")
 
 	if err = applySymlinks(); err != nil {
 		panic(err)
@@ -189,6 +189,9 @@ func applySymlinks() error {
 func prepareInfoPropertiesListTemplate() error {
 	plistPath := getInfoPropertiesListDirectory() + "/Info.plist"
 
+	// Not an OSX user, but perhaps we should build this on each invocation anyways?
+	// Might help prevent stale issues if the plist gets out of date/sync, although
+	// I'm not entirely sure how important that is.
 	if _, err := os.Stat(plistPath + ".tmpl"); os.IsNotExist(err) {
 		plist, err := ioutil.ReadFile(plistPath)
 
@@ -203,12 +206,7 @@ func prepareInfoPropertiesListTemplate() error {
 		//func WriteFile(filename string, data []byte, perm os.FileMode) error
 
 		err = ioutil.WriteFile(plistPath+".tmpl", []byte(plistTmpl), 0775)
-
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	}
 
 	return nil
@@ -224,7 +222,7 @@ func writeInfoPropertiesList() error {
 			return err
 		}
 
-		plist := strings.Replace(string(plistTmpl), "$$", common.ApplicationName, -1)
+		plist := strings.Replace(string(plistTmpl), "$$", thrust.ApplicationName, -1)
 
 		err = ioutil.WriteFile(plistPath, []byte(plist), 0775)
 		if err != nil {
@@ -238,5 +236,5 @@ func writeInfoPropertiesList() error {
 }
 
 func getInfoPropertiesListDirectory() string {
-	return GetThrustDirectory() + "/" + common.ApplicationName + ".app/Contents"
+	return GetThrustDirectory() + "/" + thrust.ApplicationName + ".app/Contents"
 }

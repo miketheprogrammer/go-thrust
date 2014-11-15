@@ -2,9 +2,8 @@ package spawn
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
-
-	"github.com/miketheprogrammer/go-thrust/common"
 )
 
 /*
@@ -12,7 +11,7 @@ GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 */
 func GetThrustDirectory() string {
-	return base + "\\vendor\\windows\\ia32\\v" + common.THRUST_VERSION
+	return filepath.Join(base, "vendor", "windows", "ia32", thrustVersion)
 }
 
 /*
@@ -20,7 +19,7 @@ GetExecutablePath returns the path to the Thrust Executable
 Differs between builds based on OS
 */
 func GetExecutablePath() string {
-	return GetThrustDirectory() + "\\thrust_shell.exe"
+	return filepath.Join(GetThrustDirectory(), "thrust_shell.exe")
 }
 
 /*
@@ -32,9 +31,6 @@ func GetDownloadUrl() string {
 	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-win32-ia32.zip"
 }
 
-/*
-SetThrustApplicationTitle sets the title in the Info.plist. This method only exists on Darwin.
-*/
 func Bootstrap() error {
 	if executableNotExist() == true {
 		if err := prepareExecutable(); err != nil {
@@ -52,11 +48,11 @@ func executableNotExist() bool {
 
 func prepareExecutable() error {
 	common.Log.Debug(base + "\\$V")
-	_, err := downloadFromUrl(GetDownloadUrl(), base+"\\$V", common.THRUST_VERSION)
+	_, err := downloadFromUrl(GetDownloadUrl(), base+"\\$V", thrustVersion)
 	if err != nil {
 		return err
 	}
-	if err = unzip(strings.Replace(base+"\\$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory()); err != nil {
+	if err = unzip(strings.Replace(base+"\\$V", "$V", thrustVersion, 1), GetThrustDirectory()); err != nil {
 		return err
 	}
 	return nil

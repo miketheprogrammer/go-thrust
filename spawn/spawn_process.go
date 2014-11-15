@@ -15,6 +15,10 @@ import (
 	"github.com/miketheprogrammer/go-thrust/connection"
 )
 
+const (
+	thrustVersion = "0.7.5"
+)
+
 var base string
 
 /*

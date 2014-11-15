@@ -2,9 +2,8 @@ package spawn
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
-
-	"github.com/miketheprogrammer/go-thrust/common"
 )
 
 /*
@@ -12,7 +11,7 @@ GetThrustDirectory returns the Directory where the unzipped thrust contents are.
 Differs between builds based on OS
 */
 func GetThrustDirectory() string {
-	return base + "/vendor/linux/x64/v" + common.THRUST_VERSION
+	return filepath.Join(base, "vendor", "linux", "x64", thrustVersion)
 }
 
 /*
@@ -31,9 +30,6 @@ func GetDownloadUrl() string {
 	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-linux-x64.zip"
 }
 
-/*
-SetThrustApplicationTitle sets the title in the Info.plist. This method only exists on Darwin.
-*/
 func Bootstrap() error {
 	if executableNotExist() == true {
 		return prepareExecutable()
@@ -46,11 +42,11 @@ func executableNotExist() bool {
 }
 
 func prepareExecutable() error {
-	_, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", common.THRUST_VERSION)
+	_, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", thrustVersion)
 	if err != nil {
 		return err
 	}
-	err = unzip(strings.Replace(base+"/$V", "$V", common.THRUST_VERSION, 1), GetThrustDirectory())
+	err = unzip(strings.Replace(base+"/$V", "$V", thrustVersion, 1), GetThrustDirectory())
 	if err != nil {
 		return err
 	}
