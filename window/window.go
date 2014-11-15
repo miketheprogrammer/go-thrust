@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/miketheprogrammer/go-thrust"
 	. "github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
 	"github.com/miketheprogrammer/go-thrust/connection"
@@ -37,7 +38,7 @@ func NewWindow(url string, sess *session.Session) *Window {
 		ObjectType: "window",
 		Args: CommandArguments{
 			RootUrl: w.Url,
-			Title:   ApplicationName,
+			Title:   thrust.ApplicationName,
 			Size: SizeHW{
 				Width:  1024,
 				Height: 768,
