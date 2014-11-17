@@ -16,10 +16,11 @@ func main() {
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
 
+	thrustWindow.OpenDevtools()
 	// Lets do a window timeout
 	go func() {
-		<-time.After(time.Second * 5)
-		thrustWindow.Close()
+		<-time.After(time.Second * 10)
+		thrustWindow.CloseDevtools()
 	}()
 	// BLOCKING - Dont run before youve excuted all commands you want first
 	dispatcher.RunLoop()

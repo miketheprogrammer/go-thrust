@@ -1,6 +1,8 @@
 package dispatcher
 
 import (
+	"runtime"
+
 	"github.com/miketheprogrammer/go-thrust/commands"
 	"github.com/miketheprogrammer/go-thrust/connection"
 )
@@ -36,9 +38,13 @@ as possible
 */
 func RunLoop() {
 	outChannels := connection.GetOutputChannels()
+	defer connection.Clean()
+
 	for {
 		Run(outChannels)
+		runtime.Gosched()
 	}
+
 }
 
 func Run(outChannels *connection.Out) {

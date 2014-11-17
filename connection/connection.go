@@ -5,7 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
+	"os"
+	"os/exec"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/miketheprogrammer/go-thrust/commands"
 	. "github.com/miketheprogrammer/go-thrust/common"
@@ -15,6 +20,7 @@ import (
 //var conn net.Conn
 var Stdin io.WriteCloser
 var Stdout io.ReadCloser
+var ExecCommand *exec.Cmd
 
 type In struct {
 	Commands         chan *commands.Command
@@ -51,6 +57,21 @@ func InitializeThreads() {
 	go Reader(&out, &in)
 	go Writer(&out, &in)
 
+	go func() {
+		fmt.Println("Registering signals")
+		p := []os.Signal{syscall.SIGINT}
+		c := make(chan os.Signal, len(p))
+		signal.Notify(c, p...)
+
+		for s := range c {
+			fmt.Println("Getting signal ", s)
+			if s == os.Interrupt || s == os.Kill {
+				fmt.Println("Finishing clean up quiting")
+				CleanExit()
+				return
+			}
+		}
+	}()
 	return
 }
 
@@ -66,6 +87,18 @@ func GetCommunicationChannels() (*Out, *In) {
 	return GetOutputChannels(), GetInputChannels()
 }
 
+func Clean() {
+	fmt.Println("Killing Thrust Core")
+	if err := ExecCommand.Process.Kill(); err != nil {
+		log.Fatal("failed to kill: ", err)
+	}
+}
+
+func CleanExit() {
+	Clean()
+	os.Exit(1)
+}
+
 func Reader(out *Out, in *In) {
 
 	reader := bufio.NewReader(Stdout)
@@ -74,7 +107,9 @@ func Reader(out *Out, in *In) {
 		line, err := reader.ReadString(byte('\n'))
 		if err != nil {
 			fmt.Println(err)
-			panic(err)
+			// For now lets just force cleanup and exit
+			CleanExit()
+			return
 		}
 
 		Log.Debug("SOCKET::Line", line)
