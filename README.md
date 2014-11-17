@@ -93,7 +93,7 @@ To use go-thrust as a library, simple use the code in the same way you would use
 
 Current Platform Targets
 ================
-Linux, Darwin, Windows.
+Linux(x64), Darwin(x64), Windows(ia32). - These targets depend on Thrust Core, obviously the go library will run on any target, but the core may not.
 Windows - Stable as of 0.3.0
 
 Unfortunately because Thrust is built around C and Go its not exactly portable to Android and IOS, this may be possible in the future, but not yet. However, since we are primarily building a web app, we may be able to do something at a later time. For instance, there is work being done on allowing java to run go libraries. This would allow us to hopefully covert our application menus, to maybe just an html menu at the top, and just serve the page, instead of using Thrust. Thats all for the future however, for now, enjoy CPD for Linux,Darwin,Windows.
