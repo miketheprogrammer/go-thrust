@@ -35,8 +35,6 @@ For Instance, in a HTTP Server setting, you might want to run this as a
 goroutine and then let the servers blocking handler keep the process open.
 As long as there are commands in the channel, this loop will dispatch as fast
 as possible
-
-Also, watch for Signals and handle.
 */
 func RunLoop() {
 	outChannels := connection.GetOutputChannels()
