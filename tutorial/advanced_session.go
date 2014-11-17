@@ -23,7 +23,7 @@ func main() {
 
 		    Look down below func main to find our session class.
 	*/
-	mysession := session.NewSession(false, true, "cache")
+	mysession := session.NewSession(false, true, "session_cache")
 
 	mysession.SetInvokable(NewSimpleSession())
 	/*

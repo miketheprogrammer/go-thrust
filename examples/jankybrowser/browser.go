@@ -40,6 +40,7 @@ func main() {
 	thrustWindow.Focus()
 	// BLOCKING - Dont run before youve excuted all commands you want first.
 	go dispatcher.RunLoop()
+
 	addr := fmt.Sprintf("127.0.0.1:%d", *port)
 	http.Handle("/", http.HandlerFunc(index))
 	err := http.ListenAndServe(addr, nil)

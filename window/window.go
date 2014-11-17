@@ -252,3 +252,70 @@ func (w *Window) Kiosk() {
 
 	w.CallWhenDisplayed(&command)
 }
+
+func (w *Window) Close() {
+	command := Command{
+		Method: "close",
+		Args:   CommandArguments{},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) OpenDevtools() {
+	command := Command{
+		Method: "open_devtools",
+		Args:   CommandArguments{},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) CloseDevtools() {
+	command := Command{
+		Method: "close_devtools",
+		Args:   CommandArguments{},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) Move(x, y int) {
+	command := Command{
+		Method: "move",
+		Args: CommandArguments{
+			X: x,
+			Y: y,
+		},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) Resize(width, height uint) {
+	command := Command{
+		Method: "resize",
+		Args: CommandArguments{
+			Size: SizeHW{
+				Width:  width,
+				Height: height,
+			},
+		},
+	}
+
+	w.CallWhenReady(&command)
+}
+
+func (w *Window) Position(x, y int) {
+	command := Command{
+		Method: "position",
+		Args: CommandArguments{
+			Position: PositionXY{
+				X: x,
+				Y: y,
+			},
+		},
+	}
+
+	w.CallWhenReady(&command)
+}

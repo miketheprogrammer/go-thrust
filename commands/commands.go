@@ -26,24 +26,27 @@ Covers all possible argument combinations.
 Makes use of omit empty to adapt to different use cases
 */
 type CommandArguments struct {
-	RootUrl      string `json:"root_url,omitempty"`
-	Title        string `json:"title,omitempty"`
-	Size         SizeHW `json:"size,omitempty"`
-	X            int    `json:"x,omitempty"`
-	Y            int    `json:"y,omitempty"`
-	CommandID    uint   `json:"command_id,omitempty"`
-	Label        string `json:"label,omitempty"`
-	MenuID       uint   `json:"menu_id,omitempty"` // this should never be 0 anyway
-	WindowID     uint   `json:"window_id,omitempty"`
-	SessionID    uint   `json:"session_id,omitempty"`
-	GroupID      uint   `json:"group_id,omitempty"`
-	Value        bool   `json:"value"`
-	CookieStore  bool   `json:"cookie_store"`
-	OffTheRecord bool   `json:"off_the_record"`
-	Fullscreen   bool   `json:"fullscreen"`
-	Kiosk        bool   `json:"kiosk"`
-	Focus        bool   `json:"focus"`
-	Path         string `json:"path,omitempty"`
+	RootUrl      string     `json:"root_url,omitempty"`
+	Title        string     `json:"title,omitempty"`
+	Size         SizeHW     `json:"size,omitempty"`
+	Position     PositionXY `json:"position,omitempty"`
+	X            int        `json:"x,omitempty"`
+	Y            int        `json:"y,omitempty"`
+	Width        uint       `json:"width,omitempty"`
+	Height       uint       `json:"height,omitempty"`
+	CommandID    uint       `json:"command_id,omitempty"`
+	Label        string     `json:"label,omitempty"`
+	MenuID       uint       `json:"menu_id,omitempty"` // this should never be 0 anyway
+	WindowID     uint       `json:"window_id,omitempty"`
+	SessionID    uint       `json:"session_id,omitempty"`
+	GroupID      uint       `json:"group_id,omitempty"`
+	Value        bool       `json:"value"`
+	CookieStore  bool       `json:"cookie_store"`
+	OffTheRecord bool       `json:"off_the_record"`
+	Fullscreen   bool       `json:"fullscreen"`
+	Kiosk        bool       `json:"kiosk"`
+	Focus        bool       `json:"focus"`
+	Path         string     `json:"path,omitempty"`
 }
 
 /*
@@ -52,6 +55,11 @@ SizeHW is a simple struct defining Height and Width
 type SizeHW struct {
 	Width  uint `json:"width,omitempty"`
 	Height uint `json:"height,omitempty"`
+}
+
+type PositionXY struct {
+	X int `json:"x,omitempty"`
+	Y int `json:"y,omitempty"`
 }
 
 /*

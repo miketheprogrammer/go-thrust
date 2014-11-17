@@ -99,7 +99,7 @@ func Run() {
 		// Setup our Connection.
 		connection.Stdout = cmdOut
 		connection.Stdin = cmdIn
-
+		connection.ExecCommand = cmd
 		connection.InitializeThreads()
 		return
 	} else {
