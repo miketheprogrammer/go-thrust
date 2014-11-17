@@ -230,3 +230,25 @@ func (w *Window) UnFocus() {
 
 	w.CallWhenDisplayed(&command)
 }
+
+func (w *Window) Fullscreen() {
+	command := Command{
+		Method: "set_fullscreen",
+		Args: CommandArguments{
+			Fullscreen: true,
+		},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
+func (w *Window) Kiosk() {
+	command := Command{
+		Method: "set_kiosk",
+		Args: CommandArguments{
+			Kiosk: true,
+		},
+	}
+
+	w.CallWhenDisplayed(&command)
+}

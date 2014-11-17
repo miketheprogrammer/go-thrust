@@ -40,6 +40,8 @@ type CommandArguments struct {
 	Value        bool   `json:"value"`
 	CookieStore  bool   `json:"cookie_store"`
 	OffTheRecord bool   `json:"off_the_record"`
+	Fullscreen   bool   `json:"fullscreen"`
+	Kiosk        bool   `json:"kiosk"`
 	Focus        bool   `json:"focus"`
 	Path         string `json:"path,omitempty"`
 }

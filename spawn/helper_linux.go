@@ -47,9 +47,5 @@ func prepareExecutable() error {
 	if err != nil {
 		return err
 	}
-	err = unzip(strings.Replace(base+"/$V", "$V", thrustVersion, 1), GetThrustDirectory())
-	if err != nil {
-		return err
-	}
-	return nil
+	return unzip(strings.Replace(base+"/$V", "$V", thrustVersion, 1), GetThrustDirectory())
 }

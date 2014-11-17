@@ -49,10 +49,10 @@ func Bootstrap() error {
 		if err = prepareInfoPropertiesListTemplate(); err != nil {
 			return err
 		}
-		if err = writeInfoPropertiesList(); err != nil {
-			return err
-		}
+
+		return writeInfoPropertiesList()
 	}
+
 	return nil
 }
 
@@ -205,8 +205,7 @@ func prepareInfoPropertiesListTemplate() error {
 		plistTmpl = strings.Replace(plistTmpl, "$$Application", "ThrustShellApplication", 1)
 		//func WriteFile(filename string, data []byte, perm os.FileMode) error
 
-		err = ioutil.WriteFile(plistPath+".tmpl", []byte(plistTmpl), 0775)
-		return err
+		return ioutil.WriteFile(plistPath+".tmpl", []byte(plistTmpl), 0775)
 	}
 
 	return nil
