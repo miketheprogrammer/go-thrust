@@ -34,6 +34,7 @@ func Bootstrap() error {
 	if executableNotExist() == true {
 		return prepareExecutable()
 	}
+	return nil
 }
 
 func executableNotExist() bool {
@@ -50,4 +51,5 @@ func prepareExecutable() error {
 	if err != nil {
 		return err
 	}
+	return nil
 }
