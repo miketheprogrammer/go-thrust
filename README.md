@@ -1,6 +1,8 @@
 go-thrust
 =========
-Current Go-Thrust Version wip-0.4.0
+
+Cross Platform UI Kit powered by Blink/V8/Chromium Content Lib
+
 Current Thrust Version 0.7.5
 
 ```bash
