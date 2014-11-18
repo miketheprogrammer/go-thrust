@@ -24,6 +24,8 @@ func InitLogger(sLevel string) {
 		level = log.Debug
 	case "info":
 		level = log.Info
+	case "none":
+		level = log.None
 	default:
 		level = log.Error
 	}

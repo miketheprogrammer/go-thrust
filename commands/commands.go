@@ -74,8 +74,9 @@ type ReplyResult struct {
 EventResult is used in CommandResponse's of Type Event
 */
 type EventResult struct {
-	CommandID  uint `json:"command_id,omitempty"`
-	EventFlags int  `json:"event_flags,omitempty"`
+	CommandID  uint   `json:"command_id,omitempty"`
+	EventFlags int    `json:"event_flags,omitempty"`
+	Type       string `json:"-"`
 }
 
 /*
@@ -91,6 +92,7 @@ type CommandResponse struct {
 	Args     CommandResponseArguments `json:"_args,omitempty"`
 	TargetID uint                     `json:"_target,omitempty"`
 	Method   string                   `json:"_method,omitempty"`
+	Type     string                   `json:"_type,omitempty"`
 }
 
 /*
