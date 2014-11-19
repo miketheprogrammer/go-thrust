@@ -9,10 +9,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	. "github.com/miketheprogrammer/go-thrust/commands"
-	. "github.com/miketheprogrammer/go-thrust/common"
-	"github.com/miketheprogrammer/go-thrust/connection"
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
+	. "github.com/sadasant/go-thrust/commands"
+	. "github.com/sadasant/go-thrust/common"
+	"github.com/sadasant/go-thrust/connection"
+	"github.com/sadasant/go-thrust/dispatcher"
 )
 
 /*

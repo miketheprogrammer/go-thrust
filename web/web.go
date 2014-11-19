@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/miketheprogrammer/go-thrust/web/platform"
+	"github.com/sadasant/go-thrust/web/platform"
 )
 
 type WebHandler struct {

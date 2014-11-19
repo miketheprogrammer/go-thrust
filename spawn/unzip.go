@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	. "github.com/miketheprogrammer/go-thrust/common"
+	. "github.com/sadasant/go-thrust/common"
 )
 
 func unzip(src, dest string) error {

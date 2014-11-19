@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/miketheprogrammer/go-thrust"
+	"github.com/sadasant/go-thrust"
 )
 
 /*

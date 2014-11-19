@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/miketheprogrammer/go-thrust/commands"
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/menu"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/sadasant/go-thrust/commands"
+	"github.com/sadasant/go-thrust/dispatcher"
+	"github.com/sadasant/go-thrust/menu"
+	"github.com/sadasant/go-thrust/spawn"
+	"github.com/sadasant/go-thrust/window"
 )
 
 func main() {

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust"
-	. "github.com/miketheprogrammer/go-thrust/commands"
-	. "github.com/miketheprogrammer/go-thrust/common"
-	"github.com/miketheprogrammer/go-thrust/connection"
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/session"
+	"github.com/sadasant/go-thrust"
+	. "github.com/sadasant/go-thrust/commands"
+	. "github.com/sadasant/go-thrust/common"
+	"github.com/sadasant/go-thrust/connection"
+	"github.com/sadasant/go-thrust/dispatcher"
+	"github.com/sadasant/go-thrust/session"
 )
 
 type Window struct {

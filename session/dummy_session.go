@@ -1,8 +1,8 @@
 package session
 
 import (
-	"github.com/miketheprogrammer/go-thrust/commands"
-	"github.com/miketheprogrammer/go-thrust/common"
+	"github.com/sadasant/go-thrust/commands"
+	"github.com/sadasant/go-thrust/common"
 )
 
 type DummySession struct{}

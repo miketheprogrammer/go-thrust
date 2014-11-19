@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/session"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/sadasant/go-thrust/dispatcher"
+	"github.com/sadasant/go-thrust/session"
+	"github.com/sadasant/go-thrust/spawn"
+	"github.com/sadasant/go-thrust/window"
 )
 
 func main() {

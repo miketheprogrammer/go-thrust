@@ -11,9 +11,9 @@ import (
 	"path"
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/sadasant/go-thrust/dispatcher"
+	"github.com/sadasant/go-thrust/spawn"
+	"github.com/sadasant/go-thrust/window"
 	"github.com/tv42/birpc"
 	"github.com/tv42/birpc/wetsock"
 	"github.com/tv42/topic"
