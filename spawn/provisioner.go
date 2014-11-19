@@ -22,6 +22,5 @@ func NewThrustProvisioner() ThrustProvisioner {
 }
 
 func (tp ThrustProvisioner) Provision() error {
-	Bootstrap()
-	return nil
+	return Bootstrap()
 }
