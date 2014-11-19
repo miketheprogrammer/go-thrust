@@ -92,7 +92,7 @@ func Run() {
 			cmd.Stderr = os.Stdout
 		}
 
-		if err = cmd.Start(); err != nil {
+		if err := cmd.Start(); err != nil {
 			Log.Emergency("Could not start Thrust Core")
 			panic("Thrust Core not started.")
 		}
