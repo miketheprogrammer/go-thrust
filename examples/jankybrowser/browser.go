@@ -7,9 +7,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust/lib/bindings/window"
+	"github.com/miketheprogrammer/go-thrust/lib/dispatcher"
+	"github.com/miketheprogrammer/go-thrust/lib/spawn"
 )
 
 var (

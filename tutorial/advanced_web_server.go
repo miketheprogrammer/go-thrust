@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/session"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/web"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/lib/session"
+	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
+	"github.com/miketheprogrammer/go-thrust/x/web"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -19,18 +18,19 @@ func main() {
 	http.HandleFunc("/", handler)
 	webHandler := web.NewWebHandler()
 	http.Handle("/web", webHandler)
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
 
+	// thrust.Start() must always come before any bindings are created.
+	thrust.DisableLogger()
+	// Set any Custom Provisioners before Start
+	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	// thrust.Start() must always come before any bindings are created.
+	thrust.Start()
 	mysession := session.NewSession(false, false, "cache")
 
-	thrustWindow := window.NewWindow("http://localhost:8080/", mysession)
+	thrustWindow := thrust.NewWindow("http://localhost:8080/", mysession)
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
-
-	// NonBLOCKING - note in other examples this was blocking.
-	go dispatcher.RunLoop()
 
 	http.ListenAndServe(":8080", nil)
 }

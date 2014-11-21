@@ -5,12 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust/commands"
-	"github.com/miketheprogrammer/go-thrust/common"
-	"github.com/miketheprogrammer/go-thrust/connection"
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust/lib/commands"
+	"github.com/miketheprogrammer/go-thrust/lib/connection"
+	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
 )
 
 /*
@@ -20,10 +17,12 @@ if you store your bindings somewhere and track the ids.
 Check package thrust for the acceptable handler definitions.
 */
 func main() {
-	common.InitLogger("none")
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
-	thrustWindow := window.NewWindow("http://breach.cc/", nil)
+	thrust.InitLogger()
+	// Set any Custom Provisioners before Start
+	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	// thrust.Start() must always come before any bindings are created.
+	thrust.Start()
+	thrustWindow := thrust.NewWindow("http://breach.cc/", nil)
 	thrustWindow.Show()
 
 	/*
@@ -102,5 +101,5 @@ func main() {
 		connection.CleanExit()
 	}()
 	// BLOCKING - Dont run before youve excuted all commands you want first
-	dispatcher.RunLoop()
+	thrust.Lock()
 }

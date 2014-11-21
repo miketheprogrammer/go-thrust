@@ -3,28 +3,30 @@ package main
 import (
 	"fmt"
 
-	"github.com/miketheprogrammer/go-thrust/commands"
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/menu"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/lib/bindings/menu"
+	"github.com/miketheprogrammer/go-thrust/lib/commands"
+	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
 )
 
 func main() {
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
-	thrustWindow := window.NewWindow("http://breach.cc/", nil)
+	thrust.InitLogger()
+	// Set any Custom Provisioners before Start
+	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	// thrust.Start() must always come before any bindings are created.
+	thrust.Start()
+	thrustWindow := thrust.NewWindow("http://breach.cc/", nil)
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
 
 	// make our top menus
 	//applicationMenu, is essentially the menu bar
-	applicationMenu := menu.NewMenu()
+	applicationMenu := thrust.NewMenu()
 	//applicationMenuRoot is the first menu, on darwin this is always named the name of your application.
-	applicationMenuRoot := menu.NewMenu()
+	applicationMenuRoot := thrust.NewMenu()
 	//File menu is our second menu
-	fileMenu := menu.NewMenu()
+	fileMenu := thrust.NewMenu()
 
 	// Lets build our root menu.
 	// the first argument to AddItem is a CommandID
@@ -43,7 +45,11 @@ func main() {
 	fileMenu.AddItem(3, "Edit")
 	fileMenu.AddSeparator()
 	fileMenu.AddItem(4, "Close")
-
+	fileMenu.RegisterEventHandlerByCommandID(4,
+		func(reply commands.CommandResponse, item *menu.MenuItem) {
+			fmt.Println("Close Event Handled")
+			thrust.Exit()
+		})
 	// Now we just need to plumb our menus together any way we want.
 
 	applicationMenu.AddSubmenu(5, "Application", applicationMenuRoot)
@@ -58,5 +64,5 @@ func main() {
 	// Now we set it as our application Menu
 	applicationMenu.SetApplicationMenu()
 	// BLOCKING - Dont run before youve excuted all commands you want first.
-	dispatcher.RunLoop()
+	thrust.LockThread()
 }

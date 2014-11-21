@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/session"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -16,19 +14,20 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", handler)
+	thrust.InitLogger()
+	// Set any Custom Provisioners before Start
+	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	// thrust.Start() must always come before any bindings are created.
+	thrust.Start()
 
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
+	mysession := thrust.NewSession(false, false, "cache")
 
-	mysession := session.NewSession(false, false, "cache")
-
-	thrustWindow := window.NewWindow("http://localhost:8080/", mysession)
+	thrustWindow := thrust.NewWindow("http://localhost:8080/", mysession)
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
 
-	// NonBLOCKING - note in other examples this was blocking.
-	go dispatcher.RunLoop()
+	// See, we dont use thrust.LockThread() because we now have something holding the process open
 	http.ListenAndServe(":8080", nil)
 }
 

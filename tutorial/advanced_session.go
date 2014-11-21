@@ -1,20 +1,22 @@
 package main
 
 import (
-	"github.com/miketheprogrammer/go-thrust/commands"
-	"github.com/miketheprogrammer/go-thrust/common"
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/session"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/lib/bindings/session"
+	"github.com/miketheprogrammer/go-thrust/lib/commands"
+	"github.com/miketheprogrammer/go-thrust/lib/common"
+	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
 )
 
 func main() {
 	/*
 	   use basic setup
 	*/
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
+	thrust.InitLogger()
+	// Set any Custom Provisioners before Start
+	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	// thrust.Start() must always come before any bindings are created.
+	thrust.Start()
 
 	/*
 			  Start of Advanced Session Tutorial.
@@ -23,20 +25,22 @@ func main() {
 
 		    Look down below func main to find our session class.
 	*/
-	mysession := session.NewSession(false, true, "session_cache")
+	mysession := thrust.NewSession(false, true, "session_cache")
 
 	mysession.SetInvokable(NewSimpleSession())
 	/*
 	   Modified basic_window, where we provide, a session argument
 	   to NewWindow.
 	*/
-	thrustWindow := window.NewWindow("http://breach.cc/", mysession)
+	thrustWindow := thrust.NewWindow("http://breach.cc/", mysession)
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
 
-	// BLOCKING - Dont run before youve excuted all commands you want first.
-	dispatcher.RunLoop()
+	// In lieu of something like an http server, we need to lock this thread
+	// in order to keep it open, and keep the process running.
+	// Dont worry we use runtime.Gosched :)
+	thrust.LockThread()
 }
 
 // SimpleSession must subscribe to the contract set forth by SessionInvokable interface
@@ -53,39 +57,39 @@ func NewSimpleSession() (ss SimpleSession) {
 For Simplicity type declarations
 */
 func (ss SimpleSession) InvokeCookiesLoad(args *commands.CommandResponseArguments, s *session.Session) (cookies []session.Cookie) {
-	common.Log.Debug("InvokeCookiesLoad")
+	common.Log.Print("InvokeCookiesLoad")
 	cookies = make([]session.Cookie, 0)
 
 	return cookies
 }
 
 func (ss SimpleSession) InvokeCookiesLoadForKey(args *commands.CommandResponseArguments, s *session.Session) (cookies []session.Cookie) {
-	common.Log.Debug("InvokeCookiesLoadForKey")
+	common.Log.Print("InvokeCookiesLoadForKey")
 	cookies = make([]session.Cookie, 0)
 
 	return cookies
 }
 
 func (ss SimpleSession) InvokeCookiesFlush(args *commands.CommandResponseArguments, s *session.Session) bool {
-	common.Log.Debug("InvokeCookiesFlush")
+	common.Log.Print("InvokeCookiesFlush")
 	return false
 }
 
 func (ss SimpleSession) InvokeCookiesAdd(args *commands.CommandResponseArguments, s *session.Session) bool {
-	common.Log.Debug("InvokeCookiesAdd")
+	common.Log.Print("InvokeCookiesAdd")
 	return false
 }
 
 func (ss SimpleSession) InvokeCookiesUpdateAccessTime(args *commands.CommandResponseArguments, s *session.Session) bool {
-	common.Log.Debug("InvokeCookiesUpdateAccessTime")
+	common.Log.Print("InvokeCookiesUpdateAccessTime")
 	return false
 }
 
 func (ss SimpleSession) InvokeCookiesDelete(args *commands.CommandResponseArguments, s *session.Session) bool {
-	common.Log.Debug("InvokeCookiesDelete")
+	common.Log.Print("InvokeCookiesDelete")
 	return false
 }
 
 func (ss SimpleSession) InvokeCookieForceKeepSessionState(args *commands.CommandResponseArguments, s *session.Session) {
-	common.Log.Debug("InvokeCookieForceKeepSessionState")
+	common.Log.Print("InvokeCookieForceKeepSessionState")
 }

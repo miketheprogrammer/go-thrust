@@ -3,15 +3,19 @@ package main
 import (
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
 )
 
 func main() {
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
-	thrustWindow := window.NewWindow("http://breach.cc/", nil)
+
+	thrust.InitLogger()
+	// Set any Custom Provisioners before Start
+	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	// thrust.Start() must always come before any bindings are created.
+	thrust.Start()
+
+	thrustWindow := thrust.NewWindow("http://breach.cc/", nil)
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
@@ -21,6 +25,9 @@ func main() {
 		<-time.After(time.Second * 5)
 		thrustWindow.Close()
 	}()
-	// BLOCKING - Dont run before youve excuted all commands you want first
-	dispatcher.RunLoop()
+
+	// In lieu of something like an http server, we need to lock this thread
+	// in order to keep it open, and keep the process running.
+	// Dont worry we use runtime.Gosched :)
+	thrust.LockThread()
 }
