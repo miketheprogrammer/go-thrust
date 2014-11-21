@@ -14,6 +14,10 @@ import (
 	"github.com/miketheprogrammer/go-thrust/lib/spawn"
 )
 
+/*
+Begin Generic Access and Binding Management Section.
+*/
+
 func NewWindow(url string, sess *session.Session) *window.Window {
 	return window.NewWindow(url, sess)
 }
@@ -63,9 +67,8 @@ func NewEventHandler(event string, fn interface{}) (ThrustEventHandler, error) {
 }
 
 /**
-First Stab at event handlers
+Begin Thrust Handler Code.
 **/
-
 type ThrustHandler interface {
 	Handle(cr commands.CommandResponse)
 	Register()
