@@ -8,14 +8,17 @@ import (
 )
 
 type HandleFunc func(commands.CommandResponse)
+type Handler interface {
+	Handle(commands.CommandResponse)
+}
 
-var registry []HandleFunc
+var registry []interface{}
 
 /*
 RegisterHandler registers a HandleFunc f to receive a CommandResponse when one is sent to the system.
 */
-func RegisterHandler(f HandleFunc) {
-	registry = append(registry, f)
+func RegisterHandler(h interface{}) {
+	registry = append(registry, h)
 }
 
 /*
@@ -23,7 +26,12 @@ Dispatch dispatches a CommandResponse to every handler in the registry
 */
 func Dispatch(command commands.CommandResponse) {
 	for _, f := range registry {
-		go f(command)
+		if fn, ok := f.(func(cr commands.CommandResponse)); ok == true {
+			go fn(command)
+		}
+		if handler, ok := f.(Handler); ok == true {
+			go handler.Handle(command)
+		}
 	}
 }
 

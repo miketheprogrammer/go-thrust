@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/miketheprogrammer/go-thrust"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
 	"github.com/miketheprogrammer/go-thrust/lib/connection"
 	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
@@ -22,6 +23,7 @@ func main() {
 	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
 	// thrust.Start() must always come before any bindings are created.
 	thrust.Start()
+
 	thrustWindow := thrust.NewWindow("http://breach.cc/", nil)
 	thrustWindow.Show()
 
@@ -101,5 +103,6 @@ func main() {
 		connection.CleanExit()
 	}()
 	// BLOCKING - Dont run before youve excuted all commands you want first
-	thrust.Lock()
+	thrust.LockThread()
+
 }
