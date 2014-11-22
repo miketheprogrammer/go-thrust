@@ -88,6 +88,13 @@ func Exit() {
 }
 
 /*
+Sets the Application Name
+*/
+func SetApplicationName(name string) {
+	spawn.ApplicationName = name
+}
+
+/*
 Create a new EventHandler for a give event.
 */
 func NewEventHandler(event string, fn interface{}) (ThrustEventHandler, error) {

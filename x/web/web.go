@@ -1,7 +1,6 @@
 package web
 
 import (
-	"bufio"
 	"fmt"
 	"net/http"
 
@@ -19,13 +18,10 @@ func NewWebHandler() WebHandler {
 }
 
 func (wh WebHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	writer := bufio.NewWriter(w)
+	platform_buffer := make([]byte)
 	for _, module := range wh.Platform.Modules {
 		fmt.Println(module)
-		for _, byte_ := range module.Data {
-			fmt.Println(byte_)
-			writer.WriteByte(byte_)
-		}
+		append(platform_buffer, module.Data...)
 	}
 	return
 }

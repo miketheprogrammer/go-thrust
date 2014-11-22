@@ -554,7 +554,7 @@ func (menu *Menu) Popup(w *window.Window) {
 				}
 
 				// Thread to wait for Stable Menu State
-				menu.CallWhenDisplayed(&command)
+				menu.CallWhenTreeStable(&command)
 				return
 			}
 			time.Sleep(time.Microsecond * 10)
