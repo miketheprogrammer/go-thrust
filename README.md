@@ -1,6 +1,12 @@
 go-thrust
 =========
 
+ALERT - Breaking Changes.
+Please See Examples, Tutorials to come.
+Basic Breakdown is, alot of intializers are now wrapped in the `thrust` package.
+i.e. window.NewWindow is now thrust.NewWindow.
+Import Paths have changed, please see the lib/ folder.
+
 Cross Platform UI Kit powered by Blink/V8/Chromium Content Lib
 
 Current Thrust Version 0.7.5
