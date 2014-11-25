@@ -4,9 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/miketheprogrammer/go-thrust/lib/bindings/window"
-	"github.com/miketheprogrammer/go-thrust/lib/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/lib/spawn"
+	"github.com/miketheprogrammer/go-thrust"
 )
 
 var (
@@ -16,12 +14,12 @@ var (
 
 func main() {
 	flag.Parse()
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
-	thrustWindow := window.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
+	thrust.InitLogger()
+	thrust.Start()
+
+	thrustWindow := thrust.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
 	thrustWindow.Show()
 	thrustWindow.Focus()
 	// BLOCKING - Dont run before youve excuted all commands you want first.
-	dispatcher.RunLoop()
-
+	thrust.LockThread()
 }

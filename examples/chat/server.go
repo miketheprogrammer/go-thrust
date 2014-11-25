@@ -11,9 +11,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/spawn"
-	"github.com/miketheprogrammer/go-thrust/window"
+	"github.com/miketheprogrammer/go-thrust"
 	"github.com/tv42/birpc"
 	"github.com/tv42/birpc/wetsock"
 	"github.com/tv42/topic"
@@ -140,14 +138,11 @@ func main() {
 	http.Handle("/", http.HandlerFunc(index))
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 
-	/* Lets start Thrust on the server anyway. */
-	spawn.SetBaseDirectory("./")
-	spawn.Run()
-	thrustWindow := window.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
+	thrust.InitLogger()
+	thrust.Start()
+	thrustWindow := thrust.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
 	thrustWindow.Show()
 	thrustWindow.Focus()
-	// BLOCKING - Dont run before youve excuted all commands you want first.
-	go dispatcher.RunLoop()
 
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
