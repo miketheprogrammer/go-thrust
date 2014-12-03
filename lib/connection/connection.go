@@ -115,7 +115,7 @@ func Reader(out *Out, in *In) {
 			return
 		}
 
-		Log.Print("SOCKET::Line", line)
+		//Log.Print("SOCKET::Line", line)
 		if !strings.Contains(line, SOCKET_BOUNDARY) {
 			response := commands.CommandResponse{}
 			json.Unmarshal([]byte(line), &response)
@@ -129,7 +129,7 @@ func Writer(out *Out, in *In) {
 		select {
 		case response := <-in.CommandResponses:
 			cmd, _ := json.Marshal(response)
-			Log.Print("Writing RESPONSE", string(cmd), "\n", SOCKET_BOUNDARY)
+			//Log.Print("Writing RESPONSE", string(cmd), "\n", SOCKET_BOUNDARY)
 
 			Stdin.Write(cmd)
 			Stdin.Write([]byte("\n"))
@@ -141,7 +141,7 @@ func Writer(out *Out, in *In) {
 
 			//fmt.Println(command)
 			cmd, _ := json.Marshal(command)
-			Log.Print("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
+			//Log.Print("Writing", string(cmd), "\n", SOCKET_BOUNDARY)
 
 			Stdin.Write(cmd)
 			Stdin.Write([]byte("\n"))

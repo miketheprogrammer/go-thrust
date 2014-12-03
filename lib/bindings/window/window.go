@@ -1,6 +1,7 @@
 package window
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/lib/common"
 	"github.com/miketheprogrammer/go-thrust/lib/connection"
 	"github.com/miketheprogrammer/go-thrust/lib/dispatcher"
+	"github.com/miketheprogrammer/go-thrust/lib/events"
 	"github.com/miketheprogrammer/go-thrust/lib/spawn"
 )
 
@@ -75,12 +77,9 @@ func (w *Window) SetSendChannel(sendChannel *connection.In) {
 func (w *Window) IsTarget(targetId uint) bool {
 	return targetId == w.TargetID
 }
+
 func (w *Window) HandleError(reply CommandResponse) {
 
-}
-
-func (w *Window) HandleEvent(reply CommandResponse) {
-	//Log.Info(("Window(", w.TargetID, ")::Handling Event::", reply))
 }
 
 func (w *Window) HandleReply(reply CommandResponse) {
@@ -125,8 +124,6 @@ func (w *Window) HandleReply(reply CommandResponse) {
 func (w *Window) DispatchResponse(reply CommandResponse) {
 
 	switch reply.Action {
-	case "event":
-		w.HandleEvent(reply)
 	case "reply":
 		w.HandleReply(reply)
 	}
@@ -318,4 +315,61 @@ func (w *Window) Position(x, y int) {
 	}
 
 	w.CallWhenReady(&command)
+}
+
+func (w *Window) SendRemoteMessage(msg string) {
+	command := Command{
+		Method: "remote",
+		Args: CommandArguments{
+			Message: RemoteMessage{
+				Payload: msg,
+			},
+		},
+	}
+
+	// We dont use call, because messages are of variable size, and we definitely,
+	// do not want to store a reference to them. So we use .Send
+	go func() {
+		for {
+			if w.Displayed {
+				command.Action = "call"
+				command.TargetID = w.TargetID
+				w.Send(&command)
+				return
+			}
+			time.Sleep(time.Microsecond * 100)
+		}
+	}()
+}
+
+/*
+CRorER means commands.CommandResponse or commands.EventResult
+*/
+type WindowEventHandler func(CRorER interface{}, window *Window)
+
+/*
+Binding Event Handlers are a bit different than global thrust handlers.
+The Signature of the function you pass in is WindowEventHandler
+*/
+func (w *Window) HandleEvent(event string, fn interface{}) (events.ThrustEventHandler, error) {
+	if fn, ok := fn.(func(CommandResponse, *Window)); ok == true {
+		return events.NewHandler(event, func(cr CommandResponse) {
+			fn(cr, w)
+		})
+	}
+	if fn, ok := fn.(func(EventResult, *Window)); ok == true {
+		return events.NewHandler(event, func(er EventResult) {
+			fn(er, w)
+		})
+	}
+	return events.ThrustEventHandler{}, errors.New("Function Signature Invalid")
+}
+
+func (w *Window) HandleBlur(fn interface{}) (events.ThrustEventHandler, error) {
+	return w.HandleEvent("blur", fn)
+}
+
+func (w *Window) HandleRemote(fn interface{}) (events.ThrustEventHandler, error) {
+	return w.HandleEvent("remote", fn)
+
 }

@@ -24,6 +24,7 @@ func main() {
 	go func() {
 		<-time.After(time.Second * 5)
 		thrustWindow.Close()
+		thrust.Exit()
 	}()
 
 	// In lieu of something like an http server, we need to lock this thread
