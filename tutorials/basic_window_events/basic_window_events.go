@@ -8,7 +8,7 @@ import (
 	"github.com/miketheprogrammer/go-thrust"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
 	"github.com/miketheprogrammer/go-thrust/lib/connection"
-	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
+	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 
 /*

@@ -7,7 +7,7 @@ import (
 	"github.com/miketheprogrammer/go-thrust"
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/window"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
-	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
+	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {

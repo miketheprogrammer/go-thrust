@@ -5,7 +5,7 @@ import (
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/session"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
 	"github.com/miketheprogrammer/go-thrust/lib/common"
-	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
+	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 
 func main() {

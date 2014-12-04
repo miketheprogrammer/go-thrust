@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/miketheprogrammer/go-thrust"
-	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
+	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 
 func main() {

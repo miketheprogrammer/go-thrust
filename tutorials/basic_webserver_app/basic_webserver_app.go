@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/miketheprogrammer/go-thrust"
-	"github.com/miketheprogrammer/go-thrust/tutorial/provisioner"
+	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
