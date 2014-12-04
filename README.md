@@ -73,10 +73,10 @@ Thrust exposes all of this beautifully over an Stdin/Stdout pipe speaking a JSON
 
 DOCUMENTATION (Docs and Tutorials)
 ================
-* [Tutorials](https://github.com/miketheprogrammer/go-thrust/tree/master/doc)
+* [Tutorials](https://github.com/miketheprogrammer/go-thrust/tree/master/tutorial)
+* [Examples](https://github.com/miketheprogrammer/go-thrust/tree/master/examples)
 * [GoDoc](http://godoc.org/github.com/miketheprogrammer/go-thrust)
-* In addition to all the documentation and tutorials, there are examples in the examples directory. For instance there is a basic chat client/server example.
-Chat code taken with License from Tv42 birpc/examples, modifed to work with thrust.
+
 
 Current Platform Specific Cases:
 ================
