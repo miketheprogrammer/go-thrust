@@ -54,14 +54,14 @@ var htmlIndex string = `
     	THRUST.remote.listen(function (event) {
     		var now = (new Date);
     		console.log("ROUNDTRIP IN " + (now - start) + "ms" + " with a length of " + event.payload.length)
-    		//write( "RESPONSE:" + event.payload + " received in " + (now - start) + "ms<br/>");
+    		write( "RESPONSE:" + event.payload + " received in " + (now - start) + "ms<br/>");
 
     	})
 			
 			setInterval(function () {
 				start = (new Date)
 				THRUST.remote.send("beep")
-			},10)
+			},1000)
     </script>
 	</head>
   <body>
