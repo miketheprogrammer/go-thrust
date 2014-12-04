@@ -35,29 +35,7 @@ On Linux/Darwin
 
 Start Go Thrust using source and GoLang runtime
 ```bash
-#install deps
-go get -v github.com/alexcesaro/log
-# build tutorials
-go build -o tutorial/bin/basic_window tutorial/basic_window.go
-go build -o tutorial/bin/basic_menu tutorial/basic_menu.go
-go build -o tutorial/bin/basic_menu_events tutorial/basic_menu_events.go
-go build -o tutorial/bin/basic_session tutorial/basic_session.go
-go build -o tutorial/bin/basic_multiple_windows tutorial/basic_multiple_windows.go
-go build -o tutorial/bin/advanced_session tutorial/advanced_session.go
-go build -o tutorial/bin/basic_webserver_app tutorial/basic_webserver_app.go
-# then execute one of the many tutorials
-#./tutorial/bin/basic_window
-#./tutorial/bin/basic_menu
-#./tutorial/bin/basic_menu_events
-#./tutorial/bin/basic_multiple_windows
-#./tutorial/bin/advanced_session
-#./tutorial/bin/basic_webserver_app
-```
-
-On Windows just use go run
-```bash
-go run tutorial/basic_window.go
-# ... etcetera
+go run tutorials/basic_window/basic_window.go
 ```
 
 Forward:
@@ -89,8 +67,8 @@ Helper methods receive the UpperCamelCase version of their relative names in Thr
 
 i.e. insert_item_at == InsertItemAt
 
-Please note **** That the intended use case of Application Menus is to only support 
-OSX and Unity/X11 global menu bars. This means that you should implement most menus in html and javascript, using IPC/RPC to communicate with the host application. The side effect is primarily that Windows, and certain unix/linux systems will not load ApplicationMenus 
+Please note that the intended use case of Application Menus is to only support 
+OSX and Unity/X11 global menu bars. This means that you should implement most menus in html and javascript, using IPC/RPC to communicate with the host application. The side effect is primarily that Windows, and certain unix/linux systems will not load ApplicationMenus
 
 
 Using Go-Thrust as a Library and bundling your final release
@@ -102,23 +80,12 @@ To use go-thrust as a library, simple use the code in the same way you would use
 Current Platform Targets
 ================
 Linux(x64), Darwin(x64), Windows(ia32). - These targets depend on Thrust Core, obviously the go library will run on any target, but the core may not.
-Windows - Stable as of 0.3.0
 
 Unfortunately because Thrust is built around C and Go its not exactly portable to Android and IOS, this may be possible in the future, but not yet. However, since we are primarily building a web app, we may be able to do something at a later time. For instance, there is work being done on allowing java to run go libraries. This would allow us to hopefully covert our application menus, to maybe just an html menu at the top, and just serve the page, instead of using Thrust. Thats all for the future however, for now, enjoy CPD for Linux,Darwin,Windows.
 
 
 The Future of Go-Thrust
 ================
-Any user of Go-Thrust should feel free to contribute Ideas, Code, anything that can help move this project in the right direction. The ideal goal is to stay as much out of the way, but still provide a useful system.
-
-Some questions and thoughts:
-
-There needs to be a UI => Application Connector. Unfortunately this is such an important part in the system design I dont think just one person should decide how it will look. As of right now in go-thrust's current state, you have to do any boilerplate webserver code yourself. For instance, I want to plug my ui, into GoLang, how do I do it. Create a Websocket server, use JSONRPC similar to how Go-Thrust contacts thrustcore. Ideally this process can be abstracted out a bit, but how do we develop a system generic enough to expose common interfaces and methods. 
-
-For example, do we write and manage api bindings for every go stl object. Like Filesystem. What is important to the core, and what can an implementor add.
-
-
-
-
+Any user of Go-Thrust should feel free to contribute ideas, code, anything that can help move this project in the right direction. The ideal goal is to stay as much out of the way, but still provide a useful system.
 ```
 
