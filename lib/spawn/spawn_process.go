@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	thrustVersion = "0.7.5"
+	thrustVersion = "0.7.6"
 )
 
 var (
