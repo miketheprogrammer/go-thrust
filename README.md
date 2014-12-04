@@ -73,7 +73,7 @@ Thrust exposes all of this beautifully over an Stdin/Stdout pipe speaking a JSON
 
 DOCUMENTATION (Docs and Tutorials)
 ================
-* [Tutorials](https://github.com/miketheprogrammer/go-thrust/tree/master/tutorial)
+* [Tutorials](https://github.com/miketheprogrammer/go-thrust/tree/master/tutorials)
 * [Examples](https://github.com/miketheprogrammer/go-thrust/tree/master/examples)
 * [GoDoc](http://godoc.org/github.com/miketheprogrammer/go-thrust)
 
