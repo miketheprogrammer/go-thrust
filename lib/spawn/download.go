@@ -1,7 +1,9 @@
 package spawn
 
 import (
+	"errors"
 	"fmt"
+	"github.com/cheggaaa/pb"
 	"io"
 	"net/http"
 	"os"
@@ -11,48 +13,44 @@ import (
 	. "github.com/miketheprogrammer/go-thrust/lib/common"
 )
 
-func downloadFromUrl(url, filepath, version string) (string, error) {
+func downloadFromUrl(url, filepath, version string) (fileName string, err error) {
 	url = strings.Replace(url, "$V", version, 2)
-	fileName := strings.Replace(filepath, "$V", version, 1)
-	Log.Print("Downloading", url, "to", fileName)
+	fileName = strings.Replace(filepath, "$V", version, 1)
+	fmt.Println("Downloading", url, "to", fileName)
 
-	quit := make(chan int, 1)
-
-	go func() {
-		for {
-			select {
-			case <-quit:
-				fmt.Print("\n")
-				return
-			case <-time.After(time.Second):
-				fmt.Print(".")
-			}
-		}
-	}()
-
-	// TODO: check file existence first with io.IsExist
 	output, err := os.Create(fileName)
 	if err != nil {
 		Log.Print("Error while creating", fileName, "-", err)
-		return "", err
+		return
 	}
 	defer output.Close()
 
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println("Error while downloading", url, "-", err)
-		return "", err
+		return
 	}
 	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		err = errors.New(fmt.Sprintf("Server return non-200 status: %v", response.Status))
+		fmt.Println(err)
+		return
+	}
 
-	n, err := io.Copy(output, response.Body)
+	// create bar
+	bar := pb.New(int(response.ContentLength)).SetUnits(pb.U_BYTES).SetRefreshRate(time.Millisecond * 10)
+	bar.ShowSpeed = true
+	bar.Start()
+	defer bar.Finish()
+
+	// create multi writer
+	writer := io.MultiWriter(output, bar)
+
+	_, err = io.Copy(writer, response.Body)
 	if err != nil {
 		Log.Print("Error while downloading", url, "-", err)
-		return "", err
+		return
 	}
-	quit <- 1
 
-	Log.Print(n, "bytes downloaded.")
-
-	return fileName, nil
+	return
 }
