@@ -99,7 +99,7 @@ func Clean() {
 
 func CleanExit() {
 	Clean()
-	os.Exit(1)
+	os.Exit(0)
 }
 
 func Reader(out *Out, in *In) {
