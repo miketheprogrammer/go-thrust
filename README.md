@@ -1,5 +1,4 @@
-go-thrust
-=========
+# go-thrust  [![build status](http://img.shields.io/travis/miketheprogrammer/go-thrust.svg)](https://travis-ci.org/miketheprogrammer/go-thrust) [![GoDoc](https://godoc.org/github.com/miketheprogrammer/go-thrust?status.png)](http://godoc.org/github.com/miketheprogrammer/go-thrust)
 
 ALERT - Breaking Changes.
 Please See Examples, and Tutorial Files, however Tutorial Readmes have not yet been updated..
@@ -67,7 +66,7 @@ Helper methods receive the UpperCamelCase version of their relative names in Thr
 
 i.e. insert_item_at == InsertItemAt
 
-Please note that the intended use case of Application Menus is to only support 
+Please note that the intended use case of Application Menus is to only support
 OSX and Unity/X11 global menu bars. This means that you should implement most menus in html and javascript, using IPC/RPC to communicate with the host application. The side effect is primarily that Windows, and certain unix/linux systems will not load ApplicationMenus
 
 
