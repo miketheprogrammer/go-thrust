@@ -6,10 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
-	"time"
-
-	. "github.com/miketheprogrammer/go-thrust/lib/common"
 )
 
 func unzip(src, dest string) error {
@@ -18,22 +14,8 @@ func unzip(src, dest string) error {
 		return err
 	}
 	defer r.Close()
-	Log.Print("Unzipping", src, "to", dest)
+	fmt.Println("Unzipping", src, "to", dest)
 
-	quit := make(chan int, 1)
-
-	go func() {
-		for {
-			select {
-			case <-quit:
-				fmt.Print("\n")
-				return
-			default:
-				fmt.Print(".")
-			}
-			time.Sleep(time.Second)
-		}
-	}()
 	for _, f := range r.File {
 		rc, err := f.Open()
 		if err != nil {
@@ -41,33 +23,26 @@ func unzip(src, dest string) error {
 		}
 		defer rc.Close()
 
-		fpath := filepath.Join(dest, f.Name)
+		filePath := filepath.Join(dest, f.Name)
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(fpath, 0775)
+			if err := os.MkdirAll(filePath, 0775); err != nil {
+				return err
+			}
 		} else {
-			var fdir string
-			if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
-				fdir = fpath[:lastIndex]
-			}
-
-			err = os.MkdirAll(fdir, 0775)
-			if err != nil {
-				Log.Print(err)
+			if err := os.MkdirAll(filepath.Dir(filePath), 0775); err != nil {
 				return err
 			}
-			f, err := os.OpenFile(
-				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0775)
+			file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.FileInfo().Mode())
 			if err != nil {
 				return err
 			}
-			defer f.Close()
+			defer file.Close()
 
-			_, err = io.Copy(f, rc)
+			_, err = io.Copy(file, rc)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	quit <- 1
 	return nil
 }
