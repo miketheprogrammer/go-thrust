@@ -12,11 +12,13 @@ Cross Platform UI Kit powered by Blink/V8/Chromium Content Lib
 Current Thrust Version 0.7.5
 
 ```bash
-go get -d github.com/miketheprogrammer/go-thrust
+go get github.com/miketheprogrammer/go-thrust
 
-# -d instructs go get not to try to build, after go get, please do following the install instructions
-#install deps
+# Install deps
 go get -v github.com/alexcesaro/log
+
+# Install Thrust
+go-thrust install
 ```
 
 ![Logo Thrust](http://i.imgur.com/DwFKI0J.png)
