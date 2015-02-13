@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 

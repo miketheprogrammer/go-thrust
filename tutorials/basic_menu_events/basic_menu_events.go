@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/miketheprogrammer/go-thrust"
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/menu"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 

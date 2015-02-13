@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/tv42/birpc"
 	"github.com/tv42/birpc/wetsock"
 	"github.com/tv42/topic"
