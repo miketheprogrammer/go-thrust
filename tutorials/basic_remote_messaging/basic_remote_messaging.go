@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/miketheprogrammer/go-thrust"
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/window"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 

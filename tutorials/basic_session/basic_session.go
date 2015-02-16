@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 

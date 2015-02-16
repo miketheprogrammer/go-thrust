@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/miketheprogrammer/go-thrust"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 )
 
 var (

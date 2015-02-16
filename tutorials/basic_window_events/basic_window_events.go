@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust"
 	"github.com/miketheprogrammer/go-thrust/lib/commands"
 	"github.com/miketheprogrammer/go-thrust/lib/connection"
+	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
 )
 
