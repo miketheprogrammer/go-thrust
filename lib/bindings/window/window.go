@@ -37,7 +37,7 @@ func checkUrl(s string) (string, error) {
 	if u.Scheme == "" {
 		p, err := filepath.Abs(s)
 		if err != nil {
-			return p, err
+			return s, err
 		}
 		u = &url.URL{
 			Scheme: "file",
