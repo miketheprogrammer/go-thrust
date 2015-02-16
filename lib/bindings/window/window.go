@@ -3,6 +3,8 @@ package window
 import (
 	"errors"
 	"fmt"
+	"net/url"
+	"path/filepath"
 	"time"
 
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/session"
@@ -27,9 +29,29 @@ type Window struct {
 	SendChannel      *connection.In `json:"-"`
 }
 
-func NewWindow(url string, sess *session.Session) *Window {
+func checkUrl(s string) (string, error) {
+	u, err := url.Parse(s)
+	if err != nil {
+		return s, err
+	}
+	if u.Scheme == "" {
+		p, err := filepath.Abs(s)
+		if err != nil {
+			return s, err
+		}
+		u = &url.URL{
+			Scheme: "file",
+			Path:   p,
+		}
+	}
+	return u.String(), err
+}
+
+func NewWindow(s string, sess *session.Session) *Window {
+	u, _ := checkUrl(s)
+
 	w := Window{}
-	w.Url = url
+	w.Url = u
 	if len(w.Url) == 0 {
 		w.Url = "http://google.com"
 	}
