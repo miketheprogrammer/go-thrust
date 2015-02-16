@@ -30,12 +30,18 @@ irc: #breach on freenode - this is the entire breach/thrust community
 gitter.im : https://gitter.im/miketheprogrammer/go-thrust - focused on go-thrust.
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/miketheprogrammer/go-thrust?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Contributors:
+Contributors
+===================
 Michael Hernandez (miketheprogrammer)<michael.hernandez1988@gmail.com>
+
 Francis Bouvier <francis.bouvier@xerus-technologies.fr>
+
 tehbilly
+
 gronpipmaster
+
 ShionRyuu
+
 Toorop
 
 Quick Start, see it in action
