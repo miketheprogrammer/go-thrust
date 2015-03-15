@@ -315,10 +315,8 @@ func (w *Window) Resize(width, height uint) {
 	command := Command{
 		Method: "resize",
 		Args: CommandArguments{
-			Size: SizeHW{
-				Width:  width,
-				Height: height,
-			},
+			Width:  width,
+			Height: height,
 		},
 	}
 
