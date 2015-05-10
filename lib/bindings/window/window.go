@@ -29,6 +29,15 @@ type Window struct {
 	SendChannel      *connection.In `json:"-"`
 }
 
+type Options struct {
+	RootUrl  string
+	Size     SizeHW
+	Title    string
+	IconPath string
+	HasFrame bool
+	Session  *session.Session
+}
+
 func checkUrl(s string) (string, error) {
 	u, err := url.Parse(s)
 	if err != nil {
@@ -47,39 +56,40 @@ func checkUrl(s string) (string, error) {
 	return u.String(), err
 }
 
-func NewWindow(s string, sess *session.Session) *Window {
-	u, _ := checkUrl(s)
-
+func NewWindow(options Options) *Window {
 	w := Window{}
-	w.Url = u
-	if len(w.Url) == 0 {
-		w.Url = "http://google.com"
-	}
+	w.setOptions(options)
 	_, sendChannel := connection.GetCommunicationChannels()
+
+	size := options.Size
+	if options.Size == (SizeHW{}) {
+		size = SizeHW{
+			Width:  1024,
+			Height: 768,
+		}
+	}
 
 	windowCreate := Command{
 		Action:     "create",
 		ObjectType: "window",
 		Args: CommandArguments{
-			RootUrl: w.Url,
-			Title:   spawn.ApplicationName,
-			Size: SizeHW{
-				Width:  1024,
-				Height: 768,
-			},
+			RootUrl:  w.Url,
+			Title:    spawn.ApplicationName,
+			Size:     size,
+			HasFrame: options.HasFrame,
 		},
 	}
 	dispatcher.RegisterHandler(w.DispatchResponse)
-	if sess == nil {
+	if options.Session == nil {
 		w.SetSendChannel(sendChannel)
 		w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
 		w.Send(&windowCreate)
 	} else {
 		go func() {
 			for {
-				if sess.TargetID != 0 {
-					fmt.Println("sess", sess.TargetID)
-					windowCreate.Args.SessionID = sess.TargetID
+				if options.Session.TargetID != 0 {
+					fmt.Println("sess", options.Session.TargetID)
+					windowCreate.Args.SessionID = options.Session.TargetID
 					w.SetSendChannel(sendChannel)
 					w.WaitingResponses = append(w.WaitingResponses, &windowCreate)
 					w.Send(&windowCreate)
@@ -90,6 +100,19 @@ func NewWindow(s string, sess *session.Session) *Window {
 		}()
 	}
 	return &w
+}
+
+func (w *Window) setOptions(options Options) {
+	u, _ := checkUrl(options.RootUrl)
+	w.Url = u
+	if len(w.Url) == 0 {
+		w.Url = "http://google.com"
+	}
+
+	w.Title = options.Title
+	if len(w.Title) == 0 {
+		w.Title = spawn.ApplicationName
+	}
 }
 
 func (w *Window) SetSendChannel(sendChannel *connection.In) {
