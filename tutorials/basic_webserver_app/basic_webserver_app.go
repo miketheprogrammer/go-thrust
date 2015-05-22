@@ -22,7 +22,10 @@ func main() {
 
 	mysession := thrust.NewSession(false, false, "cache")
 
-	thrustWindow := thrust.NewWindow("http://localhost:8080/", mysession)
+	thrustWindow := thrust.NewWindow(thrust.WindowOptions{
+		RootUrl: "http://localhost:8080/",
+		Session: mysession,
+	})
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()

@@ -25,7 +25,10 @@ func main() {
 	  Modified basic_window, where we provide, a session argument
 	  to NewWindow.
 	*/
-	thrustWindow := thrust.NewWindow("http://breach.cc/", mysession)
+	thrustWindow := thrust.NewWindow(thrust.WindowOptions{
+		RootUrl: "http://breach.cc/",
+		Session: mysession,
+	})
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
