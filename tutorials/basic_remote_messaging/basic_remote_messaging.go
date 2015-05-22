@@ -22,7 +22,9 @@ func main() {
 	// thrust.Start() must always come before any bindings are created.
 	thrust.Start()
 
-	thrustWindow := thrust.NewWindow("http://localhost:8080/", nil)
+	thrustWindow := thrust.NewWindow(thrust.WindowOptions{
+		RootUrl: "http://localhost:8080/",
+	})
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()

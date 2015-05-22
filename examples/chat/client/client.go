@@ -17,7 +17,9 @@ func main() {
 	thrust.InitLogger()
 	thrust.Start()
 
-	thrustWindow := thrust.NewWindow(fmt.Sprintf("http://127.0.0.1:%d", *port), nil)
+	thrustWindow := thrust.NewWindow(thrust.WindowOptions{
+		RootUrl: fmt.Sprintf("http://127.0.0.1:%d", *port),
+	})
 	thrustWindow.Show()
 	thrustWindow.Focus()
 	// BLOCKING - Dont run before youve excuted all commands you want first.

@@ -46,6 +46,7 @@ type CommandArguments struct {
 	Fullscreen   bool          `json:"fullscreen"`
 	Kiosk        bool          `json:"kiosk"`
 	Focus        bool          `json:"focus"`
+	HasFrame     bool          `json:"has_frame"`
 	Path         string        `json:"path,omitempty"`
 	Message      RemoteMessage `json:"message,omitempty"`
 }

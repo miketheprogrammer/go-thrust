@@ -12,12 +12,16 @@ func main() {
 	// thrust.Start() must always come before any bindings are created.
 	thrust.Start()
 
-	thrustWindow := thrust.NewWindow("http://breach.cc/", nil)
+	thrustWindow := thrust.NewWindow(thrust.WindowOptions{
+		RootUrl: "http://breach.cc/",
+	})
 	thrustWindow.Show()
 	thrustWindow.Maximize()
 	thrustWindow.Focus()
 
-	thrustWindow2 := thrust.NewWindow("http://google.com/", nil)
+	thrustWindow2 := thrust.NewWindow(thrust.WindowOptions{
+		RootUrl: "http://google.com/",
+	})
 	thrustWindow2.Show()
 	thrustWindow2.Focus()
 

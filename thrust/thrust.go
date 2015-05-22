@@ -21,9 +21,11 @@ Begin Generic Access and Binding Management Section.
 Bindings
 */
 
+type WindowOptions window.Options
+
 /* NewWindow creates a new Window Binding */
-func NewWindow(url string, sess *session.Session) *window.Window {
-	return window.NewWindow(url, sess)
+func NewWindow(options WindowOptions) *window.Window {
+	return window.NewWindow(window.Options(options))
 }
 
 /* NewSession creates a new Session Binding */
