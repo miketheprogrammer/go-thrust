@@ -200,6 +200,17 @@ func (w *Window) Show() {
 	w.CallWhenReady(&command)
 }
 
+func (w *Window) SetTitle(title string) {
+	command := Command{
+		Method: "set_title",
+		Args: CommandArguments{
+			Title: title,
+		},
+	}
+
+	w.CallWhenDisplayed(&command)
+}
+
 func (w *Window) Maximize() {
 	command := Command{
 		Method: "maximize",
