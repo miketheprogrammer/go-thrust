@@ -10,6 +10,7 @@ Other neccessary packages
 
     go get -v github.com/gorilla/websocket
     go get -v github.com/tv42/birpc
+    go get -v github.com/tv42/topic
 
 and put the resulting bin2go in `PATH`.
 
