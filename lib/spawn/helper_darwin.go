@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -15,7 +16,17 @@ func GetThrustDirectory() string {
 	return base + "/vendor/darwin/x64/v" + thrustVersion
 }
 
-func GetAppDirectory() string {
+/*
+GetDownloadPath gets the download or extract directory for Thrust
+*/
+func GetDownloadPath() string {
+	return strings.Replace(filepath.Join(base, "$V"), "$V", thrustVersion, 1)
+}
+
+/*
+Get the path to the .app directory (only OSX)
+*/
+func getAppDirectory() string {
 	return base + "/vendor/darwin/x64/v" + thrustVersion + "/" + ApplicationName + ".app"
 }
 
@@ -28,10 +39,10 @@ func GetExecutablePath() string {
 }
 
 /*
-GetDownloadUrl returns the interpolatable version of the Thrust download url
+GetDownloadURL returns the interpolatable version of the Thrust download url
 Differs between builds based on OS
 */
-func GetDownloadUrl() string {
+func GetDownloadURL() string {
 	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-darwin-x64.zip"
 }
 
@@ -39,7 +50,7 @@ func GetDownloadUrl() string {
 SetThrustApplicationTitle sets the title in the Info.plist. This method only exists on Darwin.
 */
 func Bootstrap() error {
-	if executableNotExist() == true {
+	if ExecutableNotExist() == true {
 		var err error
 		if err = prepareExecutable(); err != nil {
 			return err
@@ -55,14 +66,15 @@ func Bootstrap() error {
 }
 
 /*
-executableNotExist checks if the executable does not exist
+ExecutableNotExist checks if the executable does not exist
 */
-func executableNotExist() bool {
+func ExecutableNotExist() bool {
 	_, err := os.Stat(GetExecutablePath())
+	fmt.Println(err)
 	return os.IsNotExist(err)
 }
 
-func pathNotExist(path string) bool {
+func PathNotExist(path string) bool {
 	_, err := os.Stat(path)
 	return os.IsNotExist(err)
 }
@@ -71,19 +83,23 @@ func pathNotExist(path string) bool {
 prepareExecutable dowloads, unzips and does alot of other magic to prepare our thrust core build.
 */
 func prepareExecutable() error {
-	path, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", thrustVersion)
+	path, err := downloadFromUrl(GetDownloadURL(), base+"/$V", thrustVersion)
 	if err != nil {
 		return err
 	}
-	if err = unzip(path, GetThrustDirectory()); err != nil {
+
+	return UnzipExecutable(path)
+}
+
+func UnzipExecutable(path string) error {
+	if err := unzip(path, GetThrustDirectory()); err != nil {
 		return err
 	}
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/ThrustShell", GetThrustDirectory()+"/ThrustShell.app/Contents/MacOS/"+ApplicationName)
 	os.Rename(GetThrustDirectory()+"/ThrustShell.app", GetThrustDirectory()+"/"+ApplicationName+".app")
 
-	if err = applySymlinks(); err != nil {
+	if err := applySymlinks(); err != nil {
 		panic(err)
-		return err
 	}
 
 	return nil
@@ -95,88 +111,88 @@ ApplySymLinks exists because our unzip utility does not respect deferred symlink
 func applySymlinks() error {
 	fmt.Println("Removing bad symlinks")
 	var err error
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current") == false {
-		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"); err != nil {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current") == false {
+		if err = os.Remove(getAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks") == false {
-		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"); err != nil {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks") == false {
+		if err = os.Remove(getAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries") == false {
-		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Libraries"); err != nil {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries") == false {
+		if err = os.Remove(getAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Libraries"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources") == false {
-		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Resources"); err != nil {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources") == false {
+		if err = os.Remove(getAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Resources"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework") == false {
-		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"); err != nil {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework") == false {
+		if err = os.Remove(getAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries") == false {
-		if err = os.Remove(GetAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"); err != nil {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries") == false {
+		if err = os.Remove(getAppDirectory() + "/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"); err != nil {
 			return err
 		}
 	}
 
 	fmt.Println("Applying Symlinks")
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current") == true {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current") == true {
 		if err = os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"); err != nil {
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A",
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks") == true {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks") == true {
 		if err = os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Frameworks",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"); err != nil {
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Frameworks",
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Frameworks"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries") == true {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries") == true {
 		if err = os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"); err != nil {
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries",
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Libraries"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources") == true {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources") == true {
 		if err = os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Resources",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"); err != nil {
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Resources",
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Resources"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework") == true {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework") == true {
 		if err = os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/ThrustShell Framework",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"); err != nil {
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/ThrustShell Framework",
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/ThrustShell Framework"); err != nil {
 			return err
 		}
 	}
 
-	if pathNotExist(GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries") == true {
+	if PathNotExist(getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries") == true {
 		if err = os.Symlink(
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A/Libraries/Libraries",
-			GetAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"); err != nil {
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/A/Libraries/Libraries",
+			getAppDirectory()+"/Contents/Frameworks/ThrustShell Framework.framework/Versions/Current/Libraries"); err != nil {
 			return err
 		}
 	}

@@ -2,6 +2,7 @@ package thrust
 
 import (
 	"runtime"
+	"time"
 
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/menu"
 	"github.com/miketheprogrammer/go-thrust/lib/bindings/session"
@@ -62,6 +63,7 @@ Otherwise, why dont you start an http server, and expose some websockets.
 */
 func LockThread() {
 	for {
+		time.Sleep(1 * time.Second)
 		runtime.Gosched()
 	}
 }
