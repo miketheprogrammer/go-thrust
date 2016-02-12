@@ -4,8 +4,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/miketheprogrammer/go-thrust/lib/common"
 )
 
 /*
@@ -17,6 +15,13 @@ func GetThrustDirectory() string {
 }
 
 /*
+GetDownloadDirectory gets the download or extract directory for Thrust
+*/
+func GetDownloadPath() string {
+	return strings.Replace(filepath.Join(base, "$V"), "$V", thrustVersion, 1)
+}
+
+/*
 GetExecutablePath returns the path to the Thrust Executable
 Differs between builds based on OS
 */
@@ -25,10 +30,10 @@ func GetExecutablePath() string {
 }
 
 /*
-GetDownloadUrl returns the interpolatable version of the Thrust download url
+GetDownloadURL returns the interpolatable version of the Thrust download url
 Differs between builds based on OS
 */
-func GetDownloadUrl() string {
+func GetDownloadURL() string {
 	//https://github.com/breach/thrust/releases/download/v0.7.5/thrust-v0.7.5-win32-ia32.zip
 	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-win32-ia32.zip"
 }
@@ -49,13 +54,14 @@ func executableNotExist() bool {
 }
 
 func prepareExecutable() error {
-	common.Log.Print(base + "\\$V")
-	_, err := downloadFromUrl(GetDownloadUrl(), base+"\\$V", thrustVersion)
+	path, err := downloadFromUrl(GetDownloadURL(), base+"\\$V", thrustVersion)
 	if err != nil {
 		return err
 	}
-	if err = unzip(strings.Replace(base+"\\$V", "$V", thrustVersion, 1), GetThrustDirectory()); err != nil {
-		return err
-	}
-	return nil
+
+	return UnzipExecutable(path)
+}
+
+func UnzipExecutable(path string) error {
+	return unzip(path, GetThrustDirectory())
 }

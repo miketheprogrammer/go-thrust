@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codegangsta/cli"
+	"github.com/miketheprogrammer/go-thrust/Godeps/_workspace/src/github.com/codegangsta/cli"
 	"github.com/miketheprogrammer/go-thrust/lib/spawn"
 )
 

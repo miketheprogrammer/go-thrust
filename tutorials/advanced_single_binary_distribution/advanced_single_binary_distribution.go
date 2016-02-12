@@ -2,14 +2,15 @@ package main
 
 import (
 	"github.com/miketheprogrammer/go-thrust/thrust"
-	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
+	"github.com/miketheprogrammer/go-thrust/tutorials/advanced_single_binary_distribution/provisioner"
+	"github.com/pkg/profile"
 )
 
 func main() {
 
 	thrust.InitLogger()
 	// Set any Custom Provisioners before Start
-	thrust.SetProvisioner(tutorial.NewTutorialProvisioner())
+	thrust.SetProvisioner(provisioner.NewSingleBinaryThrustProvisioner())
 	// thrust.Start() must always come before any bindings are created.
 	thrust.Start()
 
@@ -30,5 +31,6 @@ func main() {
 	// In lieu of something like an http server, we need to lock this thread
 	// in order to keep it open, and keep the process running.
 	// Dont worry we use runtime.Gosched :)
+	defer profile.Start().Stop()
 	thrust.LockThread()
 }

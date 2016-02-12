@@ -3,12 +3,13 @@ package spawn
 import (
 	"errors"
 	"fmt"
-	"github.com/cheggaaa/pb"
 	"io"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/cheggaaa/pb"
 
 	. "github.com/miketheprogrammer/go-thrust/lib/common"
 )
@@ -16,6 +17,11 @@ import (
 func downloadFromUrl(url, filepath, version string) (fileName string, err error) {
 	url = strings.Replace(url, "$V", version, 2)
 	fileName = strings.Replace(filepath, "$V", version, 1)
+	if PathNotExist(fileName) == false {
+		fmt.Println("Thrust already exists on filesystem .... skipping")
+		return
+	}
+	fmt.Println("Extract directory was", GetDownloadPath())
 	fmt.Println("Downloading", url, "to", fileName)
 
 	output, err := os.Create(fileName)

@@ -51,6 +51,18 @@ Start Go Thrust using source and GoLang runtime
 go run tutorials/basic_window/basic_window.go
 ```
 
+For Single Binary Install please use the tutorial
+```bash
+cd tutorials/advanced_single_binary_distribution
+mkdir vendor
+cd vendor
+wget https://github.com/breach/thrust/releases/download/v0.7.6/thrust-v0.7.6-darwin-x64.zip
+cd ..
+go-bindata -pkg provisioner -o provisioner/vendor.go vendor/
+go run advanced_single_binary_distribution.go
+
+```
+
 Forward:
 ==================
 Go-Thrust is a cross platform GUI Application development base. It aims to provide the
@@ -80,7 +92,7 @@ Helper methods receive the UpperCamelCase version of their relative names in Thr
 
 i.e. insert_item_at == InsertItemAt
 
-Please note that the intended use case of Application Menus is to only support 
+Please note that the intended use case of Application Menus is to only support
 OSX and Unity/X11 global menu bars. This means that you should implement most menus in html and javascript, using IPC/RPC to communicate with the host application. The side effect is primarily that Windows, and certain unix/linux systems will not load ApplicationMenus
 
 
@@ -101,4 +113,3 @@ The Future of Go-Thrust
 ================
 Any user of Go-Thrust should feel free to contribute ideas, code, anything that can help move this project in the right direction. The ideal goal is to stay as much out of the way, but still provide a useful system.
 ```
-

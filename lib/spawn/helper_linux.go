@@ -15,6 +15,13 @@ func GetThrustDirectory() string {
 }
 
 /*
+GetDownloadDirectory gets the download or extract directory for Thrust
+*/
+func GetDownloadPath() string {
+	return strings.Replace(filepath.Join(base, "$V"), "$V", thrustVersion, 1)
+}
+
+/*
 GetExecutablePath returns the path to the Thrust Executable
 Differs between builds based on OS
 */
@@ -23,13 +30,16 @@ func GetExecutablePath() string {
 }
 
 /*
-GetDownloadUrl returns the interpolatable version of the Thrust download url
+GetDownloadURL returns the interpolatable version of the Thrust download url
 Differs between builds based on OS
 */
-func GetDownloadUrl() string {
+func GetDownloadURL() string {
 	return "https://github.com/breach/thrust/releases/download/v$V/thrust-v$V-linux-x64.zip"
 }
 
+/*
+Bootstrap executes the default bootstrapping plan for this system and returns an error if failed
+*/
 func Bootstrap() error {
 	if executableNotExist() == true {
 		return prepareExecutable()
@@ -43,9 +53,14 @@ func executableNotExist() bool {
 }
 
 func prepareExecutable() error {
-	_, err := downloadFromUrl(GetDownloadUrl(), base+"/$V", thrustVersion)
+	path, err := downloadFromUrl(GetDownloadURL(), base+"/$V", thrustVersion)
 	if err != nil {
 		return err
 	}
-	return unzip(strings.Replace(base+"/$V", "$V", thrustVersion, 1), GetThrustDirectory())
+
+	return UnzipExecutable(path)
+}
+
+func UnzipExecutable(path string) error {
+	return unzip(path, GetThrustDirectory())
 }
