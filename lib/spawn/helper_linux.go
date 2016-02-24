@@ -64,3 +64,8 @@ func prepareExecutable() error {
 func UnzipExecutable(path string) error {
 	return unzip(path, GetThrustDirectory())
 }
+
+func PathNotExist(path string) bool {
+	_, err := os.Stat(path)
+	return os.IsNotExist(err)
+}
