@@ -61,7 +61,7 @@ func InitializeThreads() {
 	go Writer(&out, &in)
 
 	go func() {
-		fmt.Println("Registering signals")
+		fmt.Println("Registering signals...")
 		p := []os.Signal{syscall.SIGINT}
 		fmt.Println("Registered SIGINT")
 		c := make(chan os.Signal, len(p))
