@@ -4,14 +4,14 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/miketheprogrammer/go-thrust/lib/bindings/menu"
-	"github.com/miketheprogrammer/go-thrust/lib/bindings/session"
-	"github.com/miketheprogrammer/go-thrust/lib/bindings/window"
-	"github.com/miketheprogrammer/go-thrust/lib/common"
-	"github.com/miketheprogrammer/go-thrust/lib/connection"
-	"github.com/miketheprogrammer/go-thrust/lib/dispatcher"
-	"github.com/miketheprogrammer/go-thrust/lib/events"
-	"github.com/miketheprogrammer/go-thrust/lib/spawn"
+	"github.com/cloudspace/go-thrust/lib/bindings/menu"
+	"github.com/cloudspace/go-thrust/lib/bindings/session"
+	"github.com/cloudspace/go-thrust/lib/bindings/window"
+	"github.com/cloudspace/go-thrust/lib/common"
+	"github.com/cloudspace/go-thrust/lib/connection"
+	"github.com/cloudspace/go-thrust/lib/dispatcher"
+	"github.com/cloudspace/go-thrust/lib/events"
+	"github.com/cloudspace/go-thrust/lib/spawn"
 )
 
 /*

@@ -1,6 +1,6 @@
 package menu
 
-import . "github.com/miketheprogrammer/go-thrust/lib/common"
+import . "github.com/cloudspace/go-thrust/lib/common"
 
 type MenuItem struct {
 	CommandID uint   `json:"command_id,omitempty"`

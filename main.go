@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/cloudspace/go-thrust/lib/spawn"
 	"github.com/codegangsta/cli"
-	"github.com/miketheprogrammer/go-thrust/lib/spawn"
 )
 
 func install(c *cli.Context) {

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/miketheprogrammer/go-thrust/thrust"
+	"github.com/cloudspace/go-thrust/thrust"
 )
 
 var (

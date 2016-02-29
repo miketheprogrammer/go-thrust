@@ -5,5 +5,5 @@ before_install:
   - go get github.com/mattn/gom
 script:
   - $HOME/gopath/bin/gom install
-  - $HOME/gopath/bin/gom test ./_vendor/src/github.com/miketheprogrammer/go-thrust/
-  - $HOME/gopath/bin/gom test ./_vendor/src/github.com/miketheprogrammer/go-thrust/lib/...
+  - $HOME/gopath/bin/gom test ./_vendor/src/github.com/cloudspace/go-thrust/
+  - $HOME/gopath/bin/gom test ./_vendor/src/github.com/cloudspace/go-thrust/lib/...

@@ -3,7 +3,7 @@ package thrust
 import (
 	"testing"
 
-	"github.com/miketheprogrammer/go-thrust/lib/commands"
+	"github.com/cloudspace/go-thrust/lib/commands"
 )
 
 func TestNewEventHandler(t *testing.T) {

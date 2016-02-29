@@ -11,8 +11,8 @@ import (
 	"path"
 	"time"
 
+	"github.com/cloudspace/go-thrust/thrust"
 	"github.com/gorilla/websocket"
-	"github.com/miketheprogrammer/go-thrust/thrust"
 	"github.com/tv42/birpc"
 	"github.com/tv42/birpc/wetsock"
 	"github.com/tv42/topic"

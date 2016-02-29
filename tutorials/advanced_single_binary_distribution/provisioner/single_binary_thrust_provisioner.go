@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/miketheprogrammer/go-thrust/lib/spawn"
+	"github.com/cloudspace/go-thrust/lib/spawn"
 )
 
 /*
