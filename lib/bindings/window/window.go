@@ -250,7 +250,7 @@ func (w *Window) UnMaximize() {
 
 func (w *Window) Minimize() {
 	command := Command{
-		Method: "minmize",
+		Method: "minimize",
 	}
 	w.CallWhenDisplayed(&command)
 }
