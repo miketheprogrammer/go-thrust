@@ -77,6 +77,7 @@ func NewWindow(options Options) *Window {
 			Title:    spawn.ApplicationName,
 			Size:     size,
 			HasFrame: !options.HasFrame,
+			IconPath: options.IconPath,
 		},
 	}
 	dispatcher.RegisterHandler(w.DispatchResponse)
