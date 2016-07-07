@@ -74,9 +74,9 @@ func NewWindow(options Options) *Window {
 		ObjectType: "window",
 		Args: CommandArguments{
 			RootUrl:  w.Url,
-			Title:    spawn.ApplicationName,
+			Title:    options.Title, // Should be using the options.Title, not spawn.ApplicationName
 			Size:     size,
-			HasFrame: !options.HasFrame,
+			HasFrame: options.HasFrame, // This was reversed, HasFrame behavior should be 'true' (has frame) and 'false' (no frame)
 			IconPath: options.IconPath,
 		},
 	}
