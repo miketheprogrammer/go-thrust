@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/miketheprogrammer/go-thrust/thrust"
-	"github.com/miketheprogrammer/go-thrust/tutorials/advanced_single_binary_distribution/provisioner"
+	"github.com/cloudspace/go-thrust/thrust"
+	"github.com/cloudspace/go-thrust/tutorials/advanced_single_binary_distribution/provisioner"
 	"github.com/pkg/profile"
 )
 

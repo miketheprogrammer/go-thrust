@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	. "github.com/miketheprogrammer/go-thrust/lib/common"
-	"github.com/miketheprogrammer/go-thrust/lib/connection"
+	. "github.com/cloudspace/go-thrust/lib/common"
+	"github.com/cloudspace/go-thrust/lib/connection"
 )
 
 const (

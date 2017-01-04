@@ -1,6 +1,6 @@
 package session
 
-import "github.com/miketheprogrammer/go-thrust/lib/commands"
+import "github.com/cloudspace/go-thrust/lib/commands"
 
 /*
 Methods prefixed with Invoke are methods that can be called by ThrustCore, this differs to our

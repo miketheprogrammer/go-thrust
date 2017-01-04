@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/miketheprogrammer/go-thrust/lib/bindings/menu"
-	"github.com/miketheprogrammer/go-thrust/lib/commands"
-	"github.com/miketheprogrammer/go-thrust/thrust"
-	"github.com/miketheprogrammer/go-thrust/tutorials/provisioner"
+	"github.com/cloudspace/go-thrust/lib/bindings/menu"
+	"github.com/cloudspace/go-thrust/lib/commands"
+	"github.com/cloudspace/go-thrust/thrust"
+	"github.com/cloudspace/go-thrust/tutorials/provisioner"
 )
 
 func main() {

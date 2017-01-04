@@ -1,6 +1,6 @@
 package menu
 
-import "github.com/miketheprogrammer/go-thrust/lib/commands"
+import "github.com/cloudspace/go-thrust/lib/commands"
 
 type ChildCommand struct {
 	Command *commands.Command

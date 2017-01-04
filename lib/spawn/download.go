@@ -11,7 +11,7 @@ import (
 
 	"github.com/cheggaaa/pb"
 
-	. "github.com/miketheprogrammer/go-thrust/lib/common"
+	. "github.com/cloudspace/go-thrust/lib/common"
 )
 
 func downloadFromUrl(url, filepath, version string) (fileName string, err error) {

@@ -3,8 +3,8 @@ package dispatcher
 import (
 	"runtime"
 
-	"github.com/miketheprogrammer/go-thrust/lib/commands"
-	"github.com/miketheprogrammer/go-thrust/lib/connection"
+	"github.com/cloudspace/go-thrust/lib/commands"
+	"github.com/cloudspace/go-thrust/lib/connection"
 )
 
 type HandleFunc func(commands.CommandResponse)

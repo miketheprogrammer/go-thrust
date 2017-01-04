@@ -11,8 +11,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/miketheprogrammer/go-thrust/lib/commands"
-	. "github.com/miketheprogrammer/go-thrust/lib/common"
+	"github.com/cloudspace/go-thrust/lib/commands"
+	. "github.com/cloudspace/go-thrust/lib/common"
 )
 
 const (
@@ -61,12 +61,17 @@ func InitializeThreads() {
 	go Writer(&out, &in)
 
 	go func() {
-		fmt.Println("Registering signals")
+		fmt.Println("Registering signals...")
 		p := []os.Signal{syscall.SIGINT}
+		fmt.Println("Registered SIGINT")
 		c := make(chan os.Signal, len(p))
+		fmt.Println("Made channel for signals")
 		signal.Notify(c, p...)
+		fmt.Println("Set notify for signals")
 
+		fmt.Println("Loop started")
 		for s := range c {
+			fmt.Println("Loop iteration")
 			fmt.Println("Getting signal ", s)
 			if s == os.Interrupt || s == os.Kill {
 				fmt.Println("Finishing clean up quiting")
@@ -74,6 +79,7 @@ func InitializeThreads() {
 				return
 			}
 		}
+		fmt.Println("Loop ended")
 	}()
 	return
 }

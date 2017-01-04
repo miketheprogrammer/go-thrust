@@ -1,6 +1,6 @@
 package tutorial
 
-import "github.com/miketheprogrammer/go-thrust/lib/spawn"
+import "github.com/cloudspace/go-thrust/lib/spawn"
 
 /*
 Default implementation of Provisioner
