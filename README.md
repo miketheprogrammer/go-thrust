@@ -1,5 +1,4 @@
-go-thrust
-=========
+# go-thrust  [![build status](http://img.shields.io/travis/miketheprogrammer/go-thrust.svg)](https://travis-ci.org/miketheprogrammer/go-thrust) [![GoDoc](https://godoc.org/github.com/miketheprogrammer/go-thrust?status.png)](http://godoc.org/github.com/miketheprogrammer/go-thrust)
 
 ALERT - Breaking Changes.
 Please See Examples, and Tutorial Files, however Tutorial Readmes have not yet been updated..
